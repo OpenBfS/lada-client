@@ -101,6 +101,7 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
      */
+    // TODO: this is never called
     setMessages: function(errors, warnings) {
         this.down('mprkatform').setMessages(errors, warnings);
     },

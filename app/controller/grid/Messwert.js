@@ -10,7 +10,8 @@
  * This is a Controller for a Messwert Grid
  */
 Ext.define('Lada.controller.grid.Messwert', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.grid.BaseGridController',
+    alias: 'controller.messwertgrid',
 
     /**
      * Inhitialize the controller
@@ -90,6 +91,7 @@ Ext.define('Lada.controller.grid.Messwert', {
             context.record.set('id', null);
         }
         context.record.save({
+            scope: this,
             success: function() {
                 if (Ext.data.StoreManager.get('messeinheiten')) {
                     Ext.data.StoreManager.get('messeinheiten').clearFilter();
@@ -102,31 +104,10 @@ Ext.define('Lada.controller.grid.Messwert', {
                 // If you don't do the resets above, the grid will only contain
                 // one row in cases in when autocompletion was used!
                 context.grid.getSelectionModel().clearSelections();
-                context.grid.store.reload();
                 context.grid.up('window').initData();
             },
-            failure: function(request, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
+            failure: function(record, response) {
+                this.handleSaveFailure(record, response, context.record);
             }
         });
     },
@@ -146,7 +127,7 @@ Ext.define('Lada.controller.grid.Messwert', {
      */
     add: function(button) {
         var record = Ext.create('Lada.model.MeasVal', {
-            measmId: button.up('messwertgrid').recordId
+            measmId: button.up('messwertgrid').getParentRecordId()
         });
         record.set('id', null);
         button.up('messwertgrid').store.insert(0, record);

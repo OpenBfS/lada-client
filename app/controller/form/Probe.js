@@ -10,7 +10,8 @@
  * A Controller for a Probe form
  */
 Ext.define('Lada.controller.form.Probe', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.probeform',
 
     requires: [
         'Lada.view.window.AuditTrail'
@@ -79,7 +80,7 @@ Ext.define('Lada.controller.form.Probe', {
         pos[1] += 10;
         this.copyProbe(record, function(probe) {
             var probeWin = Ext.create(
-                'Lada.view.window.ProbeEdit', {
+                'Lada.view.window.Probe', {
                     record: probe,
                     style: 'z-index: -1;'
                 });
@@ -137,9 +138,10 @@ Ext.define('Lada.controller.form.Probe', {
         var saveErrors = null;
 
         Ext.Ajax.request({
-            url: 'lada-server/rest/ortszuordnung',
+            url: Lada.model.LadaBase.schema.getUrlPrefix() + '/'
+                + Lada.model.Geolocat.entityName.toLowerCase(),
             params: {
-                probeId: probe.get('id')
+                sampleId: probe.get('id')
             },
             method: 'GET',
             success: function(response) {
@@ -211,7 +213,7 @@ Ext.define('Lada.controller.form.Probe', {
         Ext.Ajax.request({
             url: 'lada-server/rest/measm',
             params: {
-                probeId: probe.get('id')
+                sampleId: probe.get('id')
             },
             method: 'GET',
             success: function(response) {
@@ -304,9 +306,10 @@ Ext.define('Lada.controller.form.Probe', {
         for (var i2 = 0; i2 < messungen.length; i2++) {
             var messung = messungen[i2];
             Ext.Ajax.request({
-                url: 'lada-server/rest/messwert',
+                url: Lada.model.LadaBase.schema.getUrlPrefix() + '/'
+                    + Lada.model.MeasVal.entityName.toLowerCase(),
                 params: {
-                    messungsId: messung.get('copyOfMessungId')
+                    measmId: messung.get('copyOfMessungId')
                 },
                 method: 'GET',
                 // eslint-disable-next-line no-loop-func
@@ -534,64 +537,31 @@ Ext.define('Lada.controller.form.Probe', {
         }
 
         record.save({
+            scope: this,
             success: function(newRecord, response) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
 
-                var json = Ext.decode(response.getResponse().responseText);
-                if (response.action === 'create') {
-                    // Close ProbeCreate window and show the new record
-                    // in a new ProbeEdit window
-                    button.up('window').close();
-                    var win = Ext.create('Lada.view.window.ProbeEdit', {
-                        record: newRecord
-                    });
-                    win.initData();
-                    win.show();
-                    win.setPosition(30);
+                // Close existing window or update form
+                var win = button.up('window');
+                if (win.closeRequested) {
+                    win.doClose();
                 } else {
-                    // Close existing window or update form
-                    var oldWin = button.up('window');
-                    if (oldWin.closeRequested) {
-                        oldWin.doClose();
-                    } else {
-                        formPanel.setRecord(newRecord);
-                        formPanel.setMessages(
-                            json.errors, json.warnings, json.notifications);
-                    }
+                    win.setRecord(newRecord);
+                    win.setTitle(win.createTitle());
+                    formPanel.setRecord(newRecord);
+                    win.down('button[action=tagedit]').setDisabled(false);
+                    win.down('button[name=reload]').setDisabled(false);
+                    win.disableChildren(
+                        newRecord.get('readonly') || !newRecord.get('owner'));
+                    var json = Ext.decode(response.getResponse().responseText);
+                    win.setMessages(
+                        json.errors, json.warnings, json.notifications);
                 }
             },
-            failure: function(newRecord, response) {
-                formPanel.loadRecord(record);
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(
-                        response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.setMessages(
-                            json.errors,
-                            json.warnings,
-                            json.notifications);
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-            }
+            failure: this.handleSaveFailure
         });
     },
 
@@ -830,7 +800,7 @@ Ext.define('Lada.controller.form.Probe', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'probe',
-            objectId: button.up('form').recordId,
+            objectId: button.up('form').getRecord().get('id'),
             titleText: titleText
         });
         button.up('window').addChild(trail);

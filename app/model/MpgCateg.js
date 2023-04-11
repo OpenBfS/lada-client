@@ -19,13 +19,12 @@ Ext.define('Lada.model.MpgCateg', {
         name: 'networkId'
     }, {
         name: 'extId',
-        type: 'nonblankstring',
+        type: 'nonblankstring'
     }, {
         name: 'name'
     }, {
         name: 'lastMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'readonly',
         type: 'boolean',

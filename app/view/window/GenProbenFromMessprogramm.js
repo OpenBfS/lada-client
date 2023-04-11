@@ -98,8 +98,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 this.down('panel').setLoading(true);
                 var reqJsondata = {
                     ids: me.ids,
-                    start: startUTC,
-                    end: endUTC,
+                    start: Ext.Date.format(
+                        new Date(this.startUTC), Ext.data.field.Date.DATE_FORMAT),
+                    end: Ext.Date.format(
+                        new Date(this.endUTC), Ext.data.field.Date.DATE_FORMAT),
                     dryrun: dryrun
                 };
                 Ext.Ajax.request({
@@ -436,7 +438,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         return r;
                     }
                 }, {
-                    header: i18n.getMsg('baId'),
+                    header: i18n.getMsg('oprModeId'),
                     dataIndex: 'oprModeId',
                     renderer: function(value) {
                         var r = '';
@@ -471,7 +473,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollVon'),
                     dataIndex: 'schedStartDate',
-                    renderer : function(value) {
+                    renderer: function(value) {
                         var dt = '';
                         var format = 'd.m.Y';
                         dt = Lada.util.Date.formatTimestamp(value, format, true);
@@ -481,7 +483,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollBis'),
                     dataIndex: 'schedEndDate',
-                    renderer : function(value) {
+                    renderer: function(value) {
                         var dt = '';
                         var format = 'd.m.Y';
                         dt = Lada.util.Date.formatTimestamp(value, format, true);

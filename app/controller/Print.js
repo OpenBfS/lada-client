@@ -710,11 +710,11 @@ Ext.define('Lada.controller.Print', {
 
         var emptyMessstelle = {
             'id': null,
-            'amtskennung': null,
-            'beschreibung': null,
-            'messStelle': null,
-            'mstTyp': null,
-            'netzbetreiberId': null
+            'trunkCode': null,
+            'address': null,
+            'name': null,
+            'measFacilType': null,
+            'networkId': null
         };
 
         var emptyDeskriptor = {
@@ -766,7 +766,7 @@ Ext.define('Lada.controller.Print', {
             // Flatten the Ortszuodnung Array
             for (var o in ortszuordnung) {
                 var oz = ortszuordnung[o];
-                for (var e in oz.ort) {
+                for (var e in oz.site) {
                     prep[i].geolocat[o]['site'] = null;
                     prep[i].geolocat[o]['site.' + e] = oz.site[e];
                 }
@@ -793,7 +793,7 @@ Ext.define('Lada.controller.Print', {
             if (selection[item].get(grid.rowtarget.probeIdentifier)) {
                 var Id = selection[item].get(grid.rowtarget.probeIdentifier);
             } else {
-                var Id = selection[item].get(grid.rowtarget.messungIdentifier)
+                var Id = selection[item].get(grid.rowtarget.messungIdentifier);
             }
 
             // avoids printing more than one sheet per probe
@@ -804,7 +804,7 @@ Ext.define('Lada.controller.Print', {
         //basically, thats the same as the downloadFile
         // code does.
         if (selection[item].get(grid.rowtarget.probeIdentifier)) {
-             var data = '{ "proben": [' + ids.toString() + '] }';
+            var data = '{ "proben": [' + ids.toString() + '] }';
         } else {
             var data = '{ "messungen": [' + ids.toString() + '] }';
         }

@@ -34,11 +34,10 @@ Ext.define('Lada.view.widget.Statuskombi', {
     initComponent: function() {
         this.textFieldCls = 'status-empty';
         this.callParent(arguments);
-    },
 
-    changebutton: function() {
         var i18n = Lada.getApplication().bundle;
-        var btn = Ext.create('Ext.Button', {
+        this.add({
+            xtype: 'button',
             text: i18n.getMsg('button.changestatus'),
             tooltip: i18n.getMsg('button.changestatus.qtip'),
             action: 'newstatus',
@@ -46,7 +45,6 @@ Ext.define('Lada.view.widget.Statuskombi', {
             disabled: true,
             listeners: this.buttonListener
         });
-        return btn;
     },
 
 
@@ -87,16 +85,11 @@ Ext.define('Lada.view.widget.Statuskombi', {
 
             }
         });
-        // instead of overwriting/appending initComponent, add the button at
-        // loading of values
-        var button = this.down('button[action=newstatus]');
-        if (!button) {
-            this.add(this.changebutton());
-        }
     },
 
 
-    /**Checks if the current value is unresetable
+    /**
+     * Checks if the current value is unresetable
      * @return True if state is resetable, else false
      */
     checkResetableState: function() {
@@ -113,21 +106,11 @@ Ext.define('Lada.view.widget.Statuskombi', {
     },
 
     setReadOnly: function(readonly) {
-        var button = this.down('button[action=newstatus]');
-        if (!readonly) {
-            button.setDisabled(false);
-        } else {
-            button.setDisabled(true);
-        }
+        this.down('button[action=newstatus]').setDisabled(readonly);
     },
 
     setResetable: function(resetable) {
-        var button = this.down('button[action=resetstatus]');
-        if (resetable) {
-            button.setDisabled(false);
-        } else {
-            button.setDisabled(true);
-        }
+        this.down('button[action=resetstatus]').setDisabled(!resetable);
     }
 
 });

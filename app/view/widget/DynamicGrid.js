@@ -410,7 +410,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     default:
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
-                            if (value === 0 || value === null)  {
+                            if (value === 0 || value === null) {
                                 return value;
                             }
                             return value || '';
@@ -468,7 +468,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 click: function(button) {
                     var id = Number(button.text);
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    var win = Ext.create('Lada.view.window.ProbeEdit', {
+                    var win = Ext.create('Lada.view.window.Probe', {
                         style: 'z-index: -1;',
                         recordId: id
                     });
@@ -509,7 +509,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     var id = Number(button.text);
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
                     var win = Ext.create(
-                        'Lada.view.window.MessungEdit', {
+                        'Lada.view.window.Messung', {
                             style: 'z-index: -1;',
                             recordId: id
                         });
@@ -520,7 +520,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 if (success) {
                                     var messungRecord = record;
                                     var probeWin = Ext.create(
-                                        'Lada.view.window.ProbeEdit', {
+                                        'Lada.view.window.Probe', {
                                             style: 'z-index: -1;',
                                             recordId: messungRecord.get(
                                                 'sampleId')
@@ -659,9 +659,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         col.xtype = 'datecolumn';
         col.format = orig_column.get('disp').format;
         col.renderer = function(value) {
-            // Convert string representing milliseconds since epoch
-            return Lada.util.Date.formatTimestamp(
-                parseInt(value, 10), col.format, true);
+            var date = Ext.Date.parse(value, Ext.data.field.Date.DATE_FORMAT);
+            return Lada.util.Date.formatTimestamp(date, col.format, true);
         };
     },
 

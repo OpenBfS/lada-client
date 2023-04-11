@@ -34,16 +34,13 @@ Ext.define('Lada.model.StatusProt', {
         persist: false
     }, {
         name: 'treeMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'parentModified',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'date',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'text'
     }]

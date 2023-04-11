@@ -13,10 +13,12 @@ Ext.define('Lada.view.form.Ort', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.ortform',
     requires: [
+        'Lada.controller.form.Ort',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat',
         'Lada.view.widget.KoordinatenArt'
     ],
+    controller: 'ortform',
     model: null,
 
     margin: 5,
@@ -62,7 +64,7 @@ Ext.define('Lada.view.form.Ort', {
         }, {
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 15,
+            maxLength: 20,
             name: 'shortText',
             fieldLabel: i18n.getMsg('orte.kurztext')
         }, {

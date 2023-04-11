@@ -13,7 +13,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.window.DeleteMultipleItems',
-        'Lada.view.window.ProbeCreate',
+        'Lada.view.window.GenProbenFromMessprogramm',
+        'Lada.view.window.Probe',
         'Lada.view.window.SetTags',
         'Lada.view.window.TagManagement'
     ],
@@ -41,6 +42,18 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             },
             'button[action=genericadd]': {
                 click: this.addData
+            },
+            'dynamicgrid toolbar button[action=genProbenFromMessprogramm]': {
+                click: this.genProbenFromMessprogramm
+            },
+            'dynamicgrid toolbar button [action=setActiveNo]': {
+                click: this.setActiveNo
+            },
+            'dynamicgrid toolbar button [action=setActiveYes]': {
+                click: this.setActiveYes
+            },
+            'dynamicgrid toolbar button[action=setstatus]': {
+                click: this.setStatus
             },
             'button[action=addMap]': {
                 click: this.activateDraw
@@ -150,7 +163,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         switch (row.grid.rowtarget.dataType) {
             case 'messungId':
                 win = Ext.create(
-                    'Lada.view.window.MessungEdit', {
+                    'Lada.view.window.Messung', {
                         recordId: id,
                         style: 'z-index: -1;'
                     });
@@ -169,7 +182,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                             if (success) {
                                 var messungRecord = newRecord;
                                 var probeWin = Ext.create(
-                                    'Lada.view.window.ProbeEdit', {
+                                    'Lada.view.window.Probe', {
                                         recordId: messungRecord.get('sampleId'),
                                         style: 'z-index: -1;'
                                     });
@@ -201,11 +214,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                             return;
                                         }
                                         /* eslint-enable max-len */
-                                        var pjson = poperation ?
-                                            Ext.decode(
-                                                poperation.getResponse()
-                                                    .responseText) :
-                                            null;
+                                        var pjson = Ext.decode(
+                                            poperation.getResponse()
+                                                .responseText);
                                         probeWin.setRecord(precord);
                                         probeWin.initData(precord);
                                         probeWin.setMessages(
@@ -215,11 +226,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                         win.setProbe(precord);
                                         win.setRecord(messungRecord);
                                         win.initData(messungRecord);
-                                        var json = operation ?
-                                            Ext.decode(
-                                                operation.getResponse()
-                                                    .responseText) :
-                                            null;
+                                        var json = Ext.decode(
+                                            operation.getResponse()
+                                                .responseText);
                                         win.setMessages(
                                             json.errors,
                                             json.warnings,
@@ -230,7 +239,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 }
                 break;
             case 'probeId':
-                win = Ext.create('Lada.view.window.ProbeEdit', {
+                win = Ext.create('Lada.view.window.Probe', {
                     style: 'z-index: -1;',
                     recordId: id
                 });
@@ -243,10 +252,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                             if (success) {
                                 win.setRecord(newRecord);
                                 win.initData(newRecord);
-                                var json = operation ?
-                                    Ext.decode(
-                                        operation.getResponse().responseText) :
-                                    null;
+                                var json = Ext.decode(
+                                    operation.getResponse().responseText);
                                 win.setMessages(
                                     json.errors,
                                     json.warnings,
@@ -371,7 +378,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     win.show();
                     break;
                 case 'probeId':
-                    win = Ext.create('Lada.view.window.ProbeCreate');
+                    win = Ext.create('Lada.view.window.Probe');
                     win.initData();
                     win.show();
                     win.setPosition(30);
@@ -414,6 +421,134 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     ).show();
             }
         }
+    },
+
+    /**
+     * This button creates a window to generate Proben
+     * from a selected messprogramm.
+     */
+    genProbenFromMessprogramm: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection();
+        var ids = [];
+        for (var i = 0; i < selection.length; i++) {
+            ids.push(selection[i].data[grid.rowtarget.dataIndex]);
+        }
+        var win = Ext.create('Lada.view.window.GenProbenFromMessprogramm', {
+            ids: ids,
+            parentWindow: grid
+        });
+        win.show();
+    },
+
+    setActiveNo: function(button) {
+        this.doSetActive(false, button);
+    },
+    setActiveYes: function(button) {
+        this.doSetActive(true, button);
+    },
+    doSetActive: function(active, button) {
+        var i18n = Lada.getApplication().bundle;
+        var ids = [];
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection();
+        for (var i = 0; i < selection.length; i++) {
+            ids.push(selection[i].data[grid.rowtarget.dataIndex]);
+        }
+        if (ids.length) {
+            Ext.Ajax.request({
+                url: 'lada-server/rest/mpg/aktiv',
+                method: 'PUT',
+                jsonData: {
+                    aktiv: active,
+                    ids: ids
+                },
+                success: function(response) {
+                    var json = Ext.JSON.decode(response.responseText);
+                    var resultMessage = '';
+                    for (var j = 0; j < json.data.length; j++) {
+                        if (json.data[j].success !== 200) {
+                            resultMessage += '<strong>'
+                                + i18n.getMsg('messprogramm') + ': '
+                                + json.data[j].id
+                                + '</strong><br><dd>'
+                                + i18n.getMsg(json.data[j].success)
+                                + '</dd><br>';
+                        }
+                    }
+                    if (resultMessage) {
+                        var errorWin = Ext.create('Ext.window.Window', {
+                            title: i18n.getMsg('setActiveMp.failure.title'),
+                            modal: true,
+                            layout: 'vbox',
+                            width: 340,
+                            height: 165,
+                            autoScroll: true,
+                            items: [{
+                                xtype: 'container',
+                                html: resultMessage,
+                                margin: '10, 5, 5, 5'
+                            }, {
+                                xtype: 'container',
+                                layout: 'hbox',
+                                items: [{
+                                    xtype: 'button',
+                                    text: i18n.getMsg('close'),
+                                    margin: '5, 0, 5, 5',
+                                    handler: function() {
+                                        errorWin.close();
+                                    }
+                                }]
+                            }]
+                        });
+                        errorWin.show();
+                    }
+                    var grids = Ext.ComponentQuery.query('dynamicgrid');
+                    if (grids.length) {
+                        grids[0].reload();
+                    }
+                },
+                failure: function() {
+                    var errorWin = Ext.create('Ext.window.Window', {
+                        title: i18n.getMsg('setActiveMp.failure.title'),
+                        modal: true,
+                        layout: 'vbox',
+                        items: [{
+                            xtype: 'container',
+                            html: i18n.getMsg('export.failednoreason'),
+                            margin: '10, 5, 5, 5'
+                        }, {
+                            xtype: 'container',
+                            layout: 'hbox',
+                            items: [{
+                                xtype: 'button',
+                                text: i18n.getMsg('close'),
+                                margin: '5, 0, 5, 5',
+                                handler: function() {
+                                    errorWin.close();
+                                }
+                            }]
+                        }]
+                    });
+                    errorWin.show();
+                }
+            });
+        }
+    },
+
+    /**
+     * Sets the Status on Bulk
+     **/
+    setStatus: function(button) {
+        var i18n = Lada.getApplication().bundle;
+        var grid = button.up('grid');
+        var win = Ext.create('Lada.view.window.SetStatus', {
+            title: i18n.getMsg('statusSetzen.win.title'),
+            grid: grid,
+            modal: true,
+            selection: grid.getView().getSelectionModel().getSelection()
+        });
+        win.show();
     },
 
     activateDraw: function(button) {

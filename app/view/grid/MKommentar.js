@@ -12,7 +12,11 @@
 Ext.define('Lada.view.grid.MKommentar', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.mkommentargrid',
-    requires: ['Lada.store.MKommentare'],
+    controller: 'mkommentargrid',
+    requires: [
+        'Lada.controller.grid.MKommentar',
+        'Lada.store.MKommentare'
+    ],
 
     maxHeight: 350,
     minHeight: 130,
@@ -20,11 +24,12 @@ Ext.define('Lada.view.grid.MKommentar', {
         deferEmptyText: false
     },
 
-    recordId: null,
     readOnly: true,
     allowDeselect: true,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.MKommentare');
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.kommentare');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -66,92 +71,102 @@ Ext.define('Lada.view.grid.MKommentar', {
                 action: 'delete'
             }]
         }];
-        this.columns = [{
-            header: i18n.getMsg('header.datum'),
-            dataIndex: 'date',
-            xtype: 'datecolumn',
-            format: 'd.m.Y H:i',
-            width: 110,
-            renderer: function(value) {
-                if (!value || value === '') {
-                    return '';
+        this.columns = {
+            items: [{
+                header: i18n.getMsg('header.datum'),
+                dataIndex: 'date',
+                xtype: 'datecolumn',
+                format: 'd.m.Y H:i',
+                width: 110,
+                renderer: function(value, metaData, record) {
+                    this.validationResultRenderer(value, metaData, record);
+                    if (!value || value === '') {
+                        return '';
+                    }
+                    var format = 'd.m.Y H:i';
+                    var dt = '';
+                    if (!isNaN(value)) {
+                        dt = Lada.util.Date.formatTimestamp(
+                            value, format, true);
+                    }
+                    return dt;
                 }
-                var format = 'd.m.Y H:i';
-                var dt = '';
-                if (!isNaN(value)) {
-                    dt = Lada.util.Date.formatTimestamp(value, format, true);
+            }, {
+                header: i18n.getMsg('erzeuger'),
+                dataIndex: 'measFacilId',
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var r = '';
+                    if (!value || value === '') {
+                        r = 'Error';
+                    }
+                    var store = Ext.data.StoreManager.get('messstellen');
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('name');
+                    }
+                    return r;
+                },
+                editor: {
+                    xtype: 'combobox',
+                    store: Ext.data.StoreManager.get('messstellenFiltered'),
+                    displayField: 'name',
+                    valueField: 'id',
+                    allowBlank: false,
+                    editable: false,
+                    matchFieldWidth: false
                 }
-                return dt;
+            }, {
+                header: i18n.getMsg('text'),
+                dataIndex: 'text',
+                flex: 1,
+                renderer: function(value, metaData, record) {
+                    var val = '<div style="white-space: normal !important;">' +
+                    value + '</div>';
+                    this.validationResultRenderer(val, metaData, record);
+                    return val;
+                },
+                editor: {
+                    xtype: 'textfield',
+                    allowBlank: false,
+                    maxLength: 1000,
+                    enforceMaxLength: true
+                }
+            }],
+            defaults: {
+                renderer: this.validationResultRenderer
             }
-        }, {
-            header: i18n.getMsg('erzeuger'),
-            dataIndex: 'measFacilId',
-            renderer: function(value) {
-                var r = '';
-                if (!value || value === '') {
-                    r = 'Error';
-                }
-                var store = Ext.data.StoreManager.get('messstellen');
-                var record = store.getById(value);
-                if (record) {
-                    r = record.get('name');
-                }
-                return r;
-            },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messstellenFiltered'),
-                displayField: 'name',
-                valueField: 'id',
-                allowBlank: false,
-                editable: false,
-                matchFieldWidth: false
-            }
-        }, {
-            header: i18n.getMsg('text'),
-            dataIndex: 'text',
-            flex: 1,
-            renderer: function(value) {
-                return '<div style="white-space: normal !important;">' +
-                value + '</div>';
-            },
-            editor: {
-                xtype: 'textfield',
-                allowBlank: false,
-                maxLength: 1000,
-                enforceMaxLength: true
-            }
-        }];
+        };
         this.listeners = {
             select: {
-                fn: this.activateRemoveButton,
+                fn: function() {
+                    this.activateRemoveButton(true);
+                },
                 scope: this
             },
             deselect: {
-                fn: this.deactivateRemoveButton,
+                fn: function() {
+                    this.activateRemoveButton(false);
+                },
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
-        if (this.store) {
-            this.store.removeAll();
-        } else {
-            this.store = Ext.create('Lada.store.MKommentare');
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    measmId: parentId
+                }
+            });
         }
-        this.addLoadingFailureHandler(this.store);
-        this.store.load({
-            params: {
-                measmId: this.recordId
-            }
-        });
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('mkommentargrid');
-            for (i=0; i<grid.length; i++) {
+            for (i = 0; i < grid.length; i++) {
                 grid[i].reload(function() {
                     Ext.ComponentQuery.query(
                         'timezonebutton[action=toggletimezone]')[0]
@@ -165,14 +180,12 @@ Ext.define('Lada.view.grid.MKommentar', {
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-        }
         this.hideReloadMask();
         this.store.reload();
     },
 
     setReadOnly: function(b) {
+        this.readOnly = b;
         if (b === true) {
             //Readonly
             if (this.getPlugin('rowedit')) {
@@ -189,24 +202,14 @@ Ext.define('Lada.view.grid.MKommentar', {
             this.down('button[action=add]').enable();
         }
     },
+
     /**
-     * Activate the Remove Button
+     * De-/Activate the Remove Button
      */
-    activateRemoveButton: function() {
-        var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
-            grid.down('button[action=delete]').enable();
-        }
-    },
-    /**
-     * Activate the Remove Button
-     */
-    deactivateRemoveButton: function() {
-        var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
-            grid.down('button[action=delete]').disable();
+    activateRemoveButton: function(activate) {
+        // Only enable the remove buttone, if the grid is editable.
+        if (!this.readOnly) {
+            this.down('button[action=delete]').setDisabled(!activate);
         }
     }
 });

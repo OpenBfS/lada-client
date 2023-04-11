@@ -14,6 +14,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     alias: 'widget.ortszuordnungform',
 
     requires: [
+        'Lada.controller.form.Ortszuordnung',
         'Lada.view.form.OrtInfo',
         'Lada.view.widget.OrtszuordnungTyp',
         'Lada.view.widget.OrtsZusatz',
@@ -22,6 +23,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         'Lada.view.widget.base.TextArea'
     ],
 
+    controller: 'ortszuordnungform',
     layout: 'fit',
     margin: '5, 5, 0, 5',
     border: false,
@@ -234,10 +236,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      * Helper to trigger the forms' validity check
      */
     changed: function() {
-        var controller = Lada.app.getController(
-            'Lada.controller.form.Ortszuordnung');
-        var form = this.up('form').getForm();
-        controller.validityChange(form, form.isValid());
+        this.fireEvent('validitychange', this, this.isValid());
     },
 
     /**

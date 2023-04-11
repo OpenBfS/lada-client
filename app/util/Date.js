@@ -13,6 +13,7 @@
 Ext.define('Lada.util.Date', {
 
     statics: {
+
         /*
          * Toggled if time should be displayed in UTC
          */
@@ -47,8 +48,9 @@ Ext.define('Lada.util.Date', {
         },
 
         /**
-         * Create a time string from a timestamp using the defined format
-         * @param {Number} timestamp Unix timestamp to use
+         * Create a time string from a given input using the defined format
+         * @param {Number|Date} timestamp Date object or Unix timestamp to
+         *                                format
          * @param {String} format Format string to use
          * @param {Boolean} extFormat True if format string is a ExtJS format,
          *                      false if format is a moment.js format string

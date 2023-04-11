@@ -25,8 +25,6 @@ Ext.define('Lada.view.grid.Messung', {
     },
     margin: '0, 5, 15, 5',
 
-    recordId: null,
-
     warnings: null,
     errors: null,
     readOnly: true,
@@ -40,6 +38,8 @@ Ext.define('Lada.view.grid.Messung', {
     messwerteLoading: false,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.Messungen');
+
         var i18n = Lada.getApplication().bundle;
         var me = this;
         this.emptyText = i18n.getMsg('emptytext.messungen');
@@ -208,7 +208,6 @@ Ext.define('Lada.view.grid.Messung', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         if (!this.bottomBar) {
             this.down('toolbar[dock=bottom]').hide();
@@ -218,20 +217,21 @@ Ext.define('Lada.view.grid.Messung', {
 
     initData: function() {
         this.setLoading(true);
-        this.store = Ext.create('Lada.store.Messungen');
-        this.addLoadingFailureHandler(this.store);
-        this.store.load({
-            params: {
-                sampleId: this.recordId
-            },
-            callback: function() {
-                this.setLoading(false);
-            },
-            scope: this
-        });
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    sampleId: parentId
+                },
+                callback: function() {
+                    this.setLoading(false);
+                },
+                scope: this
+            });
+        }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('messunggrid');
-            for (i=0; i<grid.length; i++) {
+            for (i = 0; i < grid.length; i++) {
                 grid[i].reload(function() {
                     Ext.ComponentQuery.query(
                         'timezonebutton[action=toggletimezone]')[0]
@@ -245,10 +245,6 @@ Ext.define('Lada.view.grid.Messung', {
      * Reload this grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

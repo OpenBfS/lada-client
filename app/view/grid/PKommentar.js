@@ -12,9 +12,10 @@
 Ext.define('Lada.view.grid.PKommentar', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.pkommentargrid',
-
+    controller: 'pkommentargrid',
     requires: [
         'Ext.toolbar.Toolbar',
+        'Lada.controller.grid.PKommentar',
         'Lada.store.PKommentare'
     ],
 
@@ -24,11 +25,12 @@ Ext.define('Lada.view.grid.PKommentar', {
         deferEmptyText: false
     },
 
-    recordId: null,
     readOnly: true,
     allowDeselect: true,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.PKommentare');
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.kommentare');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -71,60 +73,69 @@ Ext.define('Lada.view.grid.PKommentar', {
                 action: 'delete'
             }]
         }];
-        this.columns = [{
-            header: i18n.getMsg('header.datum'),
-            dataIndex: 'date',
-            xtype: 'datecolumn',
-            format: 'd.m.Y H:i',
-            width: 110,
-            renderer: function(value) {
-                if (!value || value === '') {
-                    return '';
+        this.columns = {
+            items: [{
+                header: i18n.getMsg('header.datum'),
+                dataIndex: 'date',
+                xtype: 'datecolumn',
+                format: 'd.m.Y H:i',
+                width: 110,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    if (!value || value === '') {
+                        return '';
+                    }
+                    var format = 'd.m.Y H:i';
+                    var dt = '';
+                    if (!isNaN(value)) {
+                        dt = Lada.util.Date.formatTimestamp(
+                            value, format, true);
+                    }
+                    return dt;
                 }
-                var format = 'd.m.Y H:i';
-                var dt = '';
-                if (!isNaN(value)) {
-                    dt = Lada.util.Date.formatTimestamp(value, format, true);
+            }, {
+                header: i18n.getMsg('erzeuger'),
+                dataIndex: 'measFacilId',
+                width: 140,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var r = '';
+                    if (!value || value === '') {
+                        r = 'Error';
+                    }
+                    var store = Ext.data.StoreManager.get('messstellen');
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('name');
+                    }
+                    return r;
+                },
+                editor: {
+                    xtype: 'combobox',
+                    store: Ext.data.StoreManager.get('messstellenFiltered'),
+                    displayField: 'name',
+                    valueField: 'id',
+                    allowBlank: false,
+                    matchFieldWidth: false
                 }
-                return dt;
-            }
-        }, {
-            header: i18n.getMsg('erzeuger'),
-            dataIndex: 'measFacilId',
-            width: 140,
-            renderer: function(value) {
-                var r = '';
-                if (!value || value === '') {
-                    r = 'Error';
-                }
-                var store = Ext.data.StoreManager.get('messstellen');
-                var record = store.getById(value);
-                if (record) {
-                    r = record.get('name');
-                }
-                return r;
-            },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messstellenFiltered'),
-                displayField: 'name',
-                valueField: 'id',
-                allowBlank: false,
-                matchFieldWidth: false
-            }
-        }, {
-            header: i18n.getMsg('text'),
-            dataIndex: 'text',
-            flex: 1,
-            renderer: function(value) {
-                return '<div style="white-space: normal !important;">' +
+            }, {
+                header: i18n.getMsg('text'),
+                dataIndex: 'text',
+                flex: 1,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    return '<div style="white-space: normal !important;">' +
                     value + '</div>';
-            },
-            editor: {
-                xtype: 'textfield',
-                allowBlank: false
+                },
+                editor: {
+                    xtype: 'textfield',
+                    allowBlank: false
+                }
+            }],
+            defaults: {
+                renderer: this.validationResultRenderer
             }
-        }];
+        };
         this.listeners = {
             select: {
                 fn: this.activateRemoveButton,
@@ -135,22 +146,22 @@ Ext.define('Lada.view.grid.PKommentar', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
-        this.store = Ext.create('Lada.store.PKommentare');
-        this.addLoadingFailureHandler(this.store);
-        this.store.load({
-            params: {
-                sampleId: this.recordId
-            }
-        });
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    sampleId: parentId
+                }
+            });
+        }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('pkommentargrid');
-            for (i=0; i<grid.length; i++) {
+            for (i = 0; i < grid.length; i++) {
                 grid[i].reload(function() {
                     Ext.ComponentQuery.query(
                         'timezonebutton[action=toggletimezone]')[0]
@@ -164,10 +175,6 @@ Ext.define('Lada.view.grid.PKommentar', {
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

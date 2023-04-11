@@ -89,8 +89,7 @@ Ext.define('Lada.model.Mpg', {
         type: 'int'
     }, {
         name: 'lastMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'media',
         persist: false

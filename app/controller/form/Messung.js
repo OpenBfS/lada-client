@@ -10,7 +10,8 @@
  * This is a controller for a Messung form
  */
 Ext.define('Lada.controller.form.Messung', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.messungform',
     requires: ['Lada.view.window.SetStatus'],
 
     /**
@@ -60,9 +61,10 @@ Ext.define('Lada.controller.form.Messung', {
         }
 
         record.save({
+            scope: this,
             success: function(newRecord, response) {
-                var oldWin = button.up('window');
-                var parentWin = oldWin.parentWindow;
+                var win = button.up('window');
+                var parentWin = win.parentWindow;
                 if (parentWin) {
                     parentWin.initData();
                     var messunggrid = parentWin.down('messunggrid');
@@ -76,62 +78,28 @@ Ext.define('Lada.controller.form.Messung', {
                     parentGrid[0].reload();
                 }
 
-                var json = Ext.decode(response.getResponse().responseText);
-                if (response.action === 'create') {
-                    // Close MessungCreate window and show the new record
-                    // in a new MessungEdit window
-                    oldWin.close();
-                    var win = Ext.create('Lada.view.window.MessungEdit', {
-                        probe: oldWin.record,
-                        parentWindow: parentWin,
-                        grid: oldWin.grid,
-                        record: record
-                    });
-                    win.initData(record);
-                    win.show();
-                    win.setMessages(json.errors, json.warnings,
-                                    json.notifications);
-                    win.setPosition(35 + parentWin.width);
+                // Close existing window or update form
+                if (win.closeRequested) {
+                    win.doClose();
                 } else {
-                    // Close or update existing window
-                    if (oldWin.closeRequested) {
-                        oldWin.doClose();
-                    } else {
-                        formPanel.setRecord(newRecord);
-                        formPanel.setMessages(
-                            json.errors, json.warnings, json.notifications);
-                        oldWin.down('messwertgrid').getStore().reload();
-                        formPanel.setLoading(false);
+                    win.setRecord(newRecord);
+                    win.setTitle(win.createTitle());
+                    formPanel.setRecord(newRecord);
+                    win.down('button[action=tagedit]').setDisabled(false);
+                    win.down('button[name=reload]').setDisabled(false);
+                    win.disableChildren(
+                        newRecord.get('readonly') || !newRecord.get('owner'));
+                    var json = Ext.decode(response.getResponse().responseText);
+                    win.setMessages(
+                        json.errors, json.warnings, json.notifications);
+                    var messwertStore = win.down('messwertgrid').getStore();
+                    if (messwertStore.isLoaded()) {
+                        messwertStore.reload();
                     }
+                    formPanel.setLoading(false);
                 }
             },
-            failure: function(newRrecord, response) {
-                formPanel.loadRecord(record);
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.setMessages(json.errors, json.warnings,
-                            json.notifications);
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-                formPanel.setLoading(false);
-            }
+            failure: this.handleSaveFailure
         });
     },
 
@@ -196,7 +164,7 @@ Ext.define('Lada.controller.form.Messung', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'messung',
-            objectId: button.up('form').recordId,
+            objectId: button.up('form').getRecord().get('id'),
             titleText: titleText[0]
         });
         button.up('window').addChild(trail);

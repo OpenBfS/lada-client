@@ -35,11 +35,8 @@ Ext.define('Lada.view.grid.Orte', {
         name: 'ortpagingtoolbar'
     },
 
-    recordId: null,
-
     warnings: null,
     errors: null,
-    readOnly: true,
     allowDeselect: true,
     plugins: 'gridfilters',
 

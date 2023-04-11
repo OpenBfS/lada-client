@@ -13,11 +13,14 @@ Ext.define('Lada.view.form.Probenehmer', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.probenehmerform',
     requires: [
+        'Lada.controller.form.Probenehmer',
         'Lada.view.widget.Netzbetreiber',
         'Lada.model.Sampler'
     ],
 
     model: 'Lada.model.Sampler',
+    controller: 'probenehmerform',
+
     minWidth: 400,
     margin: 0,
     border: false,

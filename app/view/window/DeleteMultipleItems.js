@@ -193,31 +193,31 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 datatype = 'Probe ';
                 break;
             case 'messungId':
-                url += 'messung';
+                url += Lada.model.Measm.entityName.toLowerCase();
                 datatype = 'Messung ';
                 break;
             case 'mpId':
-                url += 'messprogramm';
+                url += Lada.model.Mpg.entityName.toLowerCase();
                 datatype = i18n.getMsg('messprogramm');
                 break;
             case 'probenehmer':
-                url += 'probenehmer';
+                url += Lada.model.Sampler.entityName.toLowerCase();
                 datatype = i18n.getMsg('probenehmer');
                 break;
             case 'dsatzerz':
-                url += 'datensatzerzeuger';
+                url += Lada.model.DatasetCreator.entityName.toLowerCase();
                 datatype = i18n.getMsg('datensatzerzeuger');
                 break;
             case 'mprkat':
-                url += 'messprogrammkategorie';
+                url += Lada.model.MpgCateg.entityName.toLowerCase();
                 datatype = i18n.getMsg('messprogrammkategorie');
                 break;
             case 'ortId':
-                url += 'ort';
+                url += Lada.model.Site.entityName.toLowerCase();
                 datatype = 'Ort';
                 break;
             case 'tagId':
-                url += 'tag';
+                url += Lada.model.Tag.entityName.toLowerCase();
                 datatype = 'Tag';
                 break;
         }
@@ -227,35 +227,27 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 url: url + '/' + id,
                 method: 'DELETE',
                 success: function(resp) {
-                    var json = Ext.JSON.decode(resp.responseText);
-                    var urlArr = resp.request.url.split('/');
-                    var delId = urlArr[urlArr.length - 1];
-                    var html = me.down('panel').html;
-                    if (json.success && json.message === '200') {
-                        /* Remove successfully deleted items from store
-                         * (and thus from grid) to avoid obsolete items in
-                         * grid, if not refreshed immediately */
-                        var store = me.parentGrid.getStore();
-                        var delIdx = store.find(
-                            me.parentGrid.rowtarget.dataIndex,
-                            delId, 0, false, true, true);
-                        if (delIdx > -1) {
-                            store.removeAt(delIdx);
-                        }
+                    var delId = resp.request.url.split('/').pop();
 
-                        html = html +
-                            i18n.getMsg(
-                                'deleteItems.callback.success',
-                                datatype,
-                                delId) +
-                            '<br>';
-                        me.down('panel').setHtml(html);
-                    } else {
-                        html = html + i18n.getMsg(
-                            'deleteItems.callback.failure', datatype, delId)
-                            + '<li>' + i18n.getMsg(json.message) + '</li><br>';
-                        me.down('panel').setHtml(html);
+                    /* Remove successfully deleted items from store
+                     * (and thus from grid) to avoid obsolete items in
+                     * grid, if not refreshed immediately */
+                    var store = me.parentGrid.getStore();
+                    var delIdx = store.find(
+                        me.parentGrid.rowtarget.dataIndex,
+                        delId, 0, false, true, true);
+                    if (delIdx > -1) {
+                        store.removeAt(delIdx);
                     }
+
+                    var html = me.down('panel').html;
+                    html = html +
+                        i18n.getMsg(
+                            'deleteItems.callback.success',
+                            datatype,
+                            delId) +
+                        '<br>';
+                    me.down('panel').setHtml(html);
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(
                         me.currentProgress / me.maxSteps);
@@ -264,8 +256,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     }
                 },
                 failure: function(resp) {
-                    var urlArr = resp.request.url.split('/');
-                    var delId = urlArr[urlArr.length - 1];
+                    var delId = resp.request.url.split('/').pop();
                     var html = me.down('panel').html;
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(

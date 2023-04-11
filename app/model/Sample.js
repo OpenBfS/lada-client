@@ -61,20 +61,17 @@ Ext.define('Lada.model.Sample', {
         allowNull: true
     }, {
         name: 'sampleStartDate',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'sampleEndDate',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'midSampleDate',
         type: 'int',
         allowNull: true
     }, {
         name: 'lastMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'datasetCreatorId',
         type: 'int',
@@ -101,23 +98,19 @@ Ext.define('Lada.model.Sample', {
         allowNull: true
     }, {
         name: 'schedStartDate',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'schedEndDate',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'origDate',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'readonly',
         type: 'boolean',
         persist: false
     }, {
         name: 'treeMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }]
 });

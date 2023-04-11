@@ -32,12 +32,10 @@ Ext.define('Lada.model.GeolocatMpg', {
         allowNull: true
     }, {
         name: 'lastMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'treeMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'copyOf',
         persist: false

@@ -467,10 +467,10 @@ Ext.define('Lada.view.window.GridExport', {
             var urlString = '';
             switch (this.rowexp.type) {
                 case 'Lada.view.grid.Messung':
-                    urlString = 'messung?probeId=' + data[i].get(di);
+                    urlString = 'measm?sampleId=' + data[i].get(di);
                     break;
                 case 'Lada.view.grid.Messwert':
-                    urlString = 'messwert?messungsId=' + data[i].get(di);
+                    urlString = 'measval?measmId=' + data[i].get(di);
                     break;
             }
             if (urlString) {

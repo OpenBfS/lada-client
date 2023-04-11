@@ -49,16 +49,13 @@ Ext.define('Lada.model.MeasVal', {
         type: 'int'
     }, {
         name: 'lastMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'treeMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'parentModified',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'warnings',
         persist: false

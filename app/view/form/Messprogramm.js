@@ -13,6 +13,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.messprogrammform',
     requires: [
+        'Lada.controller.form.Messprogramm',
         'Lada.util.FunctionScheduler',
         'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
@@ -31,10 +32,9 @@ Ext.define('Lada.view.form.Messprogramm', {
     ],
 
     model: 'Lada.model.Mpg',
+    controller: 'messprogrammform',
     margin: 5,
     border: false,
-
-    recordId: null,
 
     trackResetOnLoad: true,
 
@@ -149,7 +149,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             focusFilters: [
                                 function(item) {
                                     var functions = Lada.netzbetreiberFunktionen[
-                                        item.get('netzbetreiberId')];
+                                        item.get('networkId')];
                                     return functions
                                         && Ext.Array.contains(functions, 4);
                                 }
@@ -174,7 +174,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'betriebsart',
                             name: 'oprModeId',
                             margin: '0, 0, 5, 5',
-                            fieldLabel: i18n.getMsg('baId'),
+                            fieldLabel: i18n.getMsg('oprModeId'),
                             width: '50%',
                             labelWidth: 80
                         }]
@@ -561,7 +561,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         }
 
         var intrec = intervallstore
-            .findRecord('samplePd',
+            .findRecord('probenintervall',
                 intervall, 0, false, false, true);
 
         if (intrec) { // in cases when a new messprogramm is
