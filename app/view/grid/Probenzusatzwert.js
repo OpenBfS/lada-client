@@ -121,7 +121,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                     inputValue: '<'
                 }
             }, {
-                header: i18n.getMsg('messwert'),
+                header: i18n.getMsg('measVal'),
                 dataIndex: 'measVal',
                 flex: 1,
                 editor: {
@@ -143,7 +143,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                     + Math.abs(exponent).toString();
                 }
             }, {
-                header: i18n.getMsg('mehId'),
+                header: i18n.getMsg('unitId'),
                 dataIndex: 'sampleSpecifId',
                 flex: 1,
                 renderer: function(value, metaData, gridRec) {

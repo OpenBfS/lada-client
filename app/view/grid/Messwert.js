@@ -160,7 +160,7 @@ Ext.define('Lada.view.grid.Messwert', {
         }];
         this.columns = {
             items: [{
-                header: i18n.getMsg('messgroesseId'),
+                header: i18n.getMsg('measdId'),
                 dataIndex: 'measdId',
                 width: 118,
                 renderer: function(value, metaData, record) {
@@ -202,7 +202,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     inputValue: '<'
                 }
             }, {
-                header: i18n.getMsg('messwert'),
+                header: i18n.getMsg('measVal'),
                 dataIndex: 'measVal',
                 width: 80,
                 editor: {
@@ -248,7 +248,7 @@ Ext.define('Lada.view.grid.Messwert', {
                         + Math.abs(exponent).toString();
                 }
             }, {
-                header: i18n.getMsg('mehId'),
+                header: i18n.getMsg('unitId'),
                 dataIndex: 'measUnitId',
                 width: 120,
                 renderer: function(value, metaData, record) {

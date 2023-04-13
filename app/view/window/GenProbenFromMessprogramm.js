@@ -423,7 +423,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         return r;
                     }
                 }, {
-                    header: i18n.getMsg('datenbasisId'),
+                    header: i18n.getMsg('regulationId'),
                     dataIndex: 'regulationId',
                     renderer: function(value) {
                         var r = '';
@@ -455,7 +455,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         return r;
                     }
                 }, {
-                    header: i18n.getMsg('probenartId'),
+                    header: i18n.getMsg('sampleMethId'),
                     dataIndex: 'sampleMethId',
                     renderer: function(value) {
                         var r = '';
@@ -493,11 +493,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     header: i18n.getMsg('messprogramm.form.fieldset.title'),
                     dataIndex: 'mpgId'
                 }, {
-                    header: i18n.getMsg('mediaDesk'),
+                    header: i18n.getMsg('envDescripDisplay'),
                     dataIndex: 'envDescripDisplay'
                 }, {
                     //TODO: load description
-                    header: i18n.getMsg('umwId'),
+                    header: i18n.getMsg('envMediumId'),
                     dataIndex: 'envMediumId',
                     renderer: function(value) {
                         if (!value) {

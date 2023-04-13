@@ -105,7 +105,7 @@ Ext.define('Lada.view.grid.Messung', {
                 allowBlank: false
             }
         }, {
-            header: i18n.getMsg('nebenprobenNr'),
+            header: i18n.getMsg('minSampleId'),
             dataIndex: 'minSampleId',
             flex: 0.8,
             editor: {

@@ -117,7 +117,7 @@ Ext.define('Lada.view.form.Ort', {
                 maxLength: 100,
                 name: 'reiAgGrId',
                 editable: true,
-                fieldLabel: i18n.getMsg('reiProgpunktGrpId')
+                fieldLabel: i18n.getMsg('reiAgGrId')
             }, {
                 xtype: 'ktagruppe',
                 labelWidth: 125,

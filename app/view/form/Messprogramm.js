@@ -121,7 +121,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }, {
                             xtype: 'chkbox',
                             name: 'isTest',
-                            fieldLabel: i18n.getMsg('test'),
+                            fieldLabel: i18n.getMsg('isTest'),
                             margin: '0, 5, 5, 5',
                             width: '10%',
                             labelWidth: 30,
@@ -131,7 +131,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             editable: false,
                             allowBlank: false,
                             name: 'regulationId',
-                            fieldLabel: i18n.getMsg('datenbasisId'),
+                            fieldLabel: i18n.getMsg('regulationId'),
                             margin: '0, 5, 5, 5',
                             width: '32%',
                             labelWidth: 65
@@ -165,7 +165,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'probenart',
                             editable: false,
                             name: 'sampleMethId',
-                            fieldLabel: i18n.getMsg('probenartId'),
+                            fieldLabel: i18n.getMsg('sampleMethId'),
                             margin: '0, 5, 5, 5',
                             width: '50%',
                             labelWidth: 100,
@@ -259,7 +259,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         name: 'reiAgGrId',
                         width: '50%',
                         labelWidth: 140,
-                        fieldLabel: i18n.getMsg('reiProgpunktGrpId'),
+                        fieldLabel: i18n.getMsg('reiAgGrId'),
                         margin: '0 5 5 5',
                         allowBlank: true,
                         editable: true,
@@ -269,7 +269,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         name: 'nuclFacilGrId',
                         width: '50%',
                         labelWidth: 140,
-                        fieldLabel: i18n.getMsg('ktaGruppeId'),
+                        fieldLabel: i18n.getMsg('nuclFacilGrId'),
                         margin: '0 5 5 5',
                         hidden: true,
                         editable: true,
@@ -297,14 +297,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                             items: [{
                                 xtype: 'umwelt',
                                 name: 'envMediumId',
-                                fieldLabel: i18n.getMsg('umwId'),
+                                fieldLabel: i18n.getMsg('envMediumId'),
                                 labelWidth: 100,
                                 width: '58%',
                                 editable: true
                             }, {
                                 xtype: 'messeinheit',
                                 name: 'unitId',
-                                fieldLabel: i18n.getMsg('mehId'),
+                                fieldLabel: i18n.getMsg('unitId'),
                                 labelWidth: 75,
                                 width: '42%',
                                 margin: '0, 0, 5, 5',
@@ -324,7 +324,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 name: 'envDescripDisplay',
                                 width: '58%',
                                 labelWidth: 100,
-                                fieldLabel: i18n.getMsg('mediaDesk'),
+                                fieldLabel: i18n.getMsg('envDescripDisplay'),
                                 editable: false
                             }, {
                                 xtype: 'textfield',
