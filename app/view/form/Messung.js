@@ -116,7 +116,7 @@ Ext.define('Lada.view.form.Messung', {
                             maxLength: 10,
                             minValue: 0,
                             name: 'measPd',
-                            fieldLabel: i18n.getMsg('messdauer'),
+                            fieldLabel: i18n.getMsg('measPd'),
                             width: 300,
                             labelWidth: 100
                         }, {
@@ -134,7 +134,7 @@ Ext.define('Lada.view.form.Messung', {
                             xtype: 'tfield',
                             name: 'minSampleId',
                             maxLength: 4,
-                            fieldLabel: i18n.getMsg('nebenprobenNr'),
+                            fieldLabel: i18n.getMsg('minSampleId'),
                             width: 300,
                             labelWidth: 100
                         }, {

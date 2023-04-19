@@ -170,7 +170,7 @@ Ext.define('Lada.view.form.Probe', {
                         items: [{
                             xtype: 'tfield',
                             name: 'mainSampleId',
-                            fieldLabel: i18n.getMsg('hauptprobenNr'),
+                            fieldLabel: i18n.getMsg('mainSampleId'),
                             margin: '0, 5, 5, 5',
                             width: '35%',
                             labelWidth: 95,
@@ -187,7 +187,7 @@ Ext.define('Lada.view.form.Probe', {
                             xtype: 'probenart',
                             //editable: true,
                             name: 'sampleMethId',
-                            fieldLabel: i18n.getMsg('probenartId'),
+                            fieldLabel: i18n.getMsg('sampleMethId'),
                             margin: '0, 5, 5, 5',
                             width: '30%',
                             allowBlank: false,
@@ -336,7 +336,7 @@ Ext.define('Lada.view.form.Probe', {
                             width: '50%',
                             labelWidth: 140,
                             name: 'reiAgGrId',
-                            fieldLabel: i18n.getMsg('reiProgpunktGrpId'),
+                            fieldLabel: i18n.getMsg('reiAgGrId'),
                             margin: '0 5 5 5',
                             allowBlank: true,
                             editable: true,
@@ -346,7 +346,7 @@ Ext.define('Lada.view.form.Probe', {
                             width: '50%',
                             labelWidth: 140,
                             name: 'nuclFacilGrId',
-                            fieldLabel: i18n.getMsg('ktaGruppeId'),
+                            fieldLabel: i18n.getMsg('nuclFacilGrId'),
                             margin: '0 5 5 5',
                             hidden: true,
                             editable: true,
@@ -435,7 +435,7 @@ Ext.define('Lada.view.form.Probe', {
                         },
                         items: [{
                             xtype: 'datetime',
-                            fieldLabel: i18n.getMsg('ursprungszeit'),
+                            fieldLabel: i18n.getMsg('origDate'),
                             labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'origDate',
@@ -477,7 +477,7 @@ Ext.define('Lada.view.form.Probe', {
                                 width: '58%',
                                 margin: '0 5 0 0',
                                 labelWidth: 100,
-                                fieldLabel: i18n.getMsg('mediaDesk'),
+                                fieldLabel: i18n.getMsg('envDescripDisplay'),
                                 editable: false
                             }, {
                                 xtype: 'textfield',
