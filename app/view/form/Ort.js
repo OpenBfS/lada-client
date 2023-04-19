@@ -22,10 +22,10 @@ Ext.define('Lada.view.form.Ort', {
     model: null,
 
     margin: 5,
+    border: true,
+    bodyPadding: 5,
 
     scrollable: true,
-
-    border: false,
 
     record: null,
 
