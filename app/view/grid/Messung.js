@@ -164,7 +164,7 @@ Ext.define('Lada.view.grid.Messung', {
                 return st;
             }
         }, {
-            header: i18n.getMsg('header.fertig'),
+            header: i18n.getMsg('isCompleted'),
             dataIndex: 'isCompleted',
             flex: 0.8,
             renderer: function(value) {
