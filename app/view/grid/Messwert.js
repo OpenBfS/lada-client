@@ -363,7 +363,7 @@ Ext.define('Lada.view.grid.Messwert', {
         });
     },
 
-    initData: function() {
+    initData: function(parentId) {
         if (this.umwId) {
             var umwStore = Ext.create('Lada.store.Umwelt');
             this.addLoadingFailureHandler(umwStore);
@@ -386,7 +386,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 }
             });
         }
-        var parentId = this.getParentRecordId();
+        parentId = parentId? parentId: this.getParentRecordId();
         if (parentId) {
             this.store.load({
                 params: {

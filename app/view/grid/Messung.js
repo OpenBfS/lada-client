@@ -215,9 +215,9 @@ Ext.define('Lada.view.grid.Messung', {
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
-    initData: function() {
+    initData: function(parentId) {
         this.setLoading(true);
-        var parentId = this.getParentRecordId();
+        parentId = parentId? parentId: this.getParentRecordId();
         if (parentId) {
             this.store.load({
                 params: {
