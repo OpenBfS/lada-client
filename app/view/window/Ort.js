@@ -132,6 +132,7 @@ Ext.define('Lada.view.window.Ort', {
             }
             title += ' - ' + i18n.getMsg('orte.ortId') + ': ' +
                 this.record.get('extId');
+            this.down('siteimages').setReadonly(this.record.get('readonly'));
         }
 
         this.setTitle(title);

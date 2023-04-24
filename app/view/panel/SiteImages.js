@@ -25,7 +25,8 @@ Ext.define('Lada.view.panel.SiteImages', {
             .setSrc(this.baseUrl + siteId + this.imgPath);
         this.down('image[name=mapImg]')
             .setSrc(this.baseUrl + siteId + this.mapPath);
-        this.setReadonly(this.site.get('readonly'));
+        //Set readonly if site is readonly or phantom
+        this.setReadonly(this.site.get('readonly') || this.site.phantom);
     },
 
     initUI: function() {
