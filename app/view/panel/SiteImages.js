@@ -44,9 +44,15 @@ Ext.define('Lada.view.panel.SiteImages', {
                         text: i18n.getMsg('form.site.label.photo')
                     }, {
                         xtype: 'filefield',
+                        buttonText: i18n.getMsg('search'),
                         name: 'photofile',
+                        grow: true,
+                        growMin: 200,
                         listeners: {
-                            change: function(field) {
+                            change: function(field, value) {
+                                var newValue = value.replace(
+                                    /C:\\fakepath\\/g, '');
+                                field.setRawValue(newValue);
                                 var widget = field.up('siteimages');
                                 this.up('panel')
                                     .down('button[name=uploadPhoto]')
@@ -94,9 +100,15 @@ Ext.define('Lada.view.panel.SiteImages', {
                         text: i18n.getMsg('form.site.label.map')
                     }, {
                         xtype: 'filefield',
+                        buttonText: i18n.getMsg('search'),
                         name: 'mapfile',
+                        grow: true,
+                        growMin: 200,
                         listeners: {
-                            change: function(field) {
+                            change: function(field, value) {
+                                var newValue = value.replace(
+                                    /C:\\fakepath\\/g, '');
+                                field.setRawValue(newValue);
                                 var widget = field.up('siteimages');
                                 this.up('panel').down('button[name=uploadMap]')
                                     .setDisabled(false);
