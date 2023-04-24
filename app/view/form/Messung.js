@@ -147,7 +147,7 @@ Ext.define('Lada.view.form.Messung', {
                         }, {
                             xtype: 'chkbox',
                             name: 'isCOmpleted',
-                            fieldLabel: i18n.getMsg('fertig'),
+                            fieldLabel: i18n.getMsg('isCompleted'),
                             width: 300,
                             labelWidth: 100
                         }]

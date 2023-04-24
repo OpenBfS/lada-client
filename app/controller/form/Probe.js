@@ -477,7 +477,7 @@ Ext.define('Lada.controller.form.Probe', {
         reiStore.proxy.extraParams = {};
         var umwId = combo.getModelData().envMediumId;
         if (umwId || umwId === 0) {
-            reiStore.proxy.extraParams.umwelt = umwId;
+            reiStore.proxy.extraParams.envMediumId = umwId;
         }
         reiStore.load();
 
@@ -487,7 +487,7 @@ Ext.define('Lada.controller.form.Probe', {
         if (pzwFset !== null) {
             var params = {};
             if (umwId) {
-                params['umwId'] = umwId;
+                params['envMediumId'] = umwId;
             }
             pzwFset.down('probenzusatzwertgrid').pzStore.load({
                 params: params

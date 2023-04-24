@@ -164,7 +164,7 @@ Ext.define('Lada.view.grid.Messung', {
                 return st;
             }
         }, {
-            header: i18n.getMsg('header.fertig'),
+            header: i18n.getMsg('isCompleted'),
             dataIndex: 'isCompleted',
             flex: 0.8,
             renderer: function(value) {
@@ -215,9 +215,9 @@ Ext.define('Lada.view.grid.Messung', {
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
-    initData: function() {
+    initData: function(parentId) {
         this.setLoading(true);
-        var parentId = this.getParentRecordId();
+        parentId = parentId? parentId: this.getParentRecordId();
         if (parentId) {
             this.store.load({
                 params: {
