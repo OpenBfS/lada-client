@@ -125,7 +125,7 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
             cls: 'row-expander-grid'
         });
         var grid = Ext.create(me.type, gridConfig);
-        grid.initData(parentId)
+        grid.initData(parentId);
         return grid;
     },
 
