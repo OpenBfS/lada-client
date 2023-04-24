@@ -115,7 +115,6 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'tfield',
             labelWidth: 125,
             readOnly: true,
-            maxLength: 10,
             name: 'lastMod',
             fieldLabel: i18n.getMsg('letzteAenderung')
         }, {
