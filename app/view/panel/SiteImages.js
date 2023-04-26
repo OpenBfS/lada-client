@@ -21,10 +21,11 @@ Ext.define('Lada.view.panel.SiteImages', {
         this.initUI();
         this.callParent(arguments);
         var siteId = this.site.get('id');
+        var dc = '?dc=' + Date.now();
         this.down('image[name=imageImg]')
-            .setSrc(this.baseUrl + siteId + this.imgPath);
+            .setSrc(this.baseUrl + siteId + this.imgPath + dc);
         this.down('image[name=mapImg]')
-            .setSrc(this.baseUrl + siteId + this.mapPath);
+            .setSrc(this.baseUrl + siteId + this.mapPath + dc);
         //Set readonly if site is readonly or phantom
         this.setReadonly(this.site.get('readonly') || this.site.phantom);
     },
@@ -180,8 +181,11 @@ Ext.define('Lada.view.panel.SiteImages', {
             scope: this,
             binaryData: binFile,
             success: function() {
+                var time = Date.now();
+                var url = this.baseUrl + this.site.get('id') + path;
+                url += '?dc=' + time;
                 component.setSrc(null);
-                component.setSrc(this.baseUrl + this.site.get('id') + path);
+                component.setSrc(url);
             },
             failure: function(response) {
                 var i18n = Lada.getApplication().bundle;
