@@ -112,7 +112,7 @@ Ext.define('Lada.view.form.Ort', {
             name: 'route',
             fieldLabel: i18n.getMsg('orte.route')
         }, {
-            xtype: 'tfield',
+            xtype: 'datetimefield',
             labelWidth: 125,
             readOnly: true,
             name: 'lastMod',
