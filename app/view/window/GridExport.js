@@ -972,9 +972,9 @@ Ext.define('Lada.view.window.GridExport', {
                 store = Ext.data.StoreManager.get('statuskombi');
                 record = store.getById(value);
                 if (record) {
-                    r = record.data.statusStufe.stufe +
+                    r = record.data.statusLev.lev +
                         ' ' +
-                        record.data.statusWert.wert;
+                        record.data.statusVal.val;
                     return r || '';
                 }
                 return '';
