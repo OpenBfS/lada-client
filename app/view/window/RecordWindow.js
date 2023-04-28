@@ -187,18 +187,14 @@ Ext.define('Lada.view.window.RecordWindow', {
      */
     reloadWindow: function() {
         this.setLoading(true);
-        var form = this.down('form');
-        var callback = function() {
-            form.up('window').reloadRecord();
-        };
-        if (form.isDirty()) {
+        if (this.down('form').isDirty()) {
             var i18n = Lada.getApplication().bundle;
             Ext.MessageBox.alert(
                 i18n.getMsg('reloadRecord', i18n.getMsg(this.recordType)),
                 i18n.getMsg('confirmation.discardchanges'),
-                callback(form));
+                this.reloadRecord());
         } else {
-            callback(form);
+            this.reloadRecord();
         }
     },
 
