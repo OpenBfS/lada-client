@@ -183,6 +183,26 @@ Ext.define('Lada.view.window.RecordWindow', {
     },
 
     /**
+     * Reload the window.
+     */
+    reloadWindow: function() {
+        this.setLoading(true);
+        var form = this.down('form');
+        var callback = function() {
+            form.up('window').reloadRecord();
+        };
+        if (form.isDirty()) {
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.alert(
+                i18n.getMsg('reloadRecord', i18n.getMsg(this.recordType)),
+                i18n.getMsg('confirmation.discardchanges'),
+                callback(form));
+        } else {
+            callback(form);
+        }
+    },
+
+    /**
      * Mask this component using the reload mask
      */
     showReloadMask: function() {
