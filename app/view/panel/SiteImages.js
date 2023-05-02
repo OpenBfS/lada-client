@@ -162,7 +162,7 @@ Ext.define('Lada.view.panel.SiteImages', {
                     url: me.baseUrl + me.site.get('id') + path,
                     method: 'POST',
                     scope: me,
-                    jsonData: {file: dataUrl},
+                    rawData: dataUrl,
                     success: function() {
                         me.setLoading(false);
                         var time = Date.now();
