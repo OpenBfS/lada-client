@@ -28,6 +28,7 @@ Ext.define('Lada.view.widget.base.TextArea', {
             maxLength: this.maxLength || 1000,
             enforceMaxLength: this.enforceMaxLength || true,
             fieldLabel: this.fieldLabel,
+            labelAlign: this.labelAlign,
             labelWidth: this.labelWidth,
             readOnly: this.readOnly || false,
             listeners: this.listeners,

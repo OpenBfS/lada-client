@@ -145,7 +145,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 align: 'stretch'
             },
             items: [{
-                xtype: 'textfield',
+                xtype: 'tfield',
                 name: 'name',
                 fieldLabel: i18n.getMsg('query.name'),
                 maxLength: 80,
