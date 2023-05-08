@@ -103,7 +103,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                         flex: 0.3
                     }]
                 }, {
-                    xtype: 'textarea',
+                    xtype: 'tarea',
                     name: 'descr',
                     width: '100%',
                     allowBlank: false,

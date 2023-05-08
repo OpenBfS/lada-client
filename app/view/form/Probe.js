@@ -480,7 +480,7 @@ Ext.define('Lada.view.form.Probe', {
                                 fieldLabel: i18n.getMsg('envDescripDisplay'),
                                 editable: false
                             }, {
-                                xtype: 'textfield',
+                                xtype: 'tfield',
                                 margin: '0 0 0 5',
                                 name: 'envDescripName',
                                 width: '42%',
