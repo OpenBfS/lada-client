@@ -24,8 +24,6 @@ Ext.define('Lada.view.form.LadaForm', {
             warning: warnings,
             error: errors
         };
-        var i18n = Lada.getApplication().bundle;
-        const msgNotFound = /\.undefined$/;
         for (var msgCat in allMessages) {
             var messages = allMessages[msgCat];
             for (var key in messages) {
@@ -40,8 +38,8 @@ Ext.define('Lada.view.form.LadaForm', {
                 var content = '';
                 for (var msg of messages[key]) {
                     // If key not found, assume message translated by server
-                    content += i18n.getMsg(msg.toString())
-                        .replace(msgNotFound, '') + '<br>';
+                    content += Lada.util.I18n.getMsgIfDefined(msg.toString())
+                        + '<br>';
                 }
                 element.showMessage(content, msgCat);
             }
