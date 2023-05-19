@@ -157,10 +157,8 @@ Ext.define('Lada.view.grid.BaseGrid', {
             return value;
         }
         var dataIndex = metaData.column.dataIndex;
-        var i18n = Lada.getApplication().bundle;
         var validationResult = [];
         var validationResultCls = null;
-        const msgNotFound = /\.undefined$/;
         ['notification', 'warning', 'error'].forEach(function(msgCat) {
             var messages = record.get(msgCat + 's');
             if (messages) {
@@ -174,7 +172,7 @@ Ext.define('Lada.view.grid.BaseGrid', {
                     if (tmp === dataIndex) {
                         // If key not found, assume message translated by server
                         validationResult.push(
-                            i18n.getMsg(messages[key]).replace(msgNotFound, '')
+                            Lada.util.I18n.getMsgIfDefined(messages[key])
                         );
                         validationResultCls =
                             'x-lada-' + msgCat + '-grid-field';

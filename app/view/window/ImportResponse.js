@@ -235,11 +235,13 @@ Ext.define('Lada.view.window.ImportResponse', {
                             str = i18n.getMsg(parts[0]) +
                                 (parts[1] === undefined ? '' : ' ' + parts[1]);
                             validation.push(str + ' ('
-                                + i18n.getMsg(msgs[i].code.toString()) + ')');
+                                + Lada.util.I18n.getMsgIfDefined(
+                                    msgs[i].code.toString()) + ')');
                             validation.push('</ol>');
                         } else {
                             out.push('<li>' + msgs[i].key + ' ('
-                                     + i18n.getMsg(msgs[i].code.toString())
+                                     + Lada.util.I18n.getMsgIfDefined(
+                                         msgs[i].code.toString())
                                      + '): ' + msgs[i].value + '</li>');
                         }
                     }
