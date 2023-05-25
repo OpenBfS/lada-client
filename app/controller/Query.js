@@ -7,7 +7,8 @@
  */
 
 Ext.define('Lada.controller.Query', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.queryform',
     requires: [
         'Lada.view.widget.base.DateRange',
         'Lada.store.GridColumnValue',
@@ -204,6 +205,7 @@ Ext.define('Lada.controller.Query', {
                                 resolve();
                             }
                         },
+                        scope: this,
                         failure: this.handleSaveFailure
                     });
                 });
@@ -317,6 +319,7 @@ Ext.define('Lada.controller.Query', {
                                 resolve();
                             }
                         },
+                        scope: this,
                         failure: this.handleSaveFailure
                     });
                 });
@@ -359,6 +362,7 @@ Ext.define('Lada.controller.Query', {
                     qp.loadingMask.hide();
                 });
             },
+            scope: this,
             failure: this.handleSaveFailure
         });
     },
@@ -1320,10 +1324,8 @@ Ext.define('Lada.controller.Query', {
     },
 
     handleSaveFailure: function() {
-        var i18n = Lada.getApplication().bundle;
         Ext.ComponentQuery.query('querypanel')[0].loadingMask.hide();
-        Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
-                      i18n.getMsg('query.error.save.message'));
+        this.callParent(arguments);
     },
 
     /**

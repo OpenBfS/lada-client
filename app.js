@@ -515,7 +515,6 @@ Ext.application({
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
-        'Lada.controller.Query',
         'Lada.controller.Global',
         'Lada.controller.Print',
         'Lada.controller.ElanScenario',

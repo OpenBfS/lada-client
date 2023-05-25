@@ -10,15 +10,17 @@
  * Panel to show and manipulate queries and their filters
  */
 Ext.define('Lada.view.panel.QueryPanel', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.querypanel',
     id: 'querypanelid',
     requires: [
+        'Lada.controller.Query',
         'Lada.view.widget.ColumnChoser',
         'Lada.view.widget.ColumnSort',
         'Lada.store.GridColumnValue',
         'Lada.store.Query'
     ],
+    controller: 'queryform',
     gridColumnStore: null,
     gridColumnValueStore: null,
 
@@ -133,7 +135,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 disabled: false
             }]
         }, {
-            xtype: 'fieldset',
+            xtype: 'fset',
             name: 'querydetails',
             title: i18n.getMsg('query.details'),
             style: {'border': '2px solid grey;'},
@@ -225,7 +227,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 disabled: true
             }]
         }, {
-            xtype: 'fieldset',
+            xtype: 'fset',
             name: 'filtervariables',
             title: i18n.getMsg('query.filters.visible'),
             style: {'border': '2px solid grey;'},
