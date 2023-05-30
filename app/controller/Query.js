@@ -147,6 +147,7 @@ Ext.define('Lada.controller.Query', {
         var i18n = Lada.getApplication().bundle;
         // Create new query record
         var qp = button.up('querypanel');
+        qp.clearMessages();
         var cbox = qp.down('combobox[name=selectedQuery]');
         if (!cbox.getSelection()) {
             Ext.Msg.alert(
@@ -271,6 +272,7 @@ Ext.define('Lada.controller.Query', {
         var contentPanel = qp.up('panel[name=main]').down(
             'panel[name=contentpanel]');
         contentPanel.removeAll();
+        qp.clearMessages();
 
         var newquery = combobox.getStore().findRecord(
             'id',
@@ -336,6 +338,7 @@ Ext.define('Lada.controller.Query', {
      */
     saveQuery: function(record, callback) {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
+        qp.clearMessages();
         record.set(qp.getForm().getFieldValues(true));
         var me = this;
         record.save({
