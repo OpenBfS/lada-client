@@ -337,7 +337,7 @@ Ext.define('Lada.controller.Query', {
      *     If present, it will replace the saving of gridColumns
      */
     saveQuery: function(record, callback) {
-        var qp = Ext.ComponentQuery.query('querypanel')[0];
+        var qp = this.getView();
         qp.clearMessages();
         record.set(qp.getForm().getFieldValues(true));
         var me = this;
