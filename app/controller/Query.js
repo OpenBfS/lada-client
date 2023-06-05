@@ -7,7 +7,8 @@
  */
 
 Ext.define('Lada.controller.Query', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.queryform',
     requires: [
         'Lada.view.widget.base.DateRange',
         'Lada.store.GridColumnValue',
@@ -146,6 +147,7 @@ Ext.define('Lada.controller.Query', {
         var i18n = Lada.getApplication().bundle;
         // Create new query record
         var qp = button.up('querypanel');
+        qp.clearMessages();
         var cbox = qp.down('combobox[name=selectedQuery]');
         if (!cbox.getSelection()) {
             Ext.Msg.alert(
@@ -204,6 +206,7 @@ Ext.define('Lada.controller.Query', {
                                 resolve();
                             }
                         },
+                        scope: this,
                         failure: this.handleSaveFailure
                     });
                 });
@@ -269,6 +272,7 @@ Ext.define('Lada.controller.Query', {
         var contentPanel = qp.up('panel[name=main]').down(
             'panel[name=contentpanel]');
         contentPanel.removeAll();
+        qp.clearMessages();
 
         var newquery = combobox.getStore().findRecord(
             'id',
@@ -317,6 +321,7 @@ Ext.define('Lada.controller.Query', {
                                 resolve();
                             }
                         },
+                        scope: this,
                         failure: this.handleSaveFailure
                     });
                 });
@@ -332,7 +337,8 @@ Ext.define('Lada.controller.Query', {
      *     If present, it will replace the saving of gridColumns
      */
     saveQuery: function(record, callback) {
-        var qp = Ext.ComponentQuery.query('querypanel')[0];
+        var qp = this.getView();
+        qp.clearMessages();
         record.set(qp.getForm().getFieldValues(true));
         var me = this;
         record.save({
@@ -359,6 +365,7 @@ Ext.define('Lada.controller.Query', {
                     qp.loadingMask.hide();
                 });
             },
+            scope: this,
             failure: this.handleSaveFailure
         });
     },
@@ -1320,10 +1327,8 @@ Ext.define('Lada.controller.Query', {
     },
 
     handleSaveFailure: function() {
-        var i18n = Lada.getApplication().bundle;
         Ext.ComponentQuery.query('querypanel')[0].loadingMask.hide();
-        Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
-                      i18n.getMsg('query.error.save.message'));
+        this.callParent(arguments);
     },
 
     /**

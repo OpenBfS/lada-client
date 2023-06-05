@@ -86,7 +86,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     fieldLabel: i18n.getMsg('netzbetreiberId'),
                     value: this.record.get('networkId')
                 }, {
-                    xtype: 'combobox',
+                    xtype: 'cbox',
                     displayField: 'name',
                     readOnly: true,
                     valueField: 'id',

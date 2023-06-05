@@ -217,7 +217,7 @@ Ext.define('Lada.view.grid.Messung', {
 
     initData: function(parentId) {
         this.setLoading(true);
-        parentId = parentId? parentId: this.getParentRecordId();
+        parentId = parentId ? parentId : this.getParentRecordId();
         if (parentId) {
             this.store.load({
                 params: {
@@ -231,7 +231,7 @@ Ext.define('Lada.view.grid.Messung', {
         }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('messunggrid');
-            for (i = 0; i < grid.length; i++) {
+            for (var i = 0; i < grid.length; i++) {
                 grid[i].reload(function() {
                     Ext.ComponentQuery.query(
                         'timezonebutton[action=toggletimezone]')[0]

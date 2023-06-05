@@ -327,7 +327,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 fieldLabel: i18n.getMsg('envDescripDisplay'),
                                 editable: false
                             }, {
-                                xtype: 'textfield',
+                                xtype: 'tfield',
                                 name: 'envDescripName',
                                 margin: '0, 0, 5, 10',
                                 width: '42%',
@@ -342,7 +342,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             title: i18n.getMsg('deskDetails'),
                             collapsible: true,
                             collapsed: true,
-                            defaultType: 'textfield',
+                            defaultType: 'tfield',
                             layout: {
                                 type: 'vbox',
                                 align: 'stretch'
@@ -354,7 +354,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     layout: 'fit',
                     margin: '0, 10, 0, 5',
                     items: [{
-                        xtype: 'textfield',
+                        xtype: 'tfield',
                         name: 'sampleQuant',
                         labelAlign: 'top',
                         fieldLabel: i18n.getMsg('probenahmeMenge'),
@@ -365,7 +365,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     layout: 'fit',
                     margin: '0, 10, 0, 5',
                     items: [{
-                        xtype: 'textarea',
+                        xtype: 'tarea',
                         name: 'commSample',
                         labelAlign: 'top',
                         fieldLabel: i18n.getMsg('probeKommentar'),

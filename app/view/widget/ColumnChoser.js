@@ -187,7 +187,8 @@ Ext.define('Lada.view.widget.ColumnChoser', {
     },
 
     sortvisibles: function() {
-        var gcv_store = this.up('querypanel').gridColumnValueStore;
+        var querypanel = this.up('querypanel');
+        var gcv_store = querypanel.gridColumnValueStore;
         var tarstore = this.getComponent('targetGrid').getStore();
         var taritems = tarstore.getData().items;
         for ( var j = 0; j < taritems.length; j++) {
@@ -203,7 +204,7 @@ Ext.define('Lada.view.widget.ColumnChoser', {
 
             }
         }
-        var ctrl = Lada.app.getController('Lada.controller.Query');
+        var ctrl = querypanel.getController();
         ctrl.showFilter(this);
     },
 

@@ -41,7 +41,7 @@ Ext.define('Lada.view.window.Probe', {
         this.buttons = [{
             text: i18n.getMsg('reload'),
             name: 'reload',
-            handler: this.reload,
+            handler: this.reloadWindow,
             scope: this,
             disabled: true,
             icon: 'resources/img/view-refresh.png'
@@ -313,26 +313,6 @@ Ext.define('Lada.view.window.Probe', {
             title += messstelle.get('name');
         }
         return title;
-    },
-
-    /**
-     * Reload Probe Window
-     */
-    reload: function() {
-        this.setLoading(true);
-        var form = this.down('probeform');
-        var callback = function() {
-            form.up('window').reloadRecord();
-        };
-        if (form.isDirty()) {
-            var i18n = Lada.getApplication().bundle;
-            Ext.MessageBox.alert(
-                i18n.getMsg('reloadRecord', i18n.getMsg('probe')),
-                i18n.getMsg('confirmation.discardchanges'),
-                callback(form));
-        } else {
-            callback(form);
-        }
     },
 
     /**

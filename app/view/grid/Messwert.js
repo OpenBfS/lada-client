@@ -386,7 +386,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 }
             });
         }
-        parentId = parentId? parentId: this.getParentRecordId();
+        parentId = parentId ? parentId : this.getParentRecordId();
         if (parentId) {
             this.store.load({
                 params: {

@@ -65,7 +65,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         {
             text: i18n.getMsg('reload'),
             name: 'reload',
-            handler: this.reload,
+            handler: this.reloadWindow,
             scope: this,
             qtip: i18n.getMsg('reload.qtip') + i18n.getMsg('messprogramm'),
             icon: 'resources/img/view-refresh.png'
@@ -251,26 +251,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                 }]
             }]
         }]);
-    },
-
-    /**
-     * Reload MessprogrammEdit Window
-     */
-    reload: function() {
-        var form = this.down('messprogrammform');
-        // TODO: visual feedback on form and button
-        var callback = function() {
-            form.up('window').initData();
-        };
-        if (form.isDirty()) {
-            var i18n = Lada.getApplication().bundle;
-            Ext.MessageBox.alert(
-                i18n.getMsg('reloadRecord', i18n.getMsg('messprogramm')),
-                i18n.getMsg('confirmation.discardchanges'),
-                callback(form));
-        } else {
-            callback(form);
-        }
     },
 
     disableChildren: function() {

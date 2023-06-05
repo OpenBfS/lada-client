@@ -172,6 +172,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                         id,
                         row,
                         function(newRecord, operation, success) {
+                            win.setLoading(true);
                             if (!newRecord || !operation) {
                                 Ext.log({
                                     msg: 'Loading messung record failed',
@@ -233,6 +234,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                             json.errors,
                                             json.warnings,
                                             json.notifications);
+                                        win.setLoading(false);
                                     });
                             }
                         });
