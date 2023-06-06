@@ -302,13 +302,13 @@ Ext.define('Lada.view.grid.Orte', {
             },
             dataIndex: 'spatRefSysId'
         }, {
-            header: i18n.getMsg('orte.koordXExtern'),
+            header: i18n.getMsg('coordXExt'),
             filter: {
                 type: 'string'
             },
             dataIndex: 'coordXExt'
         }, {
-            header: i18n.getMsg('orte.koordYExtern'),
+            header: i18n.getMsg('coordYExt'),
             filter: {
                 type: 'string'
             },
