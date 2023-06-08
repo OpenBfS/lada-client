@@ -186,7 +186,7 @@ Ext.define('Lada.view.form.Ort', {
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
-                fieldLabel: i18n.getMsg('orte.koordx'),
+                fieldLabel: i18n.getMsg('coordXExt'),
                 validator: function(val) {
                     var kda = me.down('field[name=spatRefSysId]').getValue();
                     var hasMinFields = Boolean(!kda || kda && val);
@@ -198,7 +198,7 @@ Ext.define('Lada.view.form.Ort', {
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
-                fieldLabel: i18n.getMsg('orte.koordy'),
+                fieldLabel: i18n.getMsg('coordYExt'),
                 name: 'coordYExt',
                 validator: function(val) {
                     var kda = me.down('field[name=spatRefSysId]').getValue();
