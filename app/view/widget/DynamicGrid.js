@@ -1149,7 +1149,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     map.onAfter(
                         'afterrender',
                         function() {
-                            this.fireEvent('gridreload');
+                            var querypanel = Ext.getCmp('querypanelid');
+                            querypanel.fireEvent('gridreload');
                             this.select(selection);
                         },
                         this,

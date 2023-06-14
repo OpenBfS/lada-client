@@ -94,12 +94,12 @@ Ext.define('Lada.controller.Query', {
                 click: me.reloadQuery
             },
             'dynamicgrid': {
-                columnresize: me.dataChanged,
-                gridreload: me.drawGeometryColumns
+                columnresize: me.dataChanged
             },
             'querypanel': {
                 validitychange: me.dataChanged,
-                dirtychange: me.dataChanged
+                dirtychange: me.dataChanged,
+                gridreload: me.drawGeometryColumns
             }
 
         });
