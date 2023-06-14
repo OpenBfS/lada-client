@@ -21,11 +21,13 @@ Ext.define('Lada.view.panel.SiteImages', {
         this.initUI();
         this.callParent(arguments);
         var siteId = this.site.get('id');
-        var dc = '?dc=' + Date.now();
-        this.down('image[name=imageImg]')
-            .setSrc(this.baseUrl + siteId + this.imgPath + dc);
-        this.down('image[name=mapImg]')
-            .setSrc(this.baseUrl + siteId + this.mapPath + dc);
+        if (!this.site.phantom) {
+            var dc = '?dc=' + Date.now();
+            this.down('image[name=imageImg]')
+                .setSrc(this.baseUrl + siteId + this.imgPath + dc);
+            this.down('image[name=mapImg]')
+                .setSrc(this.baseUrl + siteId + this.mapPath + dc);
+        }
         //Set readonly if site is readonly or phantom
         this.setReadonly(this.site.get('readonly') || this.site.phantom);
     },
