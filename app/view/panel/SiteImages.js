@@ -9,13 +9,19 @@ Ext.define('Lada.view.panel.SiteImages', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.siteimages',
     name: 'siteimages',
-    layout: 'vbox',
     baseUrl: 'lada-server/rest/site/',
     imgPath: '/img',
     mapPath: '/map',
+    border: true,
+    margin: 5,
     site: null,
     width: '100%',
     height: 600,
+    scrollable: true,
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
 
     initComponent: function() {
         this.initUI();
@@ -36,115 +42,113 @@ Ext.define('Lada.view.panel.SiteImages', {
         var i18n = Lada.getApplication().bundle;
         this.items =
             [{
-                layout: 'vbox',
-                align: 'fill',
-                items: [{
-                    xtype: 'panel',
-                    margin: 5,
-                    width: 550,
-                    height: 300,
-                    tbar: [{
-                        xtype: 'label',
-                        text: i18n.getMsg('form.site.label.photo')
-                    }, {
-                        xtype: 'filefield',
-                        buttonText: i18n.getMsg('search'),
-                        name: 'photofile',
-                        grow: true,
-                        growMin: 200,
-                        listeners: {
-                            change: function(field, value) {
-                                var newValue = value.replace(
-                                    /C:\\fakepath\\/g, '');
-                                field.setRawValue(newValue);
-                                this.up('panel')
-                                    .down('button[name=uploadPhoto]')
-                                    .setDisabled(false);
-                            }
-                        }
-
-                    }, {
-                        xtype: 'tbfill'
-                    }, {
-                        xtype: 'button',
-                        name: 'uploadPhoto',
-                        disabled: true,
-                        text: i18n.getMsg('form.site.button.upload'),
-                        handler: function(button) {
-                            var widget = button.up('siteimages');
-                            var fileField = widget
-                                .down('filefield[name=photofile]');
-                            var imgCmp = widget.down('image[name=imageImg]');
-                            widget.uploadFile(
-                                fileField, widget.imgPath, imgCmp);
-                        }
-                    }, {
-                        xtype: 'button',
-                        name: 'clearPhoto',
-                        text: i18n.getMsg('form.site.button.clear'),
-                        handler: function(button) {
-                            var widget = button.up('siteimages');
-                            var imgCmp = widget.down('image[name=imageImg]');
-                            widget.deleteImage(widget.imgPath, imgCmp);
-                        }
-                    }],
-                    items: [{
-                        xtype: 'image',
-                        name: 'imageImg'
-                    }]
+                xtype: 'panel',
+                margin: 5,
+                minWidth: 550,
+                minHeight: 300,
+                tbar: [{
+                    xtype: 'label',
+                    text: i18n.getMsg('form.site.label.photo')
                 }, {
-                    xtype: 'panel',
-                    margin: 5,
-                    width: 550,
-                    height: 300,
-                    tbar: [{
-                        xtype: 'label',
-                        text: i18n.getMsg('form.site.label.map')
-                    }, {
-                        xtype: 'filefield',
-                        buttonText: i18n.getMsg('search'),
-                        name: 'mapfile',
-                        grow: true,
-                        growMin: 200,
-                        listeners: {
-                            change: function(field, value) {
-                                var newValue = value.replace(
-                                    /C:\\fakepath\\/g, '');
-                                field.setRawValue(newValue);
-                                this.up('panel').down('button[name=uploadMap]')
-                                    .setDisabled(false);
-                            }
+                    xtype: 'filefield',
+                    buttonText: i18n.getMsg('search'),
+                    name: 'photofile',
+                    grow: true,
+                    growMin: 200,
+                    listeners: {
+                        change: function(field, value) {
+                            var newValue = value.replace(
+                                /C:\\fakepath\\/g, '');
+                            field.setRawValue(newValue);
+                            this.up('panel')
+                                .down('button[name=uploadPhoto]')
+                                .setDisabled(false);
                         }
-                    }, {
-                        xtype: 'tbfill'
-                    }, {
-                        xtype: 'button',
-                        name: 'uploadMap',
-                        disabled: true,
-                        text: i18n.getMsg('form.site.button.upload'),
-                        handler: function(button) {
-                            var widget = button.up('siteimages');
-                            var fileField = widget
-                                .down('filefield[name=mapfile]');
-                            var imgCmp = widget
-                                .down('image[name=mapImg]');
-                            widget.uploadFile(
-                                fileField, widget.mapPath, imgCmp);
+                    }
+
+                }, {
+                    xtype: 'tbfill'
+                }, {
+                    xtype: 'button',
+                    name: 'uploadPhoto',
+                    disabled: true,
+                    text: i18n.getMsg('form.site.button.upload'),
+                    handler: function(button) {
+                        var widget = button.up('siteimages');
+                        var fileField = widget
+                            .down('filefield[name=photofile]');
+                        var imgCmp = widget.down('image[name=imageImg]');
+                        widget.uploadFile(
+                            fileField, widget.imgPath, imgCmp);
+                    }
+                }, {
+                    xtype: 'button',
+                    name: 'clearPhoto',
+                    text: i18n.getMsg('form.site.button.clear'),
+                    handler: function(button) {
+                        var widget = button.up('siteimages');
+                        var imgCmp = widget.down('image[name=imageImg]');
+                        widget.deleteImage(widget.imgPath, imgCmp);
+                    }
+                }],
+                items: [{
+                    xtype: 'image',
+                    name: 'imageImg',
+                    shrinkWrap: true
+                }]
+            }, {
+                xtype: 'panel',
+                margin: 5,
+                minWidth: 550,
+                minHeight: 300,
+                tbar: [{
+                    xtype: 'label',
+                    text: i18n.getMsg('form.site.label.map')
+                }, {
+                    xtype: 'filefield',
+                    buttonText: i18n.getMsg('search'),
+                    name: 'mapfile',
+                    grow: true,
+                    growMin: 200,
+                    listeners: {
+                        change: function(field, value) {
+                            var newValue = value.replace(
+                                /C:\\fakepath\\/g, '');
+                            field.setRawValue(newValue);
+                            this.up('panel').down('button[name=uploadMap]')
+                                .setDisabled(false);
                         }
-                    }, {
-                        xtype: 'button',
-                        name: 'clearMap',
-                        text: i18n.getMsg('form.site.button.clear'),
-                        handler: function(button) {
-                            var widget = button.up('siteimages');
-                            var imgCmp = widget.down('image[name=mapImg]');
-                            widget.deleteImage(widget.mapPath, imgCmp);
-                        }
-                    }],
-                    items: [{
-                        xtype: 'image',
-                        name: 'mapImg'
-                    }]
+                    }
+                }, {
+                    xtype: 'tbfill'
+                }, {
+                    xtype: 'button',
+                    name: 'uploadMap',
+                    disabled: true,
+                    text: i18n.getMsg('form.site.button.upload'),
+                    handler: function(button) {
+                        var widget = button.up('siteimages');
+                        var fileField = widget
+                            .down('filefield[name=mapfile]');
+                        var imgCmp = widget
+                            .down('image[name=mapImg]');
+                        widget.uploadFile(
+                            fileField, widget.mapPath, imgCmp);
+                    }
+                }, {
+                    xtype: 'button',
+                    name: 'clearMap',
+                    text: i18n.getMsg('form.site.button.clear'),
+                    handler: function(button) {
+                        var widget = button.up('siteimages');
+                        var imgCmp = widget.down('image[name=mapImg]');
+                        widget.deleteImage(widget.mapPath, imgCmp);
+                    }
+                }],
+                items: [{
+                    xtype: 'image',
+                    name: 'mapImg',
+                    shrinkWrap: true
                 }]
             }];
     },
