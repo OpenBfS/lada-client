@@ -74,6 +74,10 @@ Ext.define('Lada.controller.form.Ort', {
         pos[1] += 10;
         win.show();
         win.setPosition(pos);
+
+        //Copy over site images if available
+        var images = button.up('window').down('siteimages').getImageUrls();
+        win.down('siteimages').setImages(images.image, images.map);
     },
 
     save: function(button) {
@@ -93,6 +97,7 @@ Ext.define('Lada.controller.form.Ort', {
                 scope: me,
                 success: function(newrecord, response) {
                     var win = formpanel.up('window');
+                    win.down('siteimages').uploadPresetImages();
                     if (win.setOzOnComplete === true ) {
                         var ozf = Ext.ComponentQuery
                             .query('ortszuordnungform')[0];

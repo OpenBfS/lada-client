@@ -164,35 +164,7 @@ Ext.define('Lada.view.panel.SiteImages', {
         reader.onload = function(evt) {
             if (evt.target.readyState === FileReader.DONE) {
                 const dataUrl = evt.target.result;
-                Ext.Ajax.request({
-                    url: me.baseUrl + me.site.get('id') + path,
-                    method: 'POST',
-                    scope: me,
-                    rawData: dataUrl,
-                    success: function() {
-                        me.setLoading(false);
-                        var time = Date.now();
-                        var url = this.baseUrl + this.site.get('id') + path;
-                        url += '?dc=' + time;
-                        component.setSrc(null);
-                        component.setSrc(url);
-                    },
-                    failure: function(response) {
-                        me.setLoading(false);
-                        var i18n = Lada.getApplication().bundle;
-                        var msg = 'err.msg.generic.body';
-                        if (response.status === 502
-                                || response.status === 413) {
-                            msg = 'form.site.error.uploadsize';
-                        }
-                        if (response.status === 401) {
-                            msg = 'http-401';
-                        }
-                        Ext.Msg.alert(
-                            i18n.getMsg('form.site.error.uploadtitle'),
-                            i18n.getMsg(msg), Ext.emptyFn);
-                    }
-                });
+                me.doUpload(dataUrl, path, component);
             }
         };
         reader.readAsDataURL(file);
@@ -216,6 +188,116 @@ Ext.define('Lada.view.panel.SiteImages', {
             }
         });
     },
+
+    /**
+     * @private
+     * Update the given file as dataurl
+     * @param {*} dataUrl Image as data url
+     * @param {String} path Path
+     * @param {*} component Image component to use
+     */
+    doUpload: function(dataUrl, path, component) {
+        var me = this;
+        Ext.Ajax.request({
+            url: me.baseUrl + me.site.get('id') + path,
+            method: 'POST',
+            scope: me,
+            rawData: dataUrl,
+            success: function() {
+                me.setLoading(false);
+                var time = Date.now();
+                var url = this.baseUrl + this.site.get('id') + path;
+                url += '?dc=' + time;
+                component.setSrc(null);
+                component.setSrc(url);
+            },
+            failure: function(response) {
+                me.setLoading(false);
+                var i18n = Lada.getApplication().bundle;
+                var msg = 'err.msg.generic.body';
+                if (response.status === 502
+                        || response.status === 413) {
+                    msg = 'form.site.error.uploadsize';
+                }
+                if (response.status === 401) {
+                    msg = 'http-401';
+                }
+                Ext.Msg.alert(
+                    i18n.getMsg('form.site.error.uploadtitle'),
+                    i18n.getMsg(msg), Ext.emptyFn);
+            }
+        });
+    },
+
+    /**
+     * Get site image urls.
+     * @returns Object containing urls
+     */
+    getImageUrls: function() {
+        return {
+            image: this.down('image[name=imageImg]').getSrc(),
+            map: this.down('image[name=mapImg]').getSrc()
+        };
+    },
+
+    /**
+     * Set site images.
+     * @param {*} image Image source url
+     * @param {*} map  Map source url
+     */
+    setImages: function(image, map) {
+        if (image) {
+            var imgCmp = this.down('image[name=imageImg]');
+            this.presetImage(imgCmp, image);
+        }
+        if (map) {
+            var mapCmp = this.down('image[name=mapImg]');
+            this.presetImage(mapCmp, map);
+        }
+    },
+
+    /**
+     * Manually load an image into the given image component.
+     * @param {*} component Component to load image into
+     * @param {*} url Image source url
+     */
+    presetImage: function(component, url) {
+        // eslint-disable-next-line no-undef
+        const req = new XMLHttpRequest();
+        req.open('GET', url, true);
+        req.responseType = 'arraybuffer';
+
+        req.onload = () => {
+            const arrayBuffer = req.response;
+            if (arrayBuffer) {
+                const byteArray = new Uint8Array(arrayBuffer);
+                const binaryString = Array.from(
+                    byteArray,
+                    byte => String.fromCharCode(byte)).join('');
+                const base64Image =
+                    // eslint-disable-next-line no-undef
+                    'data:image/png;base64,' + btoa(binaryString);
+                component.presetImg = base64Image;
+                component.setSrc(base64Image);
+            }
+        };
+        req.send(null);
+    },
+
+    /**
+     * Uploads preset images if present.
+     */
+    uploadPresetImages: function() {
+        var imgCmp = this.down('image[name=imageImg]');
+        var mapCmp = this.down('image[name=mapImg]');
+        if (imgCmp.presetImg) {
+            this.doUpload(imgCmp.presetImg, '/img', imgCmp);
+        }
+        if (mapCmp.presetImg) {
+            this.doUpload(mapCmp.presetImg, '/map', mapCmp);
+        }
+    },
+
 
     setReadonly: function(readonly) {
         this.down('filefield[name=photofile]').setVisible(!readonly);
