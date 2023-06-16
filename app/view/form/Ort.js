@@ -105,10 +105,9 @@ Ext.define('Lada.view.form.Ort', {
             name: 'isReiActive',
             fieldLabel: i18n.getMsg('orte.aktiv')
         }, {
-            xtype: 'tfield',
+            xtype: 'tarea',
             labelWidth: 125,
-            readOnly: true,
-            maxLength: 10,
+            maxLength: 1024,
             name: 'route',
             fieldLabel: i18n.getMsg('orte.route')
         }, {
