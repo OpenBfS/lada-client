@@ -772,6 +772,7 @@ Ext.define('Lada.controller.Print', {
                 }
                 if (oz.typeRegulation === 'E' || oz.typeRegulation === 'R') {
                     prep[i].adminUnit = oz.site.adminUnit;
+                    prep[i].siteExtId = oz.site.extId;
                 }
             }
         }
