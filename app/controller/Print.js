@@ -668,8 +668,10 @@ Ext.define('Lada.controller.Print', {
         // to be a little bit asynchronous here...
         var callback = function(response) {
             var data = response.responseText;
+            //In case erfassungsschein is printed: Merge samples
+            var mergeSamples = templateName === 'lada_erfassungsschein';
             // Wraps all messstellen and deskriptoren objects into an array
-            data = this.prepareData(data);
+            data = this.prepareData(data, mergeSamples);
             var printData = {
                 layout: layout,
                 outputFormat: format,
@@ -697,16 +699,41 @@ Ext.define('Lada.controller.Print', {
      * (legacy function) Aggregates json responses from lada server in order
      * to satisfy lada_erfassungsbogen template demands
      */
-    prepareData: function(data) {
+    prepareData: function(data, mergeSamples = false) {
         // Copy data
         var prep = Ext.JSON.decode(data, true);
         if (prep === null) {
             this.handleError(null, 'err.msg.print.failed');
             return null;
         }
-        data = Ext.JSON.decode(data, true);
-        // ensure data and prep are equal, not sure
-        // if parsing changes order of things
+        if (!mergeSamples) {
+            // ensure data and prep are equal, not sure
+            // if parsing changes order of things
+            data = Ext.JSON.decode(data, true);
+        } else {
+            var mergedPrep = [];
+            var samples = {};
+            prep.forEach((sample) => {
+                var id = sample['id'];
+                //If sample is seen for the first time
+                if (!samples[id]) {
+                    //store it
+                    samples[id] = sample;
+                    mergedPrep.push(samples[id]);
+                } else {
+                    //Else append measms to stored sample if not already present
+                    sample.measms.forEach((measm) => {
+                        const found = samples[id].measms.findIndex(
+                            item => item.id === measm.id) !== -1;
+                        if (!found) {
+                            samples[id].measms.push(measm);
+                        }
+                    });
+                }
+            });
+            prep = mergedPrep;
+            data = Ext.JSON.decode(JSON.stringify(prep), true);
+        }
 
         var emptyMessstelle = {
             'id': null,
