@@ -93,8 +93,7 @@ Ext.define('Lada.view.panel.SiteImages', {
                 }],
                 items: [{
                     xtype: 'image',
-                    name: 'imageImg',
-                    shrinkWrap: true
+                    name: 'imageImg'
                 }]
             }, {
                 xtype: 'panel',
@@ -147,8 +146,7 @@ Ext.define('Lada.view.panel.SiteImages', {
                 }],
                 items: [{
                     xtype: 'image',
-                    name: 'mapImg',
-                    shrinkWrap: true
+                    name: 'mapImg'
                 }]
             }];
     },

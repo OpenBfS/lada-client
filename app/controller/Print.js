@@ -770,8 +770,9 @@ Ext.define('Lada.controller.Print', {
                     prep[i].geolocat[o]['site'] = null;
                     prep[i].geolocat[o]['site.' + e] = oz.site[e];
                 }
-                if (oz.typeRegulation === 'E') {
+                if (oz.typeRegulation === 'E' || oz.typeRegulation === 'R') {
                     prep[i].adminUnit = oz.site.adminUnit;
+                    prep[i].siteExtId = oz.site.extId;
                 }
             }
         }
