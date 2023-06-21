@@ -1255,7 +1255,6 @@ Ext.define('Lada.controller.Query', {
      * Draw the content of the geometry column if available.
      */
     drawGeometryColumns: function() {
-        var resultGrid = Ext.getCmp('dynamicgridid');
         //Get geom column index
         var geomColIdx = this.getGeomColumnIndex();
         if (geomColIdx <= -1) {
@@ -1289,7 +1288,7 @@ Ext.define('Lada.controller.Query', {
             }
         });
         if (featuresJson.features.length > 0) {
-            resultGrid.down('map').drawGeoJson(featuresJson);
+            Ext.getCmp('dynamicgridid').down('map').drawGeoJson(featuresJson);
         }
     },
 
