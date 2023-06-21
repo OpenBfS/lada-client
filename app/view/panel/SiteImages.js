@@ -46,6 +46,7 @@ Ext.define('Lada.view.panel.SiteImages', {
                 margin: 5,
                 minWidth: 550,
                 minHeight: 300,
+                scrollable: true,
                 tbar: [{
                     xtype: 'label',
                     text: i18n.getMsg('form.site.label.photo')
@@ -100,6 +101,7 @@ Ext.define('Lada.view.panel.SiteImages', {
                 margin: 5,
                 minWidth: 550,
                 minHeight: 300,
+                scrollable: true,
                 tbar: [{
                     xtype: 'label',
                     text: i18n.getMsg('form.site.label.map')
