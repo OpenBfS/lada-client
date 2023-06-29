@@ -669,7 +669,7 @@ Ext.define('Lada.controller.Print', {
         var callback = function(response) {
             var data = response.responseText;
             //In case erfassungsschein is printed: Merge samples
-            var mergeSamples = templateName === 'lada_erfassungsschein';
+            var mergeSamples = templateName === 'lada_erfassungsbogen_02';
             // Wraps all messstellen and deskriptoren objects into an array
             data = this.prepareData(data, mergeSamples);
             var printData = {
