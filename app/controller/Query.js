@@ -193,7 +193,7 @@ Ext.define('Lada.controller.Query', {
                         isFilterActive: item.get('isFilterActive'),
                         isFilterNegate: item.get('isFilterNegate'),
                         isFilterRegex: item.get('isFilterRegex'),
-                        filterValue: item.get('filterVal'),
+                        filterVal: item.get('filterVal'),
                         width: me.getVisibleColumnWidth(item)
                     });
                     clonedModel.set('id', null);
