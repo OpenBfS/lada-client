@@ -477,7 +477,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     umweltChanged: function(combo) {
         // avoids endless loop
-        if (combo.name !== 'umwId') {
+        if (combo.name !== 'envMediumId') {
             return true;
         }
         //Check if umwelt widget is contained in a messprogrammform
@@ -492,9 +492,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         var reiStore = reiCombo.store;
         reiStore.proxy.extraParams = {};
-        var umwId = combo.getModelData().umwId;
+        var umwId = combo.getModelData().envMediumId;
         if (umwId || umwId === 0) {
-            reiStore.proxy.extraParams.umwelt = umwId;
+            reiStore.proxy.extraParams.envMediumId = umwId;
         }
         reiStore.load();
 

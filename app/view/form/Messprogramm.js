@@ -511,7 +511,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     filterProbenZusatzs: function(umwId) {
         var params = {};
         if (umwId) {
-            params['umwId'] = umwId;
+            params['envMediumId'] = umwId;
         }
         this.down('tagfield[name=sampleSpecifs]').getStore().load({
             params: params
