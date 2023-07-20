@@ -96,6 +96,10 @@ Ext.define('Lada.controller.form.Messung', {
                     if (messwertStore.isLoaded()) {
                         messwertStore.reload();
                     }
+                    //Reload measd store in case mmt changed
+                    win.mStore.load({
+                        params: {mmtId: newRecord.get('mmtId')}
+                    });
                     formPanel.setLoading(false);
                 }
             },
