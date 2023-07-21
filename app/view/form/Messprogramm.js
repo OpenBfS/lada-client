@@ -325,8 +325,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 width: '58%',
                                 labelWidth: 100,
                                 fieldLabel: i18n.getMsg('envDescripDisplay'),
-                                editable: false,
-                                disableDirtyCheck: true
+                                editable: false
                             }, {
                                 xtype: 'tfield',
                                 name: 'envDescripName',
@@ -334,7 +333,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 width: '42%',
                                 enforceMaxLength: true,
                                 editable: false,
-                                disableDirtyCheck: true
+                                isFormField: false
                             }]
                         }, {
                             xtype: 'fieldset',

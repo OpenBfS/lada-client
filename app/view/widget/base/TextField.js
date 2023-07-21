@@ -52,11 +52,6 @@ Ext.define('Lada.view.widget.base.TextField', {
             value: this.value || null,
             vtype: this.vtype || null
         });
-        if (this.disableDirtyCheck !== undefined) {
-            this.down('textfield').isDirty = function() {
-                return false;
-            };
-        }
         if (this.regex) {
             Ext.apply(this.down('textfield'), {regex: this.regex});
         }
