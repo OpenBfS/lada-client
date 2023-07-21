@@ -133,12 +133,16 @@ Ext.define('Lada.view.window.SetStatus', {
         if (this.sampleRecord === null) {
             title = i18n.getMsg('setStatus.count', this.selection.length);
         } else {
-            var probenumber = this.sampleRecord.get('mainSampleId')
-                ? 'mit HP-Nr ' + this.sampleRecord.get('mainSampleId')
-                : 'mit extPID ' + this.sampleRecord.get('extId');
-            var messungnumber = this.selection[0].get('minSampleId')
-                ? 'mit NP-Nr ' + this.selection[0].get('minSampleId')
-                : 'mit extMId ' + this.selection[0].get('extId');
+            var mainSampleId = this.sampleRecord.get('mainSampleId');
+            var minSampleId = this.selection[0].get('minSampleId');
+            var probenumber = mainSampleId
+                ? i18n.getMsg('setStatus.sample.mainSampleId', mainSampleId)
+                : i18n.getMsg('setStatus.sample.extId',
+                    this.sampleRecord.get('extId'));
+            var messungnumber = minSampleId
+                ? i18n.getMsg('setStatus.measm.minSampleId', minSampleId)
+                : i18n.getMsg('setStatus.measm.extId',
+                    this.selection[0].get('extId'));
             title = i18n.getMsg('setStatus.hprnr',
                 messungnumber,
                 probenumber);
