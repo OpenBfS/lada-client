@@ -178,8 +178,8 @@ Ext.define('Lada.controller.form.Messung', {
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.SetStatus', {
             title: i18n.getMsg('statusSetzen.win.title'),
-            selection: [button.up('window')
-                .down('messungform').getForm().getRecord()],
+            selection: [button.up('messungform').getForm().getRecord()],
+            sampleRecord: button.up('messungform').probe,
             modal: true
         });
         var view = button.up('messungform');

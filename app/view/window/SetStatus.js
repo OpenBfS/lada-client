@@ -20,6 +20,8 @@ Ext.define('Lada.view.window.SetStatus', {
     store: Ext.create('Lada.store.StatusKombi'),
     grid: null,
     selection: null,
+
+    sampleRecord: null,
     dataId: null,
     sendIds: null,
     modal: true,
@@ -124,20 +126,22 @@ Ext.define('Lada.view.window.SetStatus', {
             handler: this.closeWindow
         }];
 
+        //Set title
         var title = '';
-        if (Ext.ComponentQuery.query('probeform').length !== 0) {
-            var probenform = Ext.ComponentQuery.query('probeform');
-            var probenumber = probenform[0].getRecord().get('mainSampleId')
-                ? 'mit HP-Nr ' + probenform[0].getRecord().get('mainSampleId')
-                : 'mit extPID ' + probenform[0].getRecord().get('extId');
-            var messungnumber = this.selection[0].get('nebenprobenNr')
-                ? 'mit NP-Nr ' + this.selection[0].get('nebenprobenNr')
-                : 'mit extMId ' + this.selection[0].get('externeMessungsId');
-            title = i18n.getMsg('setStatus.hprnr',
-                    messungnumber,
-                    probenumber);
-        } else {
+        //If a sample record is set, this window is used from a measm window
+        //else from the measm result grid
+        if (this.sampleRecord === null) {
             title = i18n.getMsg('setStatus.count', this.selection.length);
+        } else {
+            var probenumber = this.sampleRecord.get('mainSampleId')
+                ? 'mit HP-Nr ' + this.sampleRecord.get('mainSampleId')
+                : 'mit extPID ' + this.sampleRecord.get('extId');
+            var messungnumber = this.selection[0].get('minSampleId')
+                ? 'mit NP-Nr ' + this.selection[0].get('minSampleId')
+                : 'mit extMId ' + this.selection[0].get('extId');
+            title = i18n.getMsg('setStatus.hprnr',
+                messungnumber,
+                probenumber);
         }
         this.callParent(arguments);
         this.down('fieldset').setTitle(title);
