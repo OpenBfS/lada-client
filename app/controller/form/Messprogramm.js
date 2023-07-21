@@ -472,8 +472,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     /**
-     * Called if umweltBereich value has changed. filters reiProgpunktgruppe
-     * values according to the new value.
+     * Called if umweltBereich value has changed. Filters other comboboxes
+     * according to the new value.
      */
     umweltChanged: function(combo) {
         // avoids endless loop
