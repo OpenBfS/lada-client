@@ -592,20 +592,15 @@ Ext.define('Lada.controller.form.Probe', {
             panel.down('button[action=copy]').setDisabled(
                 !panel.getRecord().get('owner'));
         } else {
+            var isDirty = panel.isDirty();
             if (panel.isValid()) {
-                if (panel.isDirty()) {
-                    panel.down('button[action=discard]').setDisabled(false);
-                    panel.down('button[action=save]').setDisabled(false);
-                    panel.down('button[action=copy]').setDisabled(true);
-                } else {
-                    panel.down('button[action=discard]').setDisabled(true);
-                    panel.down('button[action=save]').setDisabled(true);
-                    panel.down('button[action=copy]').setDisabled(false);
-                }
+                panel.down('button[action=discard]').setDisabled(!isDirty);
+                panel.down('button[action=save]').setDisabled(!isDirty);
+                panel.down('button[action=copy]').setDisabled(isDirty);
             } else {
                 panel.down('button[action=save]').setDisabled(true);
                 panel.down('button[action=copy]').setDisabled(true);
-                if ( panel.getRecord().phantom === true && !panel.isDirty() ) {
+                if (panel.getRecord().phantom === true && !isDirty) {
                     panel.down('button[action=discard]').setDisabled(true);
                 } else {
                     panel.down('button[action=discard]').setDisabled(false);
