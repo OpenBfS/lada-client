@@ -644,7 +644,7 @@ Ext.define('Lada.controller.Query', {
                                 }
                             }
                         };
-                        options.value = recs[i].get('filterValue') || null;
+                        options.value = recs[i].get('filterVal') || null;
                         field = Ext.create(
                             'Lada.view.widget.base.TextField',
                             options);
