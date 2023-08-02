@@ -291,7 +291,7 @@ Ext.define('Lada.view.window.Probe', {
         var datenbasis = Ext.data.StoreManager.get('datenbasis')
             .getById(this.record.get('regulationId'));
         if (datenbasis) {
-            title += datenbasis.get('name');
+            title += datenbasis.get('regulation');
             title += ' ';
         }
         title += i18n.getMsg('probe') + ': ';

@@ -214,7 +214,7 @@ Ext.define('Lada.view.form.Messung', {
                 }
                 Lada.model.Regulation.load(dbid, {
                     success: function(dbrecord) {
-                        me.probedatenbasis = dbrecord.get('name');
+                        me.probedatenbasis = dbrecord.get('regulation');
                     },
                     failure: function() {
                         //TODO: handle failure

@@ -14,6 +14,6 @@ Ext.define('Lada.model.Regulation', {
     }, {
         name: 'descr'
     }, {
-        name: 'name'
+        name: 'regulation'
     }]
 });
