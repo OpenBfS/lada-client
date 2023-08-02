@@ -437,7 +437,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     //Readable name
                     displayName: cc[i].get('gridCol'),
                     //Filter value
-                    filterVal: cc[i].get('filterValue'),
+                    filterVal: cc[i].get('filterVal'),
                     //Readable filter value
                     filterDisplay: filterMap.get(dataIndex) ?
                         filterMap.get(dataIndex) :
