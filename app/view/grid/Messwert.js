@@ -248,7 +248,7 @@ Ext.define('Lada.view.grid.Messwert', {
                         + Math.abs(exponent).toString();
                 }
             }, {
-                header: i18n.getMsg('unitId'),
+                header: i18n.getMsg('measUnitId'),
                 dataIndex: 'measUnitId',
                 width: 120,
                 renderer: function(value, metaData, record) {

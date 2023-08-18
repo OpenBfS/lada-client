@@ -304,7 +304,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             }, {
                                 xtype: 'messeinheit',
                                 name: 'measUnitId',
-                                fieldLabel: i18n.getMsg('unitId'),
+                                fieldLabel: i18n.getMsg('measUnitId'),
                                 labelWidth: 75,
                                 width: '42%',
                                 margin: '0, 0, 5, 5',

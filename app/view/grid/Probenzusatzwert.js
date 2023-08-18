@@ -143,7 +143,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                     + Math.abs(exponent).toString();
                 }
             }, {
-                header: i18n.getMsg('unitId'),
+                header: i18n.getMsg('measUnitId'),
                 dataIndex: 'sampleSpecifId',
                 flex: 1,
                 renderer: function(value, metaData, gridRec) {
