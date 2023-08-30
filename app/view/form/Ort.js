@@ -290,7 +290,7 @@ Ext.define('Lada.view.form.Ort', {
             this.down('koordinatenart').setReadOnly(true);
         }
 
-        if (this.record.get('ortTyp') === 3) {
+        if (this.record.get('siteClassId') === 3) {
             this.down('fieldset').expand();
             this.down('ortszusatz').setHidden(false);
         }
