@@ -43,18 +43,12 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     },
 
     /**
-      * The save function saves the content of the Ort form.
-      * On success it will reload the Store,
-      * on failure, it will display an Errormessage
+      * Save the content of the form.
       */
     save: function(button) {
         var formPanel = button.up('ortszuordnungform');
-        var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
-        record.set('siteId', data.siteId);
-        record.set('typeRegulation', data.typeRegulation);
-        record.set('addSiteText', data.addSiteText);
-        record.set('poiId', data.poiId);
+        record.set(formPanel.getForm().getFieldValues(true));
         if (record.phantom) {
             record.set('id', null);
         }
@@ -65,12 +59,11 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         record.save({
             scope: this,
             success: function(newRecord, response) {
+                formPanel.setRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    formPanel.setRecord(newRecord);
-                    formPanel.setMessages(json.errors, json.warnings);
-                    formPanel.up('window').parentWindow.initData();
-                }
+                formPanel.setMessages(json.errors, json.warnings);
+                formPanel.up('window').parentWindow.initData();
+
                 //try to refresh the Grid of the Probe
                 if (
                     formPanel.up('window').parentWindow.down(
