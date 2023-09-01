@@ -237,28 +237,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      */
     changed: function() {
         this.fireEvent('validitychange', this, this.isValid());
-    },
-
-    /**
-     * When the form is editable, a Record can be selected.
-     * If the Record was selected from a grid this function
-     * sets the ortzuordnung.
-     */
-    chooseLocation: function() {
-        var win = this.up('ortszuordnungwindow');
-        var osg = win.down('ortstammdatengrid');
-        var oForm = win.down('ortszuordnungform');
-        if (!this.getRecord().get('readonly')) {
-            osg.addListener('select', oForm.setOrt, oForm);
-            var map = win.down('map');
-            if (!map.featureLayer) {
-                map.initFeatureLayer();
-            }
-            map.featureLayer.setVisibility(true);
-            osg.addListener('select', oForm.setOrt, oForm);
-        } else {
-            osg.removeListener('select', oForm.setOrt, oForm);
-        }
     }
 });
 
