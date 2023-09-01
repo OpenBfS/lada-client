@@ -49,11 +49,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
       */
     save: function(button) {
         var formPanel = button.up('ortszuordnungform');
-
-        //try to disable ortPickerButton:
-        if (formPanel.down('button[action=setOrt]')) {
-            formPanel.down('button[action=setOrt]').toggle(false);
-        }
         var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
         record.set('siteId', data.siteId);
