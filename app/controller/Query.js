@@ -350,7 +350,6 @@ Ext.define('Lada.controller.Query', {
 
                     // Trigger filtering the store
                     if (op.getRequest().getAction() === 'create') {
-                        cstore.clearFilter();
                         cbox.up('querypanel')
                             .down('checkbox[name=filterQueriesOwn]')
                             .setValue(true);
