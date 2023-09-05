@@ -133,8 +133,8 @@ Ext.define('Lada.controller.grid.Downloads', {
     },
 
     /**
-     * Polls the status of an queue item
-     * @param {*} item Lada.model.DownloadQuque instance
+     * Polls the status of a queue item
+     * @param {*} item Lada.model.DownloadQueue instance
      */
     refreshItemInfo: function(item) {
         // potentially submits wrong prefix part if url is proxied
