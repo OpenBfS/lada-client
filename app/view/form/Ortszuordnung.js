@@ -83,20 +83,19 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                             layout: 'vbox',
                             border: false,
                             margin: '0, 20, 0, 0',
+                            defaults: {
+                                labelWidth: 120,
+                                width: 350
+                            },
                             items: [{
                                 xtype: 'ortszuordnungtyp',
-                                labelWidth: 120,
                                 allowBlank: false,
-                                editable: true,
                                 name: 'typeRegulation',
                                 disableKeyFilter: true,
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ortszuordnungtyp')
                             }, {
                                 xtype: 'ortszusatz',
-                                labelWidth: 120,
-                                width: 350,
-                                editable: true,
                                 name: 'poiId',
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ozId')
@@ -109,7 +108,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 // need to know the internal ortID
                                 xtype: 'numberfield',
                                 allowBlank: false,
-                                submitValue: true,
                                 hidden: true,
                                 name: 'siteId',
                                 listeners: {
@@ -130,9 +128,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 minHeight: 10
                             }, {
                                 xtype: 'tarea',
-                                labelWidth: 125,
                                 maxLength: 100,
-                                width: 350,
                                 name: 'addSiteText',
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ortszusatztext'),
