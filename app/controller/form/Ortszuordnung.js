@@ -28,16 +28,8 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 click: this.showort
             },
             'ortszuordnungform': {
-                validitychange: this.validityChange
-            },
-            'ortszuordnungform ortszuordnungtyp [name=ortszuordnungTyp]': {
-                change: this.dirtyChange
-            },
-            'ortszuordnungform ortszusatz [name=ozId]': {
-                change: this.dirtyChange
-            },
-            'ortszuordnungform tarea [name=ortszusatztext]': {
-                change: this.dirtyChange
+                validitychange: this.setButtonsDisabled,
+                dirtychange: this.setButtonsDisabled
             }
         });
     },
@@ -52,10 +44,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         if (record.phantom) {
             record.set('id', null);
         }
-        button.setDisabled(true);
-        button.up('ortszuordnungform').form.owner
-            .down('button[action=revert]')
-            .setDisabled(true);
         record.save({
             scope: this,
             success: function(newRecord, response) {
@@ -116,57 +104,19 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 }
             }
         }
-        button.setDisabled(true);
-        button.up('toolbar').down('button[action=save]').setDisabled(true);
     },
-
 
     /**
-     * The validitychange function enables or disables the save button which
-     * is present in the toolbar of the form.
-     */
-    validityChange: function(form, valid) {
-        // the simple form.isDirty() check seems to fail for a lot of cases
-        var ortIdIsDirty = true;
-        if (
-            form.getRecord().data.ortId ===
-                form.findField('siteId').getValue()
-        ) {
-            ortIdIsDirty = false;
-        }
-        if (form.getRecord().get('readonly') === true) {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=revert]').setDisabled(true);
-            return;
-        }
-        if (form.findField('addSiteText').isDirty()
-            || form.findField('typeRegulation').isDirty()
-            || form.findField('poiId').isDirty()
-            || ortIdIsDirty) {
-            form.owner.down('button[action=revert]').setDisabled(false);
-            if (valid && form.getValues().ortId !== '') {
-                form.owner.down('button[action=save]').setDisabled(false);
-            } else {
-                form.owner.down('button[action=save]').setDisabled(true);
-            }
-        } else {
-            //not dirty
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=revert]').setDisabled(true);
-        }
-    },
+      * Enables or disables buttons in the toolbar of the form.
+      */
+    setButtonsDisabled: function(form) {
+        var enableForm = !form.getRecord().get('readonly') && form.isDirty();
+        form.owner.down('button[action=save]').setDisabled(
+            !enableForm || !form.isValid());
+        form.owner.down('button[action=revert]').setDisabled(!enableForm);
 
-    dirtyChange: function(combo) {
-        var ozf = combo.up('ortszuordnungform');
-        ozf.form.owner.down('button[action=revert]').setDisabled(false);
-        if (
-            ozf.form.findField('siteId').getValue() !== '' &&
-            ozf.form.isValid()
-        ) {
-            ozf.form.owner.down('button[action=save]').setDisabled(false);
-            ozf.clearMessages();
-        }
-
+        form.owner.down('button[action=showort]').setDisabled(
+            !form.getValues().siteId);
     },
 
     /**

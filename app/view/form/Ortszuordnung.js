@@ -56,7 +56,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         text: i18n.getMsg('orte.show'),
                         tooltip: i18n.getMsg('save.qtip'),
                         // TODO icon:
-                        action: 'showort'
+                        action: 'showort',
+                        disabled: true
                     }, {
                         text: i18n.getMsg('save'),
                         tooltip: i18n.getMsg('save.qtip'),
@@ -158,10 +159,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             if (!this.getRecord().get('readonly') && newOrtId) {
                 this.getForm().findField('siteId').setValue(newOrtId);
                 this.setOrtInfo(selRecord);
-                this.down('button[action=showort]').setDisabled(false);
             }
-        } else {
-            this.down('button[action=showort]').setDisabled(true);
         }
     },
 
@@ -234,4 +232,3 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         this.fireEvent('validitychange', this, this.isValid());
     }
 });
-
