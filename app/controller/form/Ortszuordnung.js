@@ -86,11 +86,11 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      */
     revert: function(button) {
         var form = button.up('form');
+        form.reset();
+
+        var currentOrt = form.getRecord().get('siteId');
         var osg = button.up('window').down('ortstammdatengrid');
-        var recordData = form.getForm().getRecord().data;
-        var currentOrt = recordData.ortId;
         var selmod = osg.getView().getSelectionModel();
-        form.getForm().reset();
         if (!currentOrt) {
             selmod.deselectAll();
         } else {
