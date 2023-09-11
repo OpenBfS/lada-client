@@ -193,7 +193,7 @@ Ext.define('Lada.controller.Print', {
                                 listOfItems.push({
                                     xtype: 'textarea',
                                     fieldLabel: i18n.getMsg(attributes[i].name),
-                                    emptyText: i18n.getMsg('emptyText.' +
+                                    emptyText: i18n.getMsg('emptyText.' +p
                                         attributes[i].name),
                                     name: attributes[i].name,
                                     labelWidth: 105,
@@ -211,7 +211,7 @@ Ext.define('Lada.controller.Print', {
                             xtype: 'checkbox',
                             fieldLabel: i18n.getMsg(attributes[i].name),
                             name: attributes[i].name,
-                            labelWidth: 130,
+                            labelWidth: 230,
                             margin: '5, 5, 5, 5',
                             anchor: '100%',
                             value: value
