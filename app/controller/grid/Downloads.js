@@ -117,16 +117,12 @@ Ext.define('Lada.controller.grid.Downloads', {
         var me = this;
         if (store0) {
             Ext.each(store0.getData().items, function(item) {
-                if (item.get('done') !== true) {
-                    me.refreshItemInfo(item);
-                }
+                me.refreshItemInfo(item);
             });
         }
         if (store1) {
             Ext.each(store1.getData().items, function(item) {
-                if (item.get('done') !== true) {
-                    me.refreshItemInfo(item);
-                }
+                me.refreshItemInfo(item);
             });
         }
     },
@@ -138,18 +134,17 @@ Ext.define('Lada.controller.grid.Downloads', {
     refreshItemInfo: function(item) {
         // potentially submits wrong prefix part if url is proxied
         // var url = item.get('mapfish_statusURL');
-        var type = item.get('type');
-        var url;
         var refId = item.get('refId');
-        switch (type) {
-            case 'lada-print':
-                url = this.ladaPrintUrlPrefix + '/status/' + refId + '.json';
-                break;
-            case 'export':
-                url = this.exportUrls.status + refId;
-                break;
-        }
-        if (url && refId) {
+        if (refId && !item.get('done')) {
+            var url;
+            switch (item.get('type')) {
+                case 'lada-print':
+                    url = this.ladaPrintUrlPrefix + '/status/' + refId + '.json';
+                    break;
+                case 'export':
+                    url = this.exportUrls.status + refId;
+                    break;
+            }
             var me = this;
             return new Ext.Promise(function() {
                 Ext.Ajax.request({
