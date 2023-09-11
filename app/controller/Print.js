@@ -193,7 +193,7 @@ Ext.define('Lada.controller.Print', {
                                 listOfItems.push({
                                     xtype: 'textarea',
                                     fieldLabel: i18n.getMsg(attributes[i].name),
-                                    emptyText: i18n.getMsg('emptyText.' +p
+                                    emptyText: i18n.getMsg('emptyText.' +
                                         attributes[i].name),
                                     name: attributes[i].name,
                                     labelWidth: 105,
