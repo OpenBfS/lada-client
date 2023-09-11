@@ -180,12 +180,15 @@ Ext.define('Lada.controller.grid.Downloads', {
                     failure: function(response) {
                         item.set('done', true);
                         item.set('status', 'error');
-                        if (response.status === 404) {
-                            item.set('message', 'URL not found');
 
-                        } else {
-                            item.set('message', 'bad server answer');
+                        var msg = response.responseText;
+                        if (!msg) {
+                            var i18n = Lada.getApplication().bundle;
+                            msg = response.timedout
+                                ? i18n.getMsg('err.msg.timeout')
+                                : response.statusText;
                         }
+                        item.set('message', msg);
                     }
                 });
             });

@@ -731,9 +731,18 @@ Ext.define('Lada.view.window.GridExport', {
                     queueItem.set('status', 'error');
                 }
             },
-            failure: function() {
+            failure: function(response) {
                 queueItem.set('done', true);
                 queueItem.set('status', 'error');
+
+                var msg = response.responseText;
+                if (!msg) {
+                    var i18n = Lada.getApplication().bundle;
+                    msg = response.timedout
+                        ? i18n.getMsg('err.msg.timeout')
+                        : response.statusText;
+                }
+                queueItem.set('message', msg);
             }
         });
     },
