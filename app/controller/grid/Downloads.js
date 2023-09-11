@@ -23,7 +23,7 @@ Ext.define('Lada.controller.grid.Downloads', {
      * Initialize the controller, request polling to run every 2 seconds
      */
     init: function() {
-        window.setInterval(this.refreshQueue, 2000);
+        window.setInterval(() => this.refreshQueue(), 2000);
     },
 
     /**
@@ -114,19 +114,18 @@ Ext.define('Lada.controller.grid.Downloads', {
         }
         var store0 = Ext.data.StoreManager.get('downloadqueue-print');
         var store1 = Ext.data.StoreManager.get('downloadqueue-export');
-        var controller = Lada.app.getController(
-            'Lada.controller.grid.Downloads');
+        var me = this;
         if (store0) {
             Ext.each(store0.getData().items, function(item) {
                 if (item.get('done') !== true) {
-                    controller.refreshItemInfo(item);
+                    me.refreshItemInfo(item);
                 }
             });
         }
         if (store1) {
             Ext.each(store1.getData().items, function(item) {
                 if (item.get('done') !== true) {
-                    controller.refreshItemInfo(item);
+                    me.refreshItemInfo(item);
                 }
             });
         }
