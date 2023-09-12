@@ -541,7 +541,7 @@ Ext.define('Lada.view.window.GridExport', {
                         'json', win.jsonRequestURL, requestData, win);
                     break;
                 case 'csv':
-                    if (win.validateCsvOptions(win)) {
+                    if (win.validateCsvOptions()) {
                         requestData.subDataColumnNames = win
                             .getSubdataColumNames(requestData.subDataColumns);
                         requestData = win.getCsvOptions(requestData, win);
@@ -615,9 +615,9 @@ Ext.define('Lada.view.window.GridExport', {
         };
     },
 
-    validateCsvOptions: function(win) {
-        var colsep = win.down('combobox[name=colsep]').getValue();
-        var decsep = win.down('combobox[name=decsep]').getValue();
+    validateCsvOptions: function() {
+        var colsep = this.down('combobox[name=colsep]').getValue();
+        var decsep = this.down('combobox[name=decsep]').getValue();
         if (colsep === decsep) {
             this.showError('export.differentcoldecimal');
             return false;
