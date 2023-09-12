@@ -56,7 +56,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         text: i18n.getMsg('orte.show'),
                         tooltip: i18n.getMsg('save.qtip'),
                         // TODO icon:
-                        action: 'showort'
+                        action: 'showort',
+                        disabled: true
                     }, {
                         text: i18n.getMsg('save'),
                         tooltip: i18n.getMsg('save.qtip'),
@@ -83,20 +84,19 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                             layout: 'vbox',
                             border: false,
                             margin: '0, 20, 0, 0',
+                            defaults: {
+                                labelWidth: 120,
+                                width: 350
+                            },
                             items: [{
                                 xtype: 'ortszuordnungtyp',
-                                labelWidth: 120,
                                 allowBlank: false,
-                                editable: true,
                                 name: 'typeRegulation',
                                 disableKeyFilter: true,
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ortszuordnungtyp')
                             }, {
                                 xtype: 'ortszusatz',
-                                labelWidth: 120,
-                                width: 350,
-                                editable: true,
                                 name: 'poiId',
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ozId')
@@ -107,10 +107,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                             }, {
                                 // this field is hidden because the user doesn't
                                 // need to know the internal ortID
-                                xtype: 'textfield',
+                                xtype: 'numberfield',
                                 allowBlank: false,
-                                regex: /^[0-9]{1,45}$/,
-                                submitValue: true,
                                 hidden: true,
                                 name: 'siteId',
                                 listeners: {
@@ -131,9 +129,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 minHeight: 10
                             }, {
                                 xtype: 'tarea',
-                                labelWidth: 125,
                                 maxLength: 100,
-                                width: 350,
                                 name: 'addSiteText',
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ortszusatztext'),
@@ -161,12 +157,9 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         if (selRecord) {
             var newOrtId = selRecord.get('id');
             if (!this.getRecord().get('readonly') && newOrtId) {
-                this.getForm().setValues({siteId: newOrtId});
+                this.getForm().findField('siteId').setValue(newOrtId);
                 this.setOrtInfo(selRecord);
-                this.down('button[action=showort]').setDisabled(false);
             }
-        } else {
-            this.down('button[action=showort]').setDisabled(true);
         }
     },
 
@@ -237,28 +230,5 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      */
     changed: function() {
         this.fireEvent('validitychange', this, this.isValid());
-    },
-
-    /**
-     * When the form is editable, a Record can be selected.
-     * If the Record was selected from a grid this function
-     * sets the ortzuordnung.
-     */
-    chooseLocation: function() {
-        var win = this.up('ortszuordnungwindow');
-        var osg = win.down('ortstammdatengrid');
-        var oForm = win.down('ortszuordnungform');
-        if (!this.getRecord().get('readonly')) {
-            osg.addListener('select', oForm.setOrt, oForm);
-            var map = win.down('map');
-            if (!map.featureLayer) {
-                map.initFeatureLayer();
-            }
-            map.featureLayer.setVisibility(true);
-            osg.addListener('select', oForm.setOrt, oForm);
-        } else {
-            osg.removeListener('select', oForm.setOrt, oForm);
-        }
     }
 });
-

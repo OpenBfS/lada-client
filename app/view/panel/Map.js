@@ -40,6 +40,18 @@ Ext.define('Lada.view.panel.Map', {
 
     /**
      * @private
+     * Task to update the map size after its container has been resized.
+     * This is needed to prevent the map canvas from exceeding the parent
+     * container. See https://github.com/openlayers/openlayers/issues/1963 for
+     * further details.
+     */
+    mapResizeTask: new Ext.util.DelayedTask(function() {
+        this.map.setTarget(this.mapTarget);
+        this.map.updateSize();
+    }),
+
+    /**
+     * @private
      * Initialize the map panel.
      */
     initComponent: function() {
@@ -301,6 +313,7 @@ Ext.define('Lada.view.panel.Map', {
         } else {
             this.mapOptions.target = target.dom;
         }
+        this.mapTarget = this.mapOptions.target;
         this.mapOptions.view = new ol.View({
             center: [1160000, 6694000],
             zoom: 6,
@@ -393,7 +406,8 @@ Ext.define('Lada.view.panel.Map', {
      */
     onResize: function() {
         this.superclass.onResize.apply(this, arguments);
-        this.map.updateSize();
+        this.map.setTarget('');
+        this.mapResizeTask.delay(100, null, this);
     },
 
     addPreviousOrt: function(record) {

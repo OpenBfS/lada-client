@@ -303,8 +303,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 editable: true
                             }, {
                                 xtype: 'messeinheit',
-                                name: 'unitId',
-                                fieldLabel: i18n.getMsg('unitId'),
+                                name: 'measUnitId',
+                                fieldLabel: i18n.getMsg('measUnitId'),
                                 labelWidth: 75,
                                 width: '42%',
                                 margin: '0, 0, 5, 5',
@@ -333,9 +333,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 width: '42%',
                                 enforceMaxLength: true,
                                 editable: false,
-                                isDirty: function() {
-                                    return false;
-                                }
+                                isFormField: false
                             }]
                         }, {
                             xtype: 'fieldset',
@@ -511,7 +509,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     filterProbenZusatzs: function(umwId) {
         var params = {};
         if (umwId) {
-            params['umwId'] = umwId;
+            params['envMediumId'] = umwId;
         }
         this.down('tagfield[name=sampleSpecifs]').getStore().load({
             params: params

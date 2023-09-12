@@ -47,7 +47,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 change: this.umweltChanged
             },
             // eslint-disable-next-line max-len
-            'messprogrammform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
+            'messprogrammform reiprogpunktgruppe combobox': {
                 change: this.reiProgpunktGruppeChanged
             },
             'messprogrammform datenbasis combobox': {
@@ -447,7 +447,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     reiProgpunktGruppeChanged: function(combo) {
         // avoids endless loop
-        if (combo.name !== 'reiProgpunktGrpId') {
+        if (combo.name !== 'reiAgGrId') {
             return true;
         }
         //Check if reiprogpunktgruppe widget is contained in a messprogrammform
@@ -463,21 +463,21 @@ Ext.define('Lada.controller.form.Messprogramm', {
             return true;
         }
         var umweltStore = umweltCombo.store;
-        var reiId = combo.getModelData().reiProgpunktGrpId;
-        umweltStore.proxy.extraParams = {};
+        var reiId = combo.getModelData().reiAgGrId;
+        var params = {};
         if (reiId || reiId === 0) {
-            umweltStore.proxy.extraParams.reiprogpunktgruppe = reiId;
+            params.reiAgGrId = reiId;
         }
-        umweltStore.load();
+        umweltStore.load({params: params});
     },
 
     /**
-     * Called if umweltBereich value has changed. filters reiProgpunktgruppe
-     * values according to the new value.
+     * Called if umweltBereich value has changed. Filters other comboboxes
+     * according to the new value.
      */
     umweltChanged: function(combo) {
         // avoids endless loop
-        if (combo.name !== 'umwId') {
+        if (combo.name !== 'envMediumId') {
             return true;
         }
         //Check if umwelt widget is contained in a messprogrammform
@@ -491,12 +491,12 @@ Ext.define('Lada.controller.form.Messprogramm', {
             return true;
         }
         var reiStore = reiCombo.store;
-        reiStore.proxy.extraParams = {};
-        var umwId = combo.getModelData().umwId;
+        var reiStoreParams = {};
+        var umwId = combo.getModelData().envMediumId;
         if (umwId || umwId === 0) {
-            reiStore.proxy.extraParams.umwelt = umwId;
+            reiStoreParams.envMediumId = umwId;
         }
-        reiStore.load();
+        reiStore.load({params: reiStoreParams});
 
         var masseinheitCombo = formPanel.down('messeinheit').down('combobox');
         var masseinheitStore = masseinheitCombo.store;

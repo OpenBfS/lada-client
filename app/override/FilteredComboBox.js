@@ -72,7 +72,7 @@ Ext.define('Lada.override.FilteredComboBox', {
                         var val = candidate.data[secondarySearchField];
                         if (val) {
                             val = val.toString().toLowerCase();
-                            if (val < 10 && secondarySearchField === 'sn') {
+                            if (val < 10 && secondarySearchField === 'levVal') {
                                 val = '0' + val;
                             }
                             if (val.indexOf(value) > -1) {

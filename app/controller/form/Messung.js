@@ -96,6 +96,10 @@ Ext.define('Lada.controller.form.Messung', {
                     if (messwertStore.isLoaded()) {
                         messwertStore.reload();
                     }
+                    //Reload measd store in case mmt changed
+                    win.mStore.load({
+                        params: {mmtId: newRecord.get('mmtId')}
+                    });
                     formPanel.setLoading(false);
                 }
             },
@@ -174,8 +178,9 @@ Ext.define('Lada.controller.form.Messung', {
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.SetStatus', {
             title: i18n.getMsg('statusSetzen.win.title'),
-            selection: [button.up('window')
-                .down('messungform').getForm().getRecord()],
+            selection: [button.up('messungform').getForm().getRecord()],
+            sampleRecord: button.up('messungedit').parentWindow.
+                down('probeform').getRecord(),
             modal: true
         });
         var view = button.up('messungform');

@@ -26,13 +26,11 @@ Ext.define('Lada.view.panel.SiteImages', {
     initComponent: function() {
         this.initUI();
         this.callParent(arguments);
-        var siteId = this.site.get('id');
         if (!this.site.phantom) {
+            var url = this.baseUrl + this.site.get('id');
             var dc = '?dc=' + Date.now();
-            this.down('image[name=imageImg]')
-                .setSrc(this.baseUrl + siteId + this.imgPath + dc);
-            this.down('image[name=mapImg]')
-                .setSrc(this.baseUrl + siteId + this.mapPath + dc);
+            this.down('image[name=imageImg]').setSrc(url + this.imgPath + dc);
+            this.down('image[name=mapImg]').setSrc(url + this.mapPath + dc);
         }
         //Set readonly if site is readonly or phantom
         this.setReadonly(this.site.get('readonly') || this.site.phantom);

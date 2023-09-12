@@ -20,7 +20,8 @@ Ext.define('Lada.model.Geolocat', {
         persist: false
     }, {
         name: 'siteId',
-        type: 'int'
+        type: 'int',
+        allowNull: true
     }, {
         name: 'sampleId',
         type: 'int'

@@ -28,54 +28,30 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 click: this.showort
             },
             'ortszuordnungform': {
-                validitychange: this.validityChange
-            },
-            'ortszuordnungform ortszuordnungtyp [name=ortszuordnungTyp]': {
-                change: this.dirtyChange
-            },
-            'ortszuordnungform ortszusatz [name=ozId]': {
-                change: this.dirtyChange
-            },
-            'ortszuordnungform tarea [name=ortszusatztext]': {
-                change: this.dirtyChange
+                validitychange: this.setButtonsDisabled,
+                dirtychange: this.setButtonsDisabled
             }
         });
     },
 
     /**
-      * The save function saves the content of the Ort form.
-      * On success it will reload the Store,
-      * on failure, it will display an Errormessage
+      * Save the content of the form.
       */
     save: function(button) {
         var formPanel = button.up('ortszuordnungform');
-
-        //try to disable ortPickerButton:
-        if (formPanel.down('button[action=setOrt]')) {
-            formPanel.down('button[action=setOrt]').toggle(false);
-        }
-        var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
-        record.set('siteId', data.siteId);
-        record.set('typeRegulation', data.typeRegulation);
-        record.set('addSiteText', data.addSiteText);
-        record.set('poiId', data.poiId);
+        record.set(formPanel.getForm().getFieldValues(true));
         if (record.phantom) {
             record.set('id', null);
         }
-        button.setDisabled(true);
-        button.up('ortszuordnungform').form.owner
-            .down('button[action=revert]')
-            .setDisabled(true);
         record.save({
             scope: this,
             success: function(newRecord, response) {
+                formPanel.setRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    formPanel.setRecord(newRecord);
-                    formPanel.setMessages(json.errors, json.warnings);
-                    formPanel.up('window').parentWindow.initData();
-                }
+                formPanel.setMessages(json.errors, json.warnings);
+                formPanel.up('window').parentWindow.initData();
+
                 //try to refresh the Grid of the Probe
                 if (
                     formPanel.up('window').parentWindow.down(
@@ -98,11 +74,11 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      */
     revert: function(button) {
         var form = button.up('form');
+        form.reset();
+
+        var currentOrt = form.getRecord().get('siteId');
         var osg = button.up('window').down('ortstammdatengrid');
-        var recordData = form.getForm().getRecord().data;
-        var currentOrt = recordData.ortId;
         var selmod = osg.getView().getSelectionModel();
-        form.getForm().reset();
         if (!currentOrt) {
             selmod.deselectAll();
         } else {
@@ -128,57 +104,19 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 }
             }
         }
-        button.setDisabled(true);
-        button.up('toolbar').down('button[action=save]').setDisabled(true);
     },
-
 
     /**
-     * The validitychange function enables or disables the save button which
-     * is present in the toolbar of the form.
-     */
-    validityChange: function(form, valid) {
-        // the simple form.isDirty() check seems to fail for a lot of cases
-        var ortIdIsDirty = true;
-        if (
-            form.getRecord().data.ortId ===
-                form.findField('siteId').getValue()
-        ) {
-            ortIdIsDirty = false;
-        }
-        if (form.getRecord().get('readonly') === true) {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=revert]').setDisabled(true);
-            return;
-        }
-        if (form.findField('addSiteText').isDirty()
-            || form.findField('typeRegulation').isDirty()
-            || form.findField('poiId').isDirty()
-            || ortIdIsDirty) {
-            form.owner.down('button[action=revert]').setDisabled(false);
-            if (valid && form.getValues().ortId !== '') {
-                form.owner.down('button[action=save]').setDisabled(false);
-            } else {
-                form.owner.down('button[action=save]').setDisabled(true);
-            }
-        } else {
-            //not dirty
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=revert]').setDisabled(true);
-        }
-    },
+      * Enables or disables buttons in the toolbar of the form.
+      */
+    setButtonsDisabled: function(form) {
+        var enableForm = !form.getRecord().get('readonly') && form.isDirty();
+        form.owner.down('button[action=save]').setDisabled(
+            !enableForm || !form.isValid());
+        form.owner.down('button[action=revert]').setDisabled(!enableForm);
 
-    dirtyChange: function(combo) {
-        var ozf = combo.up('ortszuordnungform');
-        ozf.form.owner.down('button[action=revert]').setDisabled(false);
-        if (
-            ozf.form.findField('siteId').getValue() !== '' &&
-            ozf.form.isValid()
-        ) {
-            ozf.form.owner.down('button[action=save]').setDisabled(false);
-            ozf.clearMessages();
-        }
-
+        form.owner.down('button[action=showort]').setDisabled(
+            !form.getValues().siteId);
     },
 
     /**

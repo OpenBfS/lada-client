@@ -18,6 +18,8 @@ Ext.define('Lada.view.window.GridExport', {
         margin: '5, 5, 5, 5',
         border: false
     },
+
+    width: 600,
     collapsible: true,
     maximizable: true,
     autoShow: true,
@@ -66,10 +68,25 @@ Ext.define('Lada.view.window.GridExport', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('export.title');
+
+        this.buttons = [{
+            action: 'export',
+            text: i18n.getMsg('export.button')
+        }, {
+            action: 'copyGeoJson',
+            icon: 'resources/img/map_add.png',
+            iconAlign: 'left',
+            text: i18n.getMsg('export.button.copy'),
+            hidden: true
+        }, '->', {
+            text: i18n.getMsg('close'),
+            scope: this,
+            handler: this.close
+        }];
+
         var columns = this.grid.getColumns();
 
         // add CSV export options
-
         this.csv_linesepstore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: [{
@@ -326,27 +343,6 @@ Ext.define('Lada.view.window.GridExport', {
                 xtype: 'downloadqueuegrid',
                 store: 'downloadqueue-export'
             }]
-        }, {
-            xtype: 'container',
-            defaults: {
-                margin: '5,5,5,5'
-            },
-            items: [{
-                xtype: 'button',
-                action: 'export',
-                text: i18n.getMsg('export.button')
-            }, {
-                xtype: 'button',
-                action: 'close',
-                text: i18n.getMsg('close')
-            }, {
-                xtype: 'button',
-                action: 'copyGeoJson',
-                icon: 'resources/img/map_add.png',
-                iconAlign: 'left',
-                text: i18n.getMsg('export.button.copy'),
-                hidden: true
-            }]
         }];
         this.callParent(arguments);
 
@@ -365,14 +361,6 @@ Ext.define('Lada.view.window.GridExport', {
             this.down('checkbox[name=allrows]').setValue(true);
         }
 
-        this.down('button[action=close]').text = i18n.getMsg('close');
-        this.down('button[action=export]').text = i18n.getMsg('export.button');
-        this.down('button[action=close]').on({
-            click: function(button) {
-                button.up('window').close();
-                return;
-            }
-        });
         this.down('button[action=copyGeoJson]').on({
             click: me.doCopy
         });
@@ -419,7 +407,6 @@ Ext.define('Lada.view.window.GridExport', {
             }
         }
 
-        this.down('button[action=export]').text = i18n.getMsg('export.button');
         this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
     },
 
@@ -554,10 +541,19 @@ Ext.define('Lada.view.window.GridExport', {
                         'json', win.jsonRequestURL, requestData, win);
                     break;
                 case 'csv':
-                    if (win.validateCsvOptions(win)) {
+                    if (win.validateCsvOptions()) {
                         requestData.subDataColumnNames = win
                             .getSubdataColumNames(requestData.subDataColumns);
-                        requestData = win.getCsvOptions(requestData, win);
+                        requestData.csvOptions = {
+                            rowDelimiter: win.down('combobox[name=linesep]')
+                                .getValue(),
+                            fieldSeparator: win.down('combobox[name=colsep]')
+                                .getValue(),
+                            decimalSeparator: win.down('combobox[name=decsep]')
+                                .getValue(),
+                            quoteType: win.down('combobox[name=textlim]')
+                                .getValue()
+                        };
                         win.requestExport(
                             'csv', win.csvRequestURL, requestData, win);
                     }
@@ -628,24 +624,14 @@ Ext.define('Lada.view.window.GridExport', {
         };
     },
 
-    validateCsvOptions: function(win) {
-        var colsep = win.down('combobox[name=colsep]').getValue();
-        var decsep = win.down('combobox[name=decsep]').getValue();
+    validateCsvOptions: function() {
+        var colsep = this.down('combobox[name=colsep]').getValue();
+        var decsep = this.down('combobox[name=decsep]').getValue();
         if (colsep === decsep) {
             this.showError('export.differentcoldecimal');
             return false;
         }
         return true;
-    },
-
-    getCsvOptions: function(requestData, win) {
-        requestData.csvOptions = {
-            rowDelimiter: win.down('combobox[name=linesep]').getValue(),
-            fieldSeparator: win.down('combobox[name=colsep]').getValue(),
-            decimalSeparator: win.down('combobox[name=decsep]').getValue(),
-            quoteType: win.down('combobox[name=textlim]').getValue()
-        };
-        return requestData;
     },
 
     /**
@@ -731,9 +717,18 @@ Ext.define('Lada.view.window.GridExport', {
                     queueItem.set('status', 'error');
                 }
             },
-            failure: function() {
+            failure: function(response) {
                 queueItem.set('done', true);
                 queueItem.set('status', 'error');
+
+                var msg = response.responseText;
+                if (!msg) {
+                    var i18n = Lada.getApplication().bundle;
+                    msg = response.timedout
+                        ? i18n.getMsg('err.msg.timeout')
+                        : response.statusText;
+                }
+                queueItem.set('message', msg);
             }
         });
     },
@@ -798,8 +793,6 @@ Ext.define('Lada.view.window.GridExport', {
         } else {
             me.down('tagfield[name=exportexpcolumns]').setVisible(false);
         }
-        expButton.setText(
-            Lada.getApplication().bundle.getMsg('export.button'));
         expButton.setDisabled(false);
         me.resetCopyButton(me);
     },
@@ -1159,8 +1152,6 @@ Ext.define('Lada.view.window.GridExport', {
                 'geojson'
         ) {
             button.setVisible(true);
-            button.setText(
-                Lada.getApplication().bundle.getMsg('export.button.copy'));
             button.setDisabled(false);
         } else {
             button.setVisible(false);

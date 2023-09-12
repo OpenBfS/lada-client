@@ -70,54 +70,17 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                     }
                 }
             });
-            if (this.record) {
-                // A probe record will be edited
-                this.title = i18n.getMsg('ortszuordnung.window.title')
-                            + ' '
-                            + i18n.getMsg('ortszuordnung.window.title2')
-                            + ' '
-                            + i18n.getMsg('probe')
-                            + ' '
-                            + this.probe.get('mainSampleId')
-                            + ' '
-                            + i18n.getMsg('edit');
-            } else {
-                // A new probe record will be created
-                this.title = i18n.getMsg('ortszuordnung.window.title')
-                            + ' '
-                            + i18n.getMsg('ortszuordnung.window.title2')
-                            + ' '
-                            + i18n.getMsg('probe')
-                            + ' '
-                            + this.probe.get('mainSampleId')
-                            + ' '
-                            + i18n.getMsg('create');
-            }
+            var mainSampleId = this.probe.get('mainSampleId');
+            this.title += ' ' + i18n.getMsg('ortszuordnung.window.title2') + ' '
+                + i18n.getMsg('probe') + ' '
+                + (mainSampleId ? mainSampleId : this.probe.get('extId'));
         } else if (this.messprogramm) {
-            if (this.record) {
-                // A messprogramm record will be edited
-                this.title = i18n.getMsg('ortszuordnung.window.title')
-                            + ' '
-                            + i18n.getMsg('ortszuordnung.window.title2')
-                            + ' '
-                            + i18n.getMsg('messprogramm')
-                            + ' '
-                            + this.messprogramm.get('id')
-                            + ' '
-                            + i18n.getMsg('edit');
-            } else {
-                // A new messprogramm record will be created
-                this.title = i18n.getMsg('ortszuordnung.window.title')
-                            + ' '
-                            + i18n.getMsg('ortszuordnung.window.title2')
-                            + ' '
-                            + i18n.getMsg('messprogramm')
-                            + ' '
-                            + this.messprogramm.get('id')
-                            + ' '
-                            + i18n.getMsg('create');
-            }
+            this.title += ' ' + i18n.getMsg('ortszuordnung.window.title2') + ' '
+                + i18n.getMsg('messprogramm') + ' '
+                + this.messprogramm.get('id');
         }
+        this.title += ' ' + (
+            this.record ? i18n.getMsg('edit') : i18n.getMsg('create'));
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),

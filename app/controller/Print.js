@@ -38,6 +38,11 @@ Ext.define('Lada.controller.Print', {
     printUrlPrefix: 'lada-printer/print/',
     irixServletURL: 'irix-servlet',
 
+    //Templates requiring additional server data
+    specialTemplates: [
+        'lada_erfassungsbogen_01', 'lada_erfassungsbogen_02',
+        'lada_probenbegleitschein', 'lada_probenetikett'],
+
     init: function() {
         this.control({
             'button[action=print]': { // generic print button
@@ -206,7 +211,7 @@ Ext.define('Lada.controller.Print', {
                             xtype: 'checkbox',
                             fieldLabel: i18n.getMsg(attributes[i].name),
                             name: attributes[i].name,
-                            labelWidth: 130,
+                            labelWidth: 230,
                             margin: '5, 5, 5, 5',
                             anchor: '100%',
                             value: value
@@ -222,7 +227,7 @@ Ext.define('Lada.controller.Print', {
         try {
             fields = recursiveFields(capabilitiesForLayout.attributes);
         } catch (e) {
-            if (e === 'lada_erfassungsbogen') {
+            if (Ext.Array.contains(this.specialTemplates, e)) {
                 fields = null;
             } else {
                 throw new Error('unknown template');
@@ -649,8 +654,8 @@ Ext.define('Lada.controller.Print', {
     },
 
     /**
-     * (Legacy) Send the selection to a Printservice. Special handling for an
-     * lada_erfassungsbogen. First it needs to query the lada-server, then
+     * (Legacy) Send the selection to a Printservice. Special handling for
+     * lada_erfassungsbogen templates. First it needs to query the lada-server, then
      * this response is aggregated (see pepareData)
      * TODO: lacks handling for server errors/timeouts
      */
@@ -669,7 +674,7 @@ Ext.define('Lada.controller.Print', {
         var callback = function(response) {
             var data = response.responseText;
             //In case erfassungsschein is printed: Merge samples
-            var mergeSamples = templateName === 'lada_erfassungsschein';
+            var mergeSamples = templateName === 'lada_erfassungsbogen_02';
             // Wraps all messstellen and deskriptoren objects into an array
             data = this.prepareData(data, mergeSamples);
             var printData = {
@@ -869,13 +874,13 @@ Ext.define('Lada.controller.Print', {
                     var grid = window.parentGrid;
                     if (Array.isArray(json)) {
                         for (var i = 0; i < json.length; i++) {
-                            if (json[i] !== 'lada_erfassungsbogen') {
+                            if (!Ext.Array.contains(
+                                me.specialTemplates, json[i])) {
                                 data.push({name: json[i]});
                             } else if (grid.rowtarget.probeIdentifier
                                 || grid.rowtarget.messungIdentifier) {
-                            // special handling for "lada_erfassungsbogen":
-                            // only usable if we have some non-null probe
-                            // identifier
+                                // special handling for templates
+                                // requiring server data
                                 var selection = grid.getSelectionModel()
                                     .getSelection()[0];
                                 if (

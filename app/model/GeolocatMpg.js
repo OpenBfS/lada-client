@@ -17,7 +17,8 @@ Ext.define('Lada.model.GeolocatMpg', {
         persist: false
     }, {
         name: 'siteId',
-        type: 'int'
+        type: 'int',
+        allowNull: true
     }, {
         name: 'mpgId',
         type: 'int'

@@ -433,7 +433,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var store = Ext.data.StoreManager.get('datenbasis');
                         var record = store.getById(value);
                         if (record) {
-                            r = record.get('regulation');
+                            r = record.get('name');
                         }
                         return r;
                     }
