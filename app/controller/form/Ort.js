@@ -98,13 +98,6 @@ Ext.define('Lada.controller.form.Ort', {
                 success: function(newrecord, response) {
                     var win = formpanel.up('window');
                     win.down('siteimages').uploadPresetImages();
-                    if (win.setOzOnComplete === true ) {
-                        var ozf = Ext.ComponentQuery
-                            .query('ortszuordnungform')[0];
-                        if (ozf) {
-                            ozf.setOrt(null, newrecord);
-                        }
-                    }
 
                     var dynamicgrid = Ext.getCmp('dynamicgridid');
                     if (dynamicgrid) {
@@ -112,9 +105,9 @@ Ext.define('Lada.controller.form.Ort', {
                     }
 
                     var ozw = formpanel.up('panel').parentWindow;
+                    var ortgrid = ozw.down('tabpanel')
+                        .down('ortstammdatengrid');
                     if (ozw && ozw.down('tabpanel')) {
-                        var ortgrid = ozw.down('tabpanel')
-                            .down('ortstammdatengrid');
                         if (ortgrid) {
                             if (ortgrid.store.storeId === 'ext-empty-store') {
                                 ortgrid.store = Ext.create('Lada.store.Orte');
@@ -123,7 +116,19 @@ Ext.define('Lada.controller.form.Ort', {
                             ortgrid.store.reload();
                         }
                     }
-
+                    //If new site shall be set in geolocat window:
+                    //Add to map and select using the grid
+                    if (win.setOzOnComplete === true ) {
+                        var ozf = Ext.ComponentQuery
+                            .query('ortszuordnungform')[0];
+                        if (ozf) {
+                            var selmod = ortgrid.getView().getSelectionModel();
+                            var map = ozw.down('map');
+                            map.addLocations(ortgrid.store);
+                            ozf.setOrt(null, newrecord);
+                            selmod.select(newrecord);
+                        }
+                    }
                     if (win.closeRequested) {
                         win.doClose();
                     } else {
