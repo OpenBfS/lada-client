@@ -325,11 +325,9 @@ Ext.define('Lada.view.window.Probe', {
             if (grid) {
                 //Special handling for measm grid:
                 //Disable only if user does not own the sample
-                if (grid.xtype === Lada.view.grid.Messung.xtype && isOwner) {
-                    grid.setReadOnly(false);
-                    return;
-                }
-                grid.setReadOnly(disable);
+                grid.setReadOnly(
+                    !(grid.xtype === Lada.view.grid.Messung.xtype && isOwner)
+                    && disable);
             }
         });
     },
