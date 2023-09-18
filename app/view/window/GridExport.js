@@ -541,22 +541,23 @@ Ext.define('Lada.view.window.GridExport', {
                         'json', win.jsonRequestURL, requestData, win);
                     break;
                 case 'csv':
-                    if (win.validateCsvOptions()) {
-                        requestData.subDataColumnNames = win
-                            .getSubdataColumNames(requestData.subDataColumns);
-                        requestData.csvOptions = {
-                            rowDelimiter: win.down('combobox[name=linesep]')
-                                .getValue(),
-                            fieldSeparator: win.down('combobox[name=colsep]')
-                                .getValue(),
-                            decimalSeparator: win.down('combobox[name=decsep]')
-                                .getValue(),
-                            quoteType: win.down('combobox[name=textlim]')
-                                .getValue()
-                        };
-                        win.requestExport(
-                            'csv', win.csvRequestURL, requestData, win);
+                    var colsep = win.down('combobox[name=colsep]').getValue();
+                    var decsep = win.down('combobox[name=decsep]').getValue();
+                    if (colsep === decsep) {
+                        win.showError('export.differentcoldecimal');
+                        return;
                     }
+                    requestData.subDataColumnNames = win
+                        .getSubdataColumNames(requestData.subDataColumns);
+                    requestData.csvOptions = {
+                        rowDelimiter: win.down('combobox[name=linesep]')
+                            .getValue(),
+                        fieldSeparator: colsep,
+                        decimalSeparator: decsep,
+                        quoteType: win.down('combobox[name=textlim]').getValue()
+                    };
+                    win.requestExport(
+                        'csv', win.csvRequestURL, requestData, win);
                     break;
             }
         }
@@ -622,16 +623,6 @@ Ext.define('Lada.view.window.GridExport', {
             'type': 'FeatureCollection',
             'features': resultObj
         };
-    },
-
-    validateCsvOptions: function() {
-        var colsep = this.down('combobox[name=colsep]').getValue();
-        var decsep = this.down('combobox[name=decsep]').getValue();
-        if (colsep === decsep) {
-            this.showError('export.differentcoldecimal');
-            return false;
-        }
-        return true;
     },
 
     /**
@@ -1045,7 +1036,6 @@ Ext.define('Lada.view.window.GridExport', {
         }
         return content;
     },
-
 
     checkExportButton: function(item) {
         var win = item ? item.up('window') : this;

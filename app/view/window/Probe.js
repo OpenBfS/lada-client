@@ -319,10 +319,15 @@ Ext.define('Lada.view.window.Probe', {
      * Disable or enable grids in fieldsets in this window
      */
     disableChildren: function(disable) {
+        var isOwner = this.record.get('owner');
         this.query('fset').forEach(function(fset) {
             var grid = fset.down('basegrid');
             if (grid) {
-                grid.setReadOnly(disable);
+                //Special handling for measm grid:
+                //Disable only if user does not own the sample
+                grid.setReadOnly(
+                    !(grid.xtype === Lada.view.grid.Messung.xtype && isOwner)
+                    && disable);
             }
         });
     },

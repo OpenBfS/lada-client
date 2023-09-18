@@ -207,7 +207,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 plausibleReferenceCount: 0,
                 referenceCountMp: 0,
                 referenceCount: 0}),
-            parentWindow: win
+            parentWindow: win,
+            setOzOnComplete: true
         });
         win.childWindows.push(ort);
         ort.show();

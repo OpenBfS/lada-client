@@ -18,7 +18,7 @@ Ext.define('Lada.view.widget.KtaGruppe', {
     valueField: 'id',
     //editable: this.editable || false,
     disableKeyFilter: true,
-    searchValueField: 'ktaGruppe',
+    searchValueField: 'extId',
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{extId} - {name}</div></tpl>'),

@@ -16,6 +16,7 @@ Ext.define('Lada.view.window.ChangeKDA', {
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.widget.KoordinatenArt'
     ],
+    controller: 'ortform',
     collapsible: false,
     maximizable: false,
     width: 400,
