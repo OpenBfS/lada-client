@@ -231,7 +231,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         var map = this.down('map');
         osg.setLoading(false);
         map.setLoading(false);
-        this.ortstore = Ext.create('Lada.store.Orte');
+        this.ortstore = Ext.create('Lada.store.Orte', {
+            pageSize: Lada.pagingSize
+        });
         this.ortstore.setProxy(Ext.clone(this.ortstore.getProxy()));
         // leave the ortstore empty at begin.
         // TODO check when changing filter method to remote/local
