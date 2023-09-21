@@ -25,7 +25,6 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
         displayInfo: true
     },
     initComponent: function() {
-        this.store = Ext.create('Lada.store.Verwaltungseinheiten');
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.verwaltungsgrid');
         this.columns = [{
@@ -36,15 +35,24 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
             dataIndex: 'name',
             flex: 1
         }];
-        if (this.store) {
-            this.store.loadPage(1);
-            this.setTitle(
-                'Verwaltungseinheiten (' + this.store.getCount() + ')');
-        }
-        var cbox = Ext.create('Lada.view.widget.PagingSize');
+
+        this.store = Ext.create('Lada.store.Verwaltungseinheiten');
+        this.store.loadPage(1);
+        this.setTitle(i18n.getMsg('title.verwaltungseinheiten'));
+        this.store.on('load', this.setTitleFromStore, this);
+
         this.callParent(arguments);
+
         this.down('pagingtoolbar').add('-');
-        this.down('pagingtoolbar').add(cbox);
+        this.down('pagingtoolbar').add(
+            Ext.create('Lada.view.widget.PagingSize'));
+    },
+
+    setTitleFromStore: function(store) {
+        var i18n = Lada.getApplication().bundle;
+        this.setTitle(
+            i18n.getMsg('title.verwaltungseinheiten')
+                + ' (' + store.getCount() + ')');
     },
 
     /**
@@ -55,8 +63,7 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
             this.store = store;
             this.addLoadingFailureHandler(this.store);
             this.reconfigure(store);
-            this.setTitle(
-                'Verwaltungseinheiten (' + store.getCount() + ')');
+            this.setTitleFromStore(store);
         }
     },
 
