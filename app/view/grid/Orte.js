@@ -346,29 +346,30 @@ Ext.define('Lada.view.grid.Orte', {
             format: 'd.m.Y H:i',
             dataIndex: 'lastMod'
         }];
+
+        this.setTitle(i18n.getMsg('title.orte'));
+
         this.callParent(arguments);
-        var cbox = Ext.create('Lada.view.widget.PagingSize');
+
         this.down('pagingtoolbar').add('-');
-        this.down('pagingtoolbar').add(cbox);
-        if (this.up('tabpanel')) {
-            this.setTitle('Orte(0)');
-        }
+        this.down('pagingtoolbar').add(
+            Ext.create('Lada.view.widget.PagingSize'));
     },
 
     /**
      * This sets the Store of this Grid.
      */
     setStore: function(store) {
-        var me = this;
         if (store) {
             this.reconfigure(store);
             this.store = store;
             this.addLoadingFailureHandler(store);
             this.store.on('load', function() {
-                if (me.up('tabpanel')) {
-                    me.setTitle('Orte(' + me.store.getCount() + ')');
-                }
-            });
+                var i18n = Lada.getApplication().bundle;
+                this.setTitle(
+                    i18n.getMsg('title.orte')
+                        + ' (' + this.store.getTotalCount() + ')');
+            }, this);
         }
     },
 

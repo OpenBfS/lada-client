@@ -23,7 +23,8 @@ Ext.define('Lada.model.LadaBase', {
             },
             reader: {
                 type: 'json',
-                rootProperty: 'data'
+                rootProperty: 'data',
+                totalProperty: 'totalCount'
             },
             writer: {
                 type: 'json',
