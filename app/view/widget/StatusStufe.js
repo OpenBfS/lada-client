@@ -13,7 +13,7 @@ Ext.define('Lada.view.widget.StatusStufe', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.statusstufe',
     store: Ext.data.StoreManager.get('statusstufe'),
-    displayField: 'stufe',
+    displayField: 'lev',
     valueField: 'id',
     autoSelect: false,
     queryMode: 'local',
