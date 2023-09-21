@@ -887,7 +887,6 @@ Ext.define('Lada.controller.Query', {
                         break;
                     case 'ortszusatz':
                         options.multiSelect = true;
-                        options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.OrtsZusatz',
                             options);
