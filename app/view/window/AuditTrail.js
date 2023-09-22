@@ -37,7 +37,16 @@ Ext.define('Lada.view.window.AuditTrail', {
         'sched_end_date',
         'measm_start_date',
         'ursprungszeit',
-        'datum'
+        'datum',
+        'date'
+    ],
+
+    /**
+     * Types that have a date string as identifier.
+     */
+    dateIdentifier: [
+        'comm_sample',
+        'comm_measm'
     ],
 
 
@@ -169,13 +178,13 @@ Ext.define('Lada.view.window.AuditTrail', {
                         html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                         html += audit[i].identifier === '(deleted)' ?
                             i18n.getMsg('deleted') :
-                            audit[i].identifier;
+                            this.getIdentifier(audit[i]);
                     }
                 } else {
                     html += '<br>' + i18n.getMsg('messung') + ': ' +
                         audit[i].identifier.measm + ' -> ' +
                         i18n.getMsg(audit[i].type) + ': ' +
-                        audit[i].identifier.identifier;
+                        this.getIdentifier(audit[i]);
 
                 }
                 html += this.createHtmlChangedFields(audit[i]);
@@ -291,5 +300,25 @@ Ext.define('Lada.view.window.AuditTrail', {
             });
         }
         at.loadingMask.show();
+    },
+
+    /**
+     * Get the identier of the given audit entry.
+     *
+     * If identifier is a date, convert to local time
+     * @param {*} auditEntry Audit Entry
+     * @returns Identifier string.
+     */
+    getIdentifier: function(auditEntry) {
+        var id = !Ext.isObject(auditEntry.identifier)
+            ? auditEntry.identifier
+            : auditEntry.identifier.identifier;
+        if (Ext.Array.contains(this.dateIdentifier, auditEntry.type)) {
+            id = Lada.util.Date.formatTimestamp(
+                id.replaceAll('"', ''),
+                'd.m.Y H:i', true);
+            id = '"' + id + '"';
+        }
+        return id;
     }
 });
