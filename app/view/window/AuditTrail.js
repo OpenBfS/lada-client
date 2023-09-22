@@ -292,7 +292,6 @@ Ext.define('Lada.view.window.AuditTrail', {
     },
 
     showLoadingMask: function() {
-        var Id = this.getId();
         var at = this.down('panel');
         if (!at.loadingMask) {
             at.loadingMask = Ext.create('Ext.LoadMask', {
