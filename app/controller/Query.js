@@ -624,7 +624,7 @@ Ext.define('Lada.controller.Query', {
                         clear: {
                             extraCls: 'x-form-clear-trigger',
                             handler: function() {
-                                this.clearValue();
+                                this.setValue('');
                             }
                         }
                     }
