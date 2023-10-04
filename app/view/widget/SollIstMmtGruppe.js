@@ -13,7 +13,7 @@ Ext.define('Lada.view.widget.SollIstMmtGruppe', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.sollistmmtgruppe',
     store: 'sollIstMmtGruppe',
-    displayField: 'beschreibung',
+    displayField: 'descr',
     valueField: 'id',
     searchValueField: 'name',
     tpl: Ext.create('Ext.XTemplate',

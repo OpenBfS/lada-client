@@ -15,8 +15,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     requires: [
         'Lada.controller.form.Ortszuordnung',
+        'Lada.store.OrtszuordnungTyp',
         'Lada.view.form.OrtInfo',
-        'Lada.view.widget.OrtszuordnungTyp',
         'Lada.view.widget.OrtsZusatz',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat',
@@ -35,6 +35,14 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
+
+        // Initialize store for typeRegulation
+        if (!Ext.data.StoreManager.get('ortszuordnungtyp')) {
+            Ext.create('Lada.store.OrtszuordnungTyp', {
+                storeId: 'ortszuordnungtyp'
+            });
+        }
+
         this.items = [{
             xtype: 'fieldset',
             title: i18n.getMsg('ortszuordnung.form.fset.title'),
@@ -89,12 +97,20 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 width: 350
                             },
                             items: [{
-                                xtype: 'ortszuordnungtyp',
+                                xtype: 'cbox',
                                 allowBlank: false,
                                 name: 'typeRegulation',
+                                store: 'ortszuordnungtyp',
+                                queryMode: 'local',
+                                displayField: 'name',
+                                valueField: 'id',
+                                forceSelection: true,
+                                autoSelect: false,
                                 disableKeyFilter: true,
                                 fieldLabel: i18n.getMsg(
-                                    'ortszuordnung.form.field.ortszuordnungtyp')
+                                    'ortszuordnung.form.field.ortszuordnungtyp'),
+                                emptyText: i18n.getMsg(
+                                    'emptytext.ortszuordnungtyp')
                             }, {
                                 xtype: 'ortszusatz',
                                 name: 'poiId',
