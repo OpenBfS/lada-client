@@ -199,16 +199,18 @@ Ext.define('Lada.view.widget.Tag', {
         }).load({
             params: params,
             callback: function(records, operation, success) {
-                if (!success) {
-                    me.showReloadMask();
+                if (!me.destroyed) {
+                    if (!success) {
+                        me.showReloadMask();
+                    }
+                    if (assignable) {
+                        records = Ext.Array.filter(records, function(rec) {
+                            return rec.isAssignable();
+                        });
+                    }
+                    me.setValue(records);
+                    me.setLoading(false);
                 }
-                if (assignable) {
-                    records = Ext.Array.filter(records, function(rec) {
-                        return rec.isAssignable();
-                    });
-                }
-                me.setValue(records);
-                me.setLoading(false);
             }
         });
     },

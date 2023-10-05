@@ -48,7 +48,7 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
         var me = this;
         cbox.store.load(function(records, op, success) {
             try {
-                if (success) {
+                if (success && !cbox.destroyed) {
                     var mediatext;
                     mediatext = cbox.store.findRecord(
                         'levVal', parseInt(media[ndx + 1], 10), 0,
