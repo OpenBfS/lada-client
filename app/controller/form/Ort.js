@@ -104,31 +104,31 @@ Ext.define('Lada.controller.form.Ort', {
                         dynamicgrid.reload();
                     }
 
+                    // Update Geolocat window if saving the Site object
+                    // was triggered from there
                     var ozw = formpanel.up('panel').parentWindow;
-                    var ortgrid = ozw.down('tabpanel')
-                        .down('ortstammdatengrid');
                     if (ozw && ozw.down('tabpanel')) {
+                        var ortgrid = ozw.down('tabpanel')
+                            .down('ortstammdatengrid');
                         if (ortgrid) {
                             if (ortgrid.store.storeId === 'ext-empty-store') {
                                 ortgrid.store = Ext.create('Lada.store.Orte');
                             }
                             ortgrid.store.add(newrecord);
                             ortgrid.store.reload();
+
+                            //If new site shall be set in geolocat window:
+                            //Add to map and select using the grid
+                            if (win.setOzOnComplete === true ) {
+                                ozw.down('map').addLocations(ortgrid.store);
+                                ozw.down('ortszuordnungform')
+                                    .setOrt(null, newrecord);
+                                ortgrid.getView().getSelectionModel()
+                                    .select(newrecord);
+                            }
                         }
                     }
-                    //If new site shall be set in geolocat window:
-                    //Add to map and select using the grid
-                    if (win.setOzOnComplete === true ) {
-                        var ozf = Ext.ComponentQuery
-                            .query('ortszuordnungform')[0];
-                        if (ozf) {
-                            var selmod = ortgrid.getView().getSelectionModel();
-                            var map = ozw.down('map');
-                            map.addLocations(ortgrid.store);
-                            ozf.setOrt(null, newrecord);
-                            selmod.select(newrecord);
-                        }
-                    }
+
                     if (win.closeRequested) {
                         win.doClose();
                     } else {
