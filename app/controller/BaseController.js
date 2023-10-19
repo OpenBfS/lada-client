@@ -38,6 +38,11 @@ Ext.define('Lada.controller.BaseController', {
                     var errors = {};
                     for (var violation of violations) {
                         var key = violation.path.split('\.').pop();
+                        key = key === 'arg0' // Key for class-level violations
+                            // Convert to snake_case to match audit-trail keys.
+                            ? record.entityName.match(/([A-Z][a-z]*)/g)
+                                .join('_').toLowerCase()
+                            : key;
                         if (errors[key]) {
                             errors[key].push(violation.message);
                         } else {
