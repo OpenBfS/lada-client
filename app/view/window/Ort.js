@@ -18,7 +18,7 @@ Ext.define('Lada.view.window.Ort', {
         'Lada.view.window.HelpprintWindow',
         'Lada.view.form.Ort'
     ],
-    width: 1000,
+    width: 1200,
     minWidth: 640,
 
     height: 700,
@@ -113,7 +113,7 @@ Ext.define('Lada.view.window.Ort', {
                     borderStyle: 'solid'
                 }
             },
-            flex: 1,
+            flex: 1.2,
             region: 'west'
         }, {
             xtype: 'siteimages',
