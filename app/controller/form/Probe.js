@@ -445,7 +445,7 @@ Ext.define('Lada.controller.form.Probe', {
         var reiId = combo.getModelData().reiAgGrId;
         umweltStore.proxy.extraParams = {};
         if (reiId || reiId === 0) {
-            umweltStore.proxy.extraParams.reiprogpunktgruppe = reiId;
+            umweltStore.proxy.extraParams.reiAgGrId = reiId;
         }
         umweltStore.load();
     },
