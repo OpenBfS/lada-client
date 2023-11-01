@@ -278,8 +278,11 @@ Ext.define('Lada.view.form.Ort', {
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
 
+        // Initialize disabled state of coordinate recalculation button
+        this.getController().enableChangeKDA();
+
         //If plausible probe instances reference this ort, disable coordinate
-        // fields, verwaltungseinheit, staat, koordiantenart, button change kda
+        // fields, verwaltungseinheit, staat, koordinatenart.
         if (this.record.get('plausibleReferenceCount') > 0 ||
                 this.record.get('referenceCountMp') > 0) {
             this.down('tfield[name=coordXExt]').setReadOnly(true);
