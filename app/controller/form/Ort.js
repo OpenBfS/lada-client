@@ -35,13 +35,16 @@ Ext.define('Lada.controller.form.Ort', {
                 change: this.checkorttyp
             },
             'ortform koordinatenart combobox': {
-                change: this.enableChangeKDA
+                validitychange: this.enableChangeKDA,
+                dirtychange: this.enableChangeKDA
             },
             'ortform tfield [name=coordXExt]': {
-                change: this.enableChangeKDA
+                validitychange: this.enableChangeKDA,
+                dirtychange: this.enableChangeKDA
             },
             'ortform tfield [name=coordYExt]': {
-                change: this.enableChangeKDA
+                validitychange: this.enableChangeKDA,
+                dirtychange: this.enableChangeKDA
             },
             'ortform': {
                 validitychange: this.checkCommitEnabled,
@@ -189,8 +192,8 @@ Ext.define('Lada.controller.form.Ort', {
     /**
      * Set disabled state of button to open coordinate transformation dialogue.
      */
-    enableChangeKDA: function(field) {
-        var panel = field.up('ortform');
+    enableChangeKDA: function() {
+        var panel = this.getView();
         var record = panel.getRecord();
         panel.down('button[action=changeKDA]').setDisabled(
             record.get('readonly')
