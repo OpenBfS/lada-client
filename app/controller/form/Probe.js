@@ -748,7 +748,7 @@ Ext.define('Lada.controller.form.Probe', {
             current.splice(0, 1);
         }
         var mediatext = field.up('probeform').down('textfield[name="envDescripName"]');
-        if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
+        if ( (desk.layer === 0 ) && (records.get('levVal') === 0) ) {
             mediatext.setValue('');
             media.setValue('');
         } else {

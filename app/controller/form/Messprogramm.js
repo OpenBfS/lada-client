@@ -408,7 +408,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var mediatext = field.up('messprogrammform')
             .down('textfield[name="envDescripName"]');
 
-        if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
+        if ( (desk.layer === 0 ) && (records.get('levVal') === 0) ) {
             media.setValue('');
             mediatext.setValue('');
         } else {

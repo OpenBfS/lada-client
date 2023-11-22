@@ -4,7 +4,7 @@
 # Build with e.g. `docker build --force-rm=true -t bfs/lada_client .'
 # Run from the repository root-dir with e.g.
 # `docker run --name lada_client
-#             --link lada_wildfly:lada-server
+#             --link lada_wildfly:server
 #             -p 8180-8184:80-84 -d bfs/lada_client'
 #
 # The linked container may be created from the Dockerfile in the lada-server

@@ -13,7 +13,7 @@ Ext.define('Lada.store.Deskriptoren', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.EnvDescrip',
     sorters: [{
-        property: 'sn',
+        property: 'levVal',
         direction: 'ASC'
     }]
 });
