@@ -96,7 +96,7 @@ Ext.define('Lada.view.grid.Messwert', {
                                     'x-lada-warning-field');
                             }
                         } else {
-                            if (o.record.get('messwertNwg') === '<') {
+                            if (o.record.get('lessThanLOD') === '<') {
                                 e.editor.down(
                                     'expnumberfield[dataIndex=measVal]')
                                     .allowBlank = true;
