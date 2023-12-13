@@ -538,7 +538,7 @@ Ext.define('Lada.controller.form.Probe', {
 
         record.save({
             scope: this,
-            success: function(newRecord, response) {
+            success: function(newRecord) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
@@ -556,9 +556,10 @@ Ext.define('Lada.controller.form.Probe', {
                     win.down('button[name=reload]').setDisabled(false);
                     win.disableChildren(
                         newRecord.get('readonly') || !newRecord.get('owner'));
-                    var json = Ext.decode(response.getResponse().responseText);
                     win.setMessages(
-                        json.errors, json.warnings, json.notifications);
+                        newRecord.get('errors'),
+                        newRecord.get('warnings'),
+                        newRecord.get('notifications'));
                 }
             },
             failure: this.handleSaveFailure

@@ -217,7 +217,7 @@ Ext.define('Lada.view.window.Probe', {
     initData: function(loadedRecord) {
         this.clearMessages();
         var me = this;
-        var loadCallBack = function(record, response) {
+        var loadCallBack = function(record) {
             me.initializeUI();
 
             me.record = record;
@@ -227,12 +227,10 @@ Ext.define('Lada.view.window.Probe', {
             me.setTitle(me.createTitle());
 
             // Set messages
-            var json = response ?
-                Ext.decode(response.getResponse().responseText) :
-                null;
-            if (json) {
-                me.setMessages(json.errors, json.warnings, json.notifications);
-            }
+            me.setMessages(
+                record.get('errors'),
+                record.get('warnings'),
+                record.get('notifications'));
 
             // Set disabled state of sub-components
             var readonly = record.get('readonly') || !record.get('owner');
