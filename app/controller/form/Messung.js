@@ -219,7 +219,10 @@ Ext.define('Lada.controller.form.Messung', {
                     }
                 }
             });
-            messwertGrid.getStore().reload();
+            var measValStore = messwertGrid.getStore();
+            if (measValStore.isLoaded()) {
+                measValStore.reload();
+            }
         });
         win.show();
     }
