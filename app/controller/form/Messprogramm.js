@@ -278,7 +278,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
 
         record.save({
             scope: this,
-            success: function(rec, response) {
+            success: function(rec) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
@@ -289,8 +289,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     win.doClose();
                 } else {
                     formPanel.setRecord(rec);
-                    var json = Ext.decode(response.getResponse().responseText);
-                    formPanel.setMessages(json.errors, json.warnings);
+                    formPanel.setMessages(
+                        rec.get('errors'),
+                        rec.get('warnings'),
+                        rec.get('notifications'));
 
                     win.record = rec;
                     win.enableChildren();

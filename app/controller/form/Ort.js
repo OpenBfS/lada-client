@@ -98,7 +98,7 @@ Ext.define('Lada.controller.form.Ort', {
         var doSave = function() {
             record.save({
                 scope: me,
-                success: function(newrecord, response) {
+                success: function(newrecord) {
                     var win = formpanel.up('window');
                     win.down('siteimages').uploadPresetImages();
 
@@ -138,9 +138,10 @@ Ext.define('Lada.controller.form.Ort', {
                         formpanel.loadRecord(newrecord);
                         formpanel.down('verwaltungseinheit').store.clearFilter();
                         formpanel.down('staat').store.clearFilter();
-                        var json = Ext.decode(
-                            response.getResponse().responseText);
-                        formpanel.setMessages(json.errors, json.warnings);
+                        formpanel.setMessages(
+                            newrecord.get('errors'),
+                            newrecord.get('warnings'),
+                            newrecord.get('notifications'));
                         win.setTitleAndReadOnly();
                     }
                 },

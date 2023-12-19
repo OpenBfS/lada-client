@@ -260,23 +260,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     },
 
     /**
-     * Instructs the fields / forms listed in this method to set a message.
-     * @param errors These Errors shall be shown
-     * @param warnings These Warning shall be shown
-     */
-    setMessages: function() {
-        //todo this is a stub
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to clear their
-     * messages.
-     */
-    clearMessages: function() {
-        //todo this is a stub
-    },
-
-    /**
      * childs will be populated with store entries after all entries are loaded
      * from all sources
      */

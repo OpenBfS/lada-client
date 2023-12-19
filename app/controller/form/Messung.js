@@ -62,7 +62,7 @@ Ext.define('Lada.controller.form.Messung', {
 
         record.save({
             scope: this,
-            success: function(newRecord, response) {
+            success: function(newRecord) {
                 var win = button.up('window');
                 var parentWin = win.parentWindow;
                 if (parentWin) {
@@ -89,9 +89,10 @@ Ext.define('Lada.controller.form.Messung', {
                     win.down('button[name=reload]').setDisabled(false);
                     win.disableChildren(
                         newRecord.get('readonly') || !newRecord.get('owner'));
-                    var json = Ext.decode(response.getResponse().responseText);
                     win.setMessages(
-                        json.errors, json.warnings, json.notifications);
+                        newRecord.get('errors'),
+                        newRecord.get('warnings'),
+                        newRecord.get('notifications'));
                     var messwertStore = win.down('messwertgrid').getStore();
                     if (messwertStore.isLoaded()) {
                         messwertStore.reload();

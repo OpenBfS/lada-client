@@ -40,6 +40,11 @@ Ext.define('Lada.view.window.TagManagement', {
             if (me.record) {
                 var form = me.down('tagform');
                 form.setRecord(me.record);
+                form.setMessages(
+                    me.record.get('errors'),
+                    me.record.get('warnings'),
+                    me.record.get('notifications')
+                );
                 form.down('button[action=delete]').setDisabled(
                     me.record.get('readonly') || me.record.phantom);
                 // See controller/form/Tag for save button enabling

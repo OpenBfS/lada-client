@@ -46,10 +46,12 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
         record.save({
             scope: this,
-            success: function(newRecord, response) {
+            success: function(newRecord) {
                 formPanel.setRecord(newRecord);
-                var json = Ext.decode(response.getResponse().responseText);
-                formPanel.setMessages(json.errors, json.warnings);
+                formPanel.setMessages(
+                    newRecord.get('errors'),
+                    newRecord.get('warnings'),
+                    newRecord.get('notifications'));
                 formPanel.up('window').parentWindow.initData();
 
                 //try to refresh the Grid of the Probe

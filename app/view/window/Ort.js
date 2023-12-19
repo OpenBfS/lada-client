@@ -94,6 +94,11 @@ Ext.define('Lada.view.window.Ort', {
     initData: function(record) {
         this.record = record;
         this.initializeUi();
+        this.down('ortform').setMessages(
+            record.get('errors'),
+            record.get('warnings'),
+            record.get('notifications')
+        );
     },
 
     initializeUi: function() {

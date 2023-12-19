@@ -145,11 +145,10 @@ Ext.define('Lada.view.window.Messprogramm', {
                     Ext.decode(response.getResponse().responseText) :
                     null;
                 if (json) {
-                    this.setMessages(json.errors, json.warnings);
-                    /*
-                    if (!json.warnings.mediaDesk) {
-                    }
-                    */
+                    this.down('messprogrammform').setMessages(
+                        record.get('errors'),
+                        record.get('warnings'),
+                        record.get('notifications'));
                 }
                 me.down('button[action=generateproben]').setDisabled(false);
                 me.down('button[name=reload]').setDisabled(false);
@@ -266,21 +265,13 @@ Ext.define('Lada.view.window.Messprogramm', {
     },
 
     /**
-     * Instructs the fields / forms listed in this method to set a message.
-     * @param errors These Errors shall be shown
-     * @param warnings These Warning shall be shown
-     */
-    setMessages: function(errors, warnings) {
-        this.down('messprogrammform').setMessages(errors, warnings);
-    },
-
-    /**
      * Instructs the fields / forms listed in this method to clear their
      * messages.
      */
     clearMessages: function() {
         this.down('messprogrammform').clearMessages();
     },
+
     toggleGenProben: function() {
         var button = this.down('button[action=generateproben]');
         if (this.record === null || this.record.phantom) {

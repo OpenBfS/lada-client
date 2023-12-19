@@ -82,6 +82,11 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
     initData: function(record) {
         this.record = record;
         this.initializeUi();
+        this.down('mprkatform').setMessages(
+            record.get('errors'),
+            record.get('warnings'),
+            record.get('notifications')
+        );
     },
 
     initializeUi: function() {

@@ -205,7 +205,7 @@ Ext.define('Lada.view.window.Messung', {
     initData: function(loadedRecord) {
         this.clearMessages();
         var me = this;
-        var loadCallback = function(record, response) {
+        var loadCallback = function(record) {
             me.intializeUI();
 
             const mmtIdKey = 'mmtId';
@@ -248,12 +248,10 @@ Ext.define('Lada.view.window.Messung', {
 
             me.setTitle(me.createTitle());
 
-            var json = response ?
-                Ext.decode(response.getResponse().responseText) :
-                null;
-            if (json) {
-                me.setMessages(json.errors, json.warnings, json.notifications);
-            }
+            me.setMessages(
+                record.get('errors'),
+                record.get('warnings'),
+                record.get('notifications'));
 
             // Set disabled state of sub-components
             me.disableChildren(

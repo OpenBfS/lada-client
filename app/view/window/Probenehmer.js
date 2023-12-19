@@ -87,6 +87,11 @@ Ext.define('Lada.view.window.Probenehmer', {
     initData: function(record) {
         this.record = record;
         this.initializeUi();
+        this.down('probenehmerform').setMessages(
+            record.get('errors'),
+            record.get('warnings'),
+            record.get('notifications')
+        );
     },
 
     initializeUi: function() {
@@ -99,16 +104,6 @@ Ext.define('Lada.view.window.Probenehmer', {
                 record: this.record
             }]
         }]);
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to set a message.
-     * @param errors These Errors shall be shown
-     * @param warnings These Warning shall be shown
-     */
-    // TODO: This is never called
-    setMessages: function(errors, warnings) {
-        this.down('probenehmerform').setMessages(errors, warnings);
     },
 
     /**

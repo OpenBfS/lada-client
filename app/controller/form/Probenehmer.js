@@ -43,7 +43,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
         }
         record.save({
             scope: this,
-            success: function(newRecord, response) {
+            success: function(newRecord) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
@@ -55,8 +55,10 @@ Ext.define('Lada.controller.form.Probenehmer', {
                     win.doClose();
                 } else {
                     formPanel.setRecord(newRecord);
-                    var json = Ext.decode(response.getResponse().responseText);
-                    formPanel.setMessages(json.errors, json.warnings);
+                    formPanel.setMessages(
+                        newRecord.get('errors'),
+                        newRecord.get('warnings'),
+                        newRecord.get('notifications'));
                 }
             },
             failure: this.handleSaveFailure

@@ -220,13 +220,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                         win.setProbe(precord);
                                         win.setRecord(messungRecord);
                                         win.initData(messungRecord);
-                                        var json = Ext.decode(
-                                            operation.getResponse()
-                                                .responseText);
-                                        win.setMessages(
-                                            json.errors,
-                                            json.warnings,
-                                            json.notifications);
                                         win.setLoading(false);
                                     });
                             }
