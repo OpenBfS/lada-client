@@ -497,10 +497,20 @@ Ext.define('Lada.controller.Query', {
                             } else if (operation.error.status !== 0) {
                                 /* Server response has HTTP error code.
                                    If it's 0, we probably got a 302 from SSO,
-                                   which is handled elsewhere. */
+                                   which is handled elsewhere.
+                                   If the response contains a error message:
+                                   show to user
+                                 */
+                                var responseText
+                                    = operation.error.response.responseText;
+                                var errorMessage = responseText ?
+                                    i18n.getMsg(
+                                        'query.error.search.message-reason',
+                                        responseText)
+                                    : i18n.getMsg('query.error.search.message');
                                 Ext.Msg.alert(
                                     i18n.getMsg('query.error.search.title'),
-                                    i18n.getMsg('query.error.search.message'));
+                                    errorMessage);
                             }
                         }
                     }
@@ -540,8 +550,19 @@ Ext.define('Lada.controller.Query', {
                     }
                 }
             },
-            failure: function() {
+            failure: function(response) {
                 Ext.log({msg: 'Unable to get sql query', lvl: 'warn'});
+                var i18n = Lada.getApplication().bundle;
+                var responseText
+                    = response.responseText;
+                var errorMessage = responseText ?
+                    i18n.getMsg(
+                        'query.error.sql.message-reason',
+                        responseText)
+                    : i18n.getMsg('query.error.sql.message');
+                Ext.Msg.alert(
+                    i18n.getMsg('query.error.sql.title'),
+                    errorMessage);
             }
         });
     },
