@@ -223,9 +223,9 @@ Ext.define('Lada.view.window.SetStatus', {
                         var json = Ext.JSON.decode(
                             operation.getResponse().responseText, true);
                         if (json) {
-                            var errors = json.errors;
-                            var warnings = json.warnings;
-                            var notifications = json.notifications;
+                            var errors = json.data.errors;
+                            var warnings = json.data.warnings;
+                            var notifications = json.data.notifications;
                             var out = [];
                             var numErrors, numWarnings, numNotifications;
                             if (!Ext.isObject(errors)) {
