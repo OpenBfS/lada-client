@@ -517,13 +517,11 @@ Ext.define('Lada.controller.Query', {
             method: 'POST',
             jsonData: jsonData,
             success: function(response) {
-                if (response) {
-                    var json = Ext.decode(response.responseText);
-                    if (json.success && json.data) {
-                        Ext.create('Lada.view.window.SqlDisplay', {
-                            sql: json.data
-                        }).show();
-                    }
+                var json = Ext.decode(response.responseText);
+                if (json.success && json.data) {
+                    Ext.create('Lada.view.window.SqlDisplay', {
+                        sql: json.data
+                    }).show();
                 }
             },
             failure: function(response) {
