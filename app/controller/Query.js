@@ -472,46 +472,30 @@ Ext.define('Lada.controller.Query', {
                                 .resumeEvent('change');
                         }
                         var i18n = Lada.getApplication().bundle;
-                        if (operation.error === undefined
-                            && operation.getResponse()
-                        ) {
-                            var json = Ext.decode(
-                                operation.getResponse().responseText);
-                            if (json.message) {
-                                var out = [];
-                                var errors = json.errors;
-                                for (var key in errors) {
-                                    out.push(key);
-                                }
-                                Ext.Msg.alert(i18n.getMsg(json.message),
-                                    out);
-                            }
-                        } else {
-                            if (operation.error.response
-                                        && operation.error.response.timedout) {
-                                Ext.Msg.alert(
-                                    i18n.getMsg('query.error.search.title'),
-                                    i18n.getMsg(
-                                        'query.error.search.querytimeout.message')
-                                );
-                            } else if (operation.error.status !== 0) {
-                                /* Server response has HTTP error code.
-                                   If it's 0, we probably got a 302 from SSO,
-                                   which is handled elsewhere.
-                                   If the response contains a error message:
-                                   show to user
-                                 */
-                                var responseText
-                                    = operation.error.response.responseText;
-                                var errorMessage = responseText ?
-                                    i18n.getMsg(
-                                        'query.error.search.message-reason',
-                                        responseText)
-                                    : i18n.getMsg('query.error.search.message');
-                                Ext.Msg.alert(
-                                    i18n.getMsg('query.error.search.title'),
-                                    errorMessage);
-                            }
+                        if (operation.error.response
+                                && operation.error.response.timedout) {
+                            Ext.Msg.alert(
+                                i18n.getMsg('query.error.search.title'),
+                                i18n.getMsg(
+                                    'query.error.search.querytimeout.message')
+                            );
+                        } else if (operation.error.status !== 0) {
+                            /* Server response has HTTP error code.
+                                If it's 0, we probably got a 302 from SSO,
+                                which is handled elsewhere.
+                                If the response contains a error message:
+                                show to user
+                                */
+                            var responseText
+                                = operation.error.response.responseText;
+                            var errorMessage = responseText ?
+                                i18n.getMsg(
+                                    'query.error.search.message-reason',
+                                    responseText)
+                                : i18n.getMsg('query.error.search.message');
+                            Ext.Msg.alert(
+                                i18n.getMsg('query.error.search.title'),
+                                errorMessage);
                         }
                     }
                 }
@@ -539,14 +523,6 @@ Ext.define('Lada.controller.Query', {
                         Ext.create('Lada.view.window.SqlDisplay', {
                             sql: json.data
                         }).show();
-                    } else {
-                        var i18n = Lada.getApplication().bundle;
-                        var errors = json.errors;
-                        var out = [];
-                        for (var key in errors) {
-                            out.push(key);
-                        }
-                        Ext.Msg.alert(i18n.getMsg(json.message), out);
                     }
                 }
             },

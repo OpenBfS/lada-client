@@ -138,18 +138,13 @@ Ext.define('Lada.view.window.Messprogramm', {
         if (this.record) {
             // If a record was passed to this window, load it for editing
             this.setLoading(true);
-            var loadCallback = function(record, response) {
+            var loadCallback = function(record) {
                 me.down('messprogrammform').setRecord(record);
                 me.record = record;
-                var json = response ?
-                    Ext.decode(response.getResponse().responseText) :
-                    null;
-                if (json) {
-                    this.down('messprogrammform').setMessages(
-                        record.get('errors'),
-                        record.get('warnings'),
-                        record.get('notifications'));
-                }
+                me.down('messprogrammform').setMessages(
+                    record.get('errors'),
+                    record.get('warnings'),
+                    record.get('notifications'));
                 me.down('button[action=generateproben]').setDisabled(false);
                 me.down('button[name=reload]').setDisabled(false);
                 // If Messprogramm is ReadOnly, disable Inputfields and grids
