@@ -10,7 +10,7 @@
  * This class represents and defines the model of a Tag
  **/
 Ext.define('Lada.model.Tag', {
-    extend: 'Lada.model.LadaBase',
+    extend: 'Lada.model.ValidatedModel',
 
     fields: [{
         name: 'name',

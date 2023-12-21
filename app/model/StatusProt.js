@@ -7,7 +7,7 @@
  */
 
 Ext.define('Lada.model.StatusProt', {
-    extend: 'Lada.model.LadaBase',
+    extend: 'Lada.model.ValidatedModel',
 
     fields: [{
         name: 'id'

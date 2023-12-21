@@ -7,7 +7,7 @@
  */
 
 Ext.define('Lada.model.Sample', {
-    extend: 'Lada.model.LadaBase',
+    extend: 'Lada.model.ValidatedModel',
 
     requires: [
         'Lada.model.field.NonBlankString'

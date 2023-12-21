@@ -7,7 +7,7 @@
  */
 
 Ext.define('Lada.model.QueryUser', {
-    extend: 'Lada.model.LadaBase',
+    extend: 'Lada.model.ValidatedModel',
     autoLoad: true,
     proxy: {
         type: 'rest',
