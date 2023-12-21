@@ -7,7 +7,7 @@
  */
 
 Ext.define('Lada.model.CommSample', {
-    extend: 'Lada.model.LadaBase',
+    extend: 'Lada.model.ValidatedModel',
 
     fields: [{
         name: 'id'

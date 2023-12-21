@@ -7,7 +7,7 @@
  */
 
 Ext.define('Lada.model.TargActMmtGr', {
-    extend: 'Lada.model.LadaBase',
+    extend: 'Lada.model.ValidatedModel',
 
     fields: [{
         name: 'id'

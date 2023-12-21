@@ -11,7 +11,7 @@
  * are readonly to the client.
  */
 Ext.define('Lada.model.GridColMp', {
-    extend: 'Lada.model.LadaBase',
+    extend: 'Lada.model.ValidatedModel',
     fields: [{
         name: 'id'
     }, {

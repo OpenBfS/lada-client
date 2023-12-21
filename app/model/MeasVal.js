@@ -7,7 +7,7 @@
  */
 
 Ext.define('Lada.model.MeasVal', {
-    extend: 'Lada.model.LadaBase',
+    extend: 'Lada.model.ValidatedModel',
 
     fields: [{
         name: 'id'
@@ -56,11 +56,5 @@ Ext.define('Lada.model.MeasVal', {
     }, {
         name: 'parentModified',
         type: 'date'
-    }, {
-        name: 'warnings',
-        persist: false
-    }, {
-        name: 'errors',
-        persist: false
     }]
 });

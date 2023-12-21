@@ -22,9 +22,16 @@ Ext.define('Lada.controller.form.BaseFormController', {
         form.loadRecord(record);
         var json = this.handleServiceFailure(
             record, response, 'err.msg.save.title');
-        if (json && json.data) {
-            form.setMessages(
-                json.data.errors, json.data.warnings, json.data.notifications);
+        /* Validation messages can be served in two ways here:
+         *  - Inside the result object (json.data)
+         *  - In a separate object as result of an HTTP error (json.errors)
+         */
+        if (json) {
+            var errors = json.data ? json.data.errors : json.errors;
+            var warnings = json.data ? json.data.warnings : json.warnings;
+            var notifications = json.data ?
+                json.data.notifications : json.notifications;
+            form.setMessages(errors, warnings, notifications);
         }
         form.setLoading(false);
     }
