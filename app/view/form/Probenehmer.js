@@ -248,7 +248,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         fieldLabel: i18n.getMsg('email'),
                         labelWidth: 100,
                         readOnly: true,
-                        maxLength: 20
+                        maxLength: 254
                     }]
                 }]
             }]
