@@ -392,15 +392,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             extraParams.search = filterstring;
         }
         ozw.ortstore.proxy.extraParams = extraParams;
-        ozw.ortstore.load({
+        ozw.ortstore.loadPage(1, {
             scope: this,
             callback: function() {
-                var toolbar = ozw.down('tabpanel').down(
-                    'ortstammdatengrid').down('pagingtoolbar');
-                this.ortefilter = filterstring || null;
                 ortgrid.setStore(ozw.ortstore);
                 ozw.onStoreChanged();
-                toolbar.doRefresh();
             }
         });
     },
