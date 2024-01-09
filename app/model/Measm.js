@@ -29,7 +29,8 @@ Ext.define('Lada.model.Measm', {
         name: 'mmtId'
     }, {
         name: 'minSampleId',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'measPd',
         type: 'int',

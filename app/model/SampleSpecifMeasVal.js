@@ -31,7 +31,8 @@ Ext.define('Lada.model.SampleSpecifMeasVal', {
                 return null;
             }
             return '<';
-        }
+        },
+        type: 'nonblankstring'
     }, {
         name: 'measVal',
         type: 'float',

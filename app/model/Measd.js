@@ -13,15 +13,19 @@ Ext.define('Lada.model.Measd', {
         name: 'id'
     }, {
         name: 'descr',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
-        name: 'name'
+        name: 'name',
+        type: 'nonblankstring'
     }, {
         name: 'defColor',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'idfExtId',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'isRefNucl',
         type: 'boolean'
@@ -31,6 +35,7 @@ Ext.define('Lada.model.Measd', {
         allowNull: true
     }, {
         name: 'bvlFormatId',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }]
 });

@@ -26,7 +26,8 @@ Ext.define('Lada.model.Mpg', {
         name: 'apprLabId'
     }, {
         name: 'commMpg',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'regulationId',
         type: 'int'
@@ -56,7 +57,9 @@ Ext.define('Lada.model.Mpg', {
         name: 'sampleMethId',
         type: 'int'
     }, {
-        name: 'samplePd'
+        name: 'samplePd',
+        type: 'nonblankstring',
+        allowNull: false
     }, {
         name: 'samplePdStartDate',
         type: 'int'
@@ -80,10 +83,12 @@ Ext.define('Lada.model.Mpg', {
         allowNull: true
     }, {
         name: 'commSample',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'sampleQuant',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'referenceCount',
         type: 'int'

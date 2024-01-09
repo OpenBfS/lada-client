@@ -26,10 +26,12 @@ Ext.define('Lada.model.Sample', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'extId'
+        name: 'extId',
+        type: 'nonblankstring'
     }, {
         name: 'mainSampleId',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'isTest',
         type: 'boolean'
@@ -55,7 +57,8 @@ Ext.define('Lada.model.Sample', {
         allowNull: true
     }, {
         name: 'envDescripName',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'envMediumId',
         allowNull: true

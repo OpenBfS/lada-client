@@ -21,7 +21,8 @@ Ext.define('Lada.model.GridColConf', {
         allowNull: true
     }, {
         name: 'sort',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'sortIndex',
         type: 'int',

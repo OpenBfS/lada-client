@@ -14,7 +14,7 @@ Ext.define('Lada.model.Tag', {
 
     fields: [{
         name: 'name',
-        type: 'string'
+        type: 'nonblankstring'
     }, {
         name: 'measFacilId',
         type: 'string',

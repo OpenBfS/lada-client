@@ -29,7 +29,8 @@ Ext.define('Lada.model.QueryUser', {
         name: 'ladaUserId',
         type: 'int'
     }, {
-        name: 'descr'
+        name: 'descr',
+        type: 'nonblankstring'
     }, {
         name: 'baseQueryId',
         type: 'int'

@@ -42,6 +42,7 @@ Ext.define('Lada.model.StatusProt', {
         name: 'date',
         type: 'date'
     }, {
-        name: 'text'
+        name: 'text',
+        type: 'nonblankstring'
     }]
 });

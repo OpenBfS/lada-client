@@ -14,11 +14,13 @@ Ext.define('Lada.model.DatasetCreator', {
     }, {
         name: 'networkId'
     }, {
-        name: 'extId'
+        name: 'extId',
+        type: 'nonblankstring'
     }, {
         name: 'measFacilId'
     }, {
-        name: 'descr'
+        name: 'descr',
+        type: 'nonblankstring'
     }, {
         name: 'lastMod',
         type: 'date'

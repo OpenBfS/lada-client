@@ -49,23 +49,30 @@ Ext.define('Lada.model.Site', {
         allowNull: true
     }, {
         name: 'reiOprMode',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'reiZone',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'reiSector',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'reiCompetence',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'reiReportText',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
-        name: 'shortText'
+        name: 'shortText',
+        type: 'nonblankstring'
     }, {
-        name: 'longText'
+        name: 'longText',
+        type: 'nonblankstring'
     }, {
         name: 'reiAgGrId',
         type: 'int',
@@ -80,9 +87,11 @@ Ext.define('Lada.model.Site', {
         name: 'heightAsl',
         type: 'float'
     }, {
-        name: 'coordXExt'
+        name: 'coordXExt',
+        type: 'nonblankstring'
     }, {
-        name: 'coordYExt'
+        name: 'coordYExt',
+        type: 'nonblankstring'
     }, {
         name: 'longitude',
         type: 'float'

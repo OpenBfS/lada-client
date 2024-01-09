@@ -27,7 +27,8 @@ Ext.define('Lada.model.GeolocatMpg', {
         allowNull: true
     }, {
         name: 'addSiteText',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'poiId',
         allowNull: true

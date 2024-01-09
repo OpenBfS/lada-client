@@ -12,15 +12,19 @@ Ext.define('Lada.model.AdminUnit', {
     fields: [{
         name: 'id'
     }, {
-        name: 'stateId'
+        name: 'stateId',
+        type: 'nonblankstring'
     }, {
         name: 'ruralDistId',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'govDistId',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
-        name: 'name'
+        name: 'name',
+        type: 'nonblankstring'
     }, {
         name: 'isState',
         type: 'boolean'
@@ -35,7 +39,8 @@ Ext.define('Lada.model.AdminUnit', {
         type: 'boolean'
     }, {
         name: 'zip',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'longitude',
         type: 'float',

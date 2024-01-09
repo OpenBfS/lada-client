@@ -27,6 +27,7 @@ Ext.define('Lada.model.CommMeasm', {
         name: 'date',
         type: 'date'
     }, {
-        name: 'text'
+        name: 'text',
+        type: 'nonblankstring'
     }]
 });

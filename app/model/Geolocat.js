@@ -30,7 +30,8 @@ Ext.define('Lada.model.Geolocat', {
         allowNull: true
     }, {
         name: 'addSiteText',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'poiId',
         allowNull: true

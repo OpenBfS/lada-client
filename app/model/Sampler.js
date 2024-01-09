@@ -14,44 +14,58 @@ Ext.define('Lada.model.Sampler', {
     }, {
         name: 'networkId'
     }, {
-        name: 'extId'
+        name: 'extId',
+        type: 'nonblankstring'
     }, {
         name: 'editor',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'comm',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
-        name: 'descr'
+        name: 'descr',
+        type: 'nonblankstring'
     }, {
-        name: 'shortText'
+        name: 'shortText',
+        type: 'nonblankstring'
     }, {
         name: 'city',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'zip',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'inst',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'street',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'phone',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'phoneMobile',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'email',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'routePlanning',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'type',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'lastMod',
         type: 'date'

@@ -13,9 +13,11 @@ Ext.define('Lada.model.State', {
         name: 'id',
         type: 'int'
     }, {
-        name: 'ctry'
+        name: 'ctry',
+        type: 'nonblankstring'
     }, {
         name: 'iso3166',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }]
 });

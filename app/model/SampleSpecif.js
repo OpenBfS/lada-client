@@ -20,13 +20,15 @@ Ext.define('Lada.model.SampleSpecif', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'name'
+        name: 'name',
+        type: 'nonblankstring'
     }, {
         name: 'unitId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'extId'
+        name: 'extId',
+        type: 'nonblankstring'
     }, {
         name: 'eudfKeyword',
         allowNull: true

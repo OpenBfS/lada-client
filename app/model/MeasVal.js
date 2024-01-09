@@ -35,7 +35,8 @@ Ext.define('Lada.model.MeasVal', {
                 return null;
             }
             return '<';
-        }
+        },
+        type: 'nonblankstring'
     }, {
         name: 'error',
         type: 'float',
