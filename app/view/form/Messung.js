@@ -33,10 +33,6 @@ Ext.define('Lada.view.form.Messung', {
     border: false,
 
     record: null,
-    //The probe model instance connected to this messung
-    probe: null,
-    //The probes datenbasis connected to this messung
-    probedatenbasis: null,
 
     trackResetOnLoad: true,
 
@@ -177,28 +173,6 @@ Ext.define('Lada.view.form.Messung', {
         }
 
         this.down('button[action=audit]').setDisabled(record.phantom);
-
-        //Get the connected Probe instance and Datenbasis
-        Lada.model.Sample.load(this.record.get('sampleId'), {
-            success: function(proberecord) {
-                me.probe = proberecord;
-                var dbid = proberecord.get('regulationId');
-                if (!dbid) {
-                    return;
-                }
-                Lada.model.Regulation.load(dbid, {
-                    success: function(dbrecord) {
-                        me.probedatenbasis = dbrecord.get('name');
-                    },
-                    failure: function() {
-                        //TODO: handle failure
-                    }
-                });
-            },
-            failure: function() {
-                //TODO: handle failure
-            }
-        });
     },
 
     getCurrentStatus: function() {
