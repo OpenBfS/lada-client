@@ -158,33 +158,7 @@ Ext.define('Lada.view.form.Messung', {
                     width: '100%',
                     padding: '0,5,0,5',
                     isFormField: false,
-                    fieldLabel: i18n.getMsg('header.statuskombi'),
-                    buttonListener: {
-                        click: {
-                            fn: function() {
-                                if ((this.probedatenbasis === 'REI-E' ||
-                                        this.probedatenbasis === 'REI-I') &&
-                                    (this.probe.get(
-                                        'reiAgGrId') === null ||
-                                        this.probe.get(
-                                            'reiAgGrId') === '') &&
-                                    (this.probe.get('nuclFacilGrId') === null ||
-                                        this.probe.get('nuclFacilGrId') === '')
-                                ) {
-                                    Ext.Msg.alert(
-                                        i18n.getMsg('err.msg.status.title'),
-                                        i18n.getMsg(
-                                            'err.msg.status.consistency')
-                                    );
-                                    return false;
-                                }
-                            },
-                            scope: this,
-                            options: {
-                                priority: 999
-                            }
-                        }
-                    }
+                    fieldLabel: i18n.getMsg('header.statuskombi')
                 }]
             }]
         }];
