@@ -50,7 +50,7 @@ Ext.define('Lada.controller.BaseController', {
                         }
                     }
                     msg = i18n.getMsg('604');
-                    responseJson = { errors: errors };
+                    responseJson = { data: { errors: errors }};
                 } else {
                     msg = response.responseText;
                     if (!msg && response.timedout) {
