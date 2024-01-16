@@ -52,9 +52,14 @@ Ext.define('Lada.controller.BaseController', {
                     msg = i18n.getMsg('604');
                     responseJson = { data: { errors: errors }};
                 } else {
-                    msg = response.responseText;
-                    if (!msg && response.timedout) {
+                    if (response.timedout) {
+                        // Handle timeout
                         msg = i18n.getMsg('err.msg.timeout');
+                    } else {
+                        // Handle general HTTP errors
+                        msg = response.responseText
+                            ? response.responseText
+                            : response.statusText;
                     }
                 }
             }
