@@ -21,7 +21,7 @@ Ext.define('Lada.controller.BaseController', {
      * Returns the parsed JSON payload of the response, if available,
      * else returns null.
      */
-    handleServiceFailure: function(record, operation, titleMsg) {
+    handleServiceFailure: function(record, operation, titleMsg, skipAlert) {
         var i18n = Lada.getApplication().bundle;
         var err = operation.getError();
         var msg = i18n.getMsg('err.msg.generic.body');
@@ -64,8 +64,10 @@ Ext.define('Lada.controller.BaseController', {
                 msg = i18n.getMsg(responseJson.message);
             }
         }
-        Ext.Msg.alert(
-            i18n.getMsg(titleMsg ? titleMsg : 'err.msg.generic.title'), msg);
+        if (!skipAlert) {
+            Ext.Msg.alert(i18n.getMsg(
+                titleMsg ? titleMsg : 'err.msg.generic.title'), msg);
+        }
         return responseJson;
     }
 });

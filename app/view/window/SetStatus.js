@@ -14,9 +14,13 @@ Ext.define('Lada.view.window.SetStatus', {
     alias: 'setstatuswindow',
 
     requires: [
+        'Lada.controller.SetStatus',
         'Lada.view.widget.StatuskombiSelect',
         'Lada.store.StatusKombi'
     ],
+
+    controller: 'setstatus',
+
     store: Ext.create('Lada.store.StatusKombi'),
     grid: null,
     selection: null,
@@ -100,7 +104,7 @@ Ext.define('Lada.view.window.SetStatus', {
                 icon: 'resources/img/mail-mark-notjunk.png',
                 formBind: true,
                 disabled: true,
-                handler: this.setStatus
+                handler: 'setStatus'
             }, {
                 text: i18n.getMsg('cancel'),
                 name: 'abort',
@@ -163,165 +167,6 @@ Ext.define('Lada.view.window.SetStatus', {
         win.close();
     },
 
-    /**
-     * @private
-     * A handler to setStatus on Bulk.
-     */
-    setStatus: function(button) {
-        var win = button.up('window');
-        win.down('panel').disable();
-        win.down('button[name=start]').disable();
-        win.down('button[name=abort]').disable();
-        var progress = win.down('progressbar');
-        progress.show();
-        win.send();
-    },
-
-    send: function() {
-        var i18n = Lada.getApplication().bundle;
-        var me = this;
-        var progress = me.down('progressbar');
-        var progressText = progress.getText();
-        var count = 0;
-        var kombi = me.down('statuskombiselect').getValue();
-        if (kombi < 0) {
-            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                i18n.getMsg('setStatus.wrongstatusstufe'));
-            me.down('button[name=close]').show();
-            return;
-        }
-        var data;
-        var done = [];
-        for (var i = 0; i < this.sendIds.length; i++) {
-            if (!done.includes(this.sendIds[i])) {
-                done.push(this.sendIds[i]);
-                data = Ext.create('Lada.model.StatusProt', {
-                    measmId: this.sendIds[i],
-                    measFacilId: this.down('combobox').getValue(),
-                    date: new Date(),
-                    statusMpId: kombi,
-                    text: this.down('textarea').getValue()
-                });
-                data.set('id', null);
-                var finalcallback = function() {
-                    var result = me.down('panel[name=result]');
-                    var values = me.down('panel[name=valueselection]');
-                    me.down('button[name=start]').hide();
-                    me.down('button[name=abort]').hide();
-                    me.down('button[name=close]').show();
-                    result.setMaxHeight('400');
-                    var title = me.down('fieldset').title;
-                    me.resultMessage = '<h4>' + title + '</h4>' +
-                        me.resultMessage;
-                    result.setHtml(me.resultMessage);
-                    result.show();
-                    values.hide();
-                };
-                data.save({
-                    // eslint-disable-next-line no-loop-func
-                    callback: function(record, operation, success) {
-                        var json = Ext.JSON.decode(
-                            operation.getResponse().responseText, true);
-                        if (json) {
-                            var errors = json.data.errors;
-                            var warnings = json.data.warnings;
-                            var notifications = json.data.notifications;
-                            var out = [];
-                            var numErrors, numWarnings, numNotifications;
-                            if (!Ext.isObject(errors)) {
-                                numErrors = 0;
-                            } else {
-                                numErrors = Object.keys(errors).length;
-                            }
-                            if (!Ext.isObject(warnings)) {
-                                numWarnings = 0;
-                            } else {
-                                numWarnings = Object.keys(warnings).length;
-                            }
-                            if (!Ext.isObject(notifications)) {
-                                numNotifications = 0;
-                            } else {
-                                numNotifications = Object.keys(notifications)
-                                    .length;
-                            }
-
-                            // Print lists of errors, warnings and notifications
-                            if (!success || numErrors > 0) {
-                                out.push('<dl><dd>' +
-                                         i18n.getMsg('errors') +
-                                         '</dd>');
-                                out.push('<dd><ul>');
-                                if (!success) {
-                                    out.push('<li>' +
-                                             i18n.getMsg(json.message) +
-                                             '</li>');
-                                }
-                                me.printMessages(errors, out);
-                                out.push('</ul></dd>');
-                            } else {
-                                out.push('<dl><dd>' +
-                                         i18n.getMsg('status-' + json.message) +
-                                         '</dd>');
-                                out.push('</dd></dl>');
-                            }
-
-                            if (numWarnings > 0) {
-                                out.push('<dl><dd>' +
-                                         i18n.getMsg('warns') +
-                                         '</dd>');
-                                out.push('<dd><ul>');
-                                me.printMessages(warnings, out);
-                                out.push('</ul></dd>');
-                            }
-
-                            if (numNotifications > 0) {
-                                out.push('<dl><dd>' +
-                                         i18n.getMsg('notes') +
-                                         '</dd>');
-                                out.push('<dd><ul>');
-                                me.printMessages(notifications, out);
-                                out.push('</ul></dd>');
-                            }
-                            if (out.length > 0) {
-                                // Print delimiter between different requests
-                                out.push('<hr>');
-                                // Add generated HTML to overall output
-                                me.addLogItem(
-                                    out.join(''), record.get('measmId'));
-                            }
-                        } else {
-                            me.addLogItem(
-                                '<dl><dd>' +
-                                    i18n.getMsg('errors') +
-                                    '</dd><dd><ul><li>' +
-                                    i18n.getMsg('err.msg.generic.body') +
-                                    '</li></ul></dd></dl><hr>',
-                                record.get('measmId')
-                            );
-                        }
-
-                        count++;
-                        progress.updateProgress(
-                            count / me.selection.length,
-                            progressText + ' (' + count + ')');
-                        if (count === me.selection.length) {
-                            finalcallback();
-                        }
-                        me.fireEvent('statussetend');
-                    }
-                });
-            } else {
-                count++;
-                progress.updateProgress(
-                    count / me.selection.length,
-                    progressText + ' (' + count + ')');
-                if (count === me.selection.length) {
-                    finalcallback();
-                }
-            }
-        }
-    },
-
     getPossibleStatus: function(ids) {
         var me = this;
         Ext.Ajax.request({
@@ -372,31 +217,6 @@ Ext.define('Lada.view.window.SetStatus', {
             }
         }
         this.resultMessage += text;
-    },
-
-    printMessages: function(messages, out) {
-        var i18n = Lada.getApplication().bundle;
-        for (var key in messages) {
-            var msgs = messages[key];
-            var validation = [];
-            if (key.indexOf('#') > -1) {
-                var keyParts = key.split('#');
-                for (const msg of msgs.reverse()) {
-                    validation.push(
-                        '<li><b>' + i18n.getMsg(keyParts[0]) + '</b><i> ' +
-                            keyParts[1].toString() + '</i>: ' +
-                            i18n.getMsg(msg.toString()) + '</li>');
-                }
-            } else {
-                for (const msg of msgs.reverse()) {
-                    validation.push(
-                        '<li><b>' + i18n.getMsg(key) + ':</b> ' +
-                            Lada.util.I18n.getMsgIfDefined(msg.toString()) +
-                            '</li>');
-                }
-            }
-            out.push(validation.join(''));
-        }
     }
 });
 
