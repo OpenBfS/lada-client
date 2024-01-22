@@ -28,9 +28,6 @@ Ext.define('Lada.view.form.LadaForm', {
             var messages = allMessages[msgCat];
             for (var key in messages) {
                 var tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
                 var element = this.down('component[name=' + tmp + ']');
                 if (!element) {
                     continue;

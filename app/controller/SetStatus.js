@@ -173,21 +173,11 @@ Ext.define('Lada.controller.SetStatus', {
         for (var key in messages) {
             var msgs = messages[key];
             var validation = [];
-            if (key.indexOf('#') > -1) {
-                var keyParts = key.split('#');
-                for (const msg of msgs.reverse()) {
-                    validation.push(
-                        '<li><b>' + i18n.getMsg(keyParts[0]) + '</b><i> ' +
-                            keyParts[1].toString() + '</i>: ' +
-                            i18n.getMsg(msg.toString()) + '</li>');
-                }
-            } else {
-                for (const msg of msgs.reverse()) {
-                    validation.push(
-                        '<li><b>' + i18n.getMsg(key) + ':</b> ' +
-                            Lada.util.I18n.getMsgIfDefined(msg.toString()) +
-                            '</li>');
-                }
+            for (const msg of msgs.reverse()) {
+                validation.push(
+                    '<li><b>' + i18n.getMsg(key) + ':</b> ' +
+                        Lada.util.I18n.getMsgIfDefined(msg.toString()) +
+                        '</li>');
             }
             out.push(validation.join(''));
         }

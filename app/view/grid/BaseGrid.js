@@ -166,9 +166,6 @@ Ext.define('Lada.view.grid.BaseGrid', {
                     key => key.startsWith(dataIndex));
                 for (var key of candidateKeys) {
                     var tmp = key;
-                    if (tmp.indexOf('#') > 0) {
-                        tmp = tmp.split('#')[0];
-                    }
                     if (tmp === dataIndex) {
                         // If key not found, assume message translated by server
                         validationResult.push(
