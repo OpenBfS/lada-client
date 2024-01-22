@@ -410,19 +410,5 @@ Ext.define('Lada.view.window.Messung', {
             errorMesswertText === '' ? null : errorMesswertText,
             notificationMesswert,
             notificationMesswertText === '' ? null : notificationMesswertText);
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to clear their
-     * messages.
-     */
-    clearMessages: function() {
-        var messungform = this.down('messungform');
-        var messwerteSet = this.down('fset[name=messwerte]');
-        if (messungform && messwerteSet) {
-            messungform.clearMessages();
-            messwerteSet.clearMessages();
-        }
     }
-
 });

@@ -400,19 +400,5 @@ Ext.define('Lada.view.window.Probe', {
             warningPZBText === '' ? null : warningPZBText,
             errorPZB,
             errorPZBText === '' ? null : errorPZBText);
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to clear their
-     * messages.
-     */
-    clearMessages: function() {
-        var probeform = this.down('probeform');
-        var orteset = this.down('fset[name=orte]');
-        if (probeform && orteset) {
-            this.down('probeform').clearMessages();
-            this.down('fset[name=orte]').clearMessages();
-            this.down('fset[name=probenzusatzwerte]').clearMessages();
-        }
     }
 });

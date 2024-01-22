@@ -10,6 +10,7 @@
  * Form panel base class.
  */
 Ext.define('Lada.view.form.LadaForm', {
+    alias: 'widget.ladaform',
     extend: 'Ext.form.Panel',
 
     /**

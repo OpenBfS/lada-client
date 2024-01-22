@@ -259,14 +259,6 @@ Ext.define('Lada.view.window.Messprogramm', {
         this.down('messmethodengrid').setReadOnly(false);
     },
 
-    /**
-     * Instructs the fields / forms listed in this method to clear their
-     * messages.
-     */
-    clearMessages: function() {
-        this.down('messprogrammform').clearMessages();
-    },
-
     toggleGenProben: function() {
         var button = this.down('button[action=generateproben]');
         if (this.record === null || this.record.phantom) {

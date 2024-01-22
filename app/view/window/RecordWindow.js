@@ -277,5 +277,19 @@ Ext.define('Lada.view.window.RecordWindow', {
             this.childWindows.splice(trailIdx, 1);
         }
         this.childWindows.push(childItem);
+    },
+
+    /**
+     * Clear validation messages of child components.
+     *
+     * Note that this function only clears messages of components extending:
+     * - Lada.view.form.LadaForm
+     * - Lada.view.widget.base.FieldSet
+     */
+    clearMessages: function() {
+        var fsets = this.query('fset');
+        var forms = this.query('ladaform');
+        var components = fsets.concat(forms);
+        components.forEach((comp => comp.clearMessages()));
     }
 });

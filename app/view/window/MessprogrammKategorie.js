@@ -109,13 +109,5 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
     // TODO: this is never called
     setMessages: function(errors, warnings) {
         this.down('mprkatform').setMessages(errors, warnings);
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to clear their
-     * messages.
-     */
-    clearMessages: function() {
-        this.down('mprkatform').clearMessages();
     }
 });

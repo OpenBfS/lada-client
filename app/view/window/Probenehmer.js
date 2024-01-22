@@ -104,13 +104,5 @@ Ext.define('Lada.view.window.Probenehmer', {
                 record: this.record
             }]
         }]);
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to clear their
-     * messages.
-     */
-    clearMessages: function() {
-        this.down('probenehmerform').clearMessages();
     }
 });
