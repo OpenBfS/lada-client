@@ -164,7 +164,7 @@ Ext.define('Lada.view.window.Probe', {
                 }]
             }, {
                 xtype: 'fset',
-                name: 'orte',
+                name: 'geolocats',
                 title: i18n.getMsg('title.ortsangabe'),
                 padding: '5, 5',
                 margin: 5,
@@ -173,7 +173,7 @@ Ext.define('Lada.view.window.Probe', {
                 }]
             }, {
                 xtype: 'fset',
-                name: 'messungen',
+                name: 'measms',
                 title: i18n.getMsg('title.messungen'),
                 padding: '5, 5',
                 margin: 5,
@@ -184,7 +184,7 @@ Ext.define('Lada.view.window.Probe', {
                 }]
             }, {
                 xtype: 'fset',
-                name: 'probenzusatzwerte',
+                name: 'sampleSpecifMeasVals',
                 title: i18n.getMsg('title.zusatzwerte'),
                 padding: '5, 5',
                 margin: 5,
@@ -196,7 +196,7 @@ Ext.define('Lada.view.window.Probe', {
                 }]
             }, {
                 xtype: 'fset',
-                name: 'pkommentare',
+                name: 'commSamples',
                 title: i18n.getMsg('title.kommentare'),
                 padding: '5, 5',
                 margin: 5,
@@ -328,77 +328,5 @@ Ext.define('Lada.view.window.Probe', {
                     && disable);
             }
         });
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to set a message.
-     * @param errors These Errors shall be shown
-     * @param warnings These Warning shall be shown
-     */
-    setMessages: function(errors, warnings, notifications) {
-        this.down('probeform').setMessages(errors, warnings, notifications);
-        var errorOrtText = '';
-        var errorOrt = false;
-        var warningOrtText = '';
-        var warningOrt = false;
-        var errorPZBText = '';
-        var errorPZB = false;
-        var warningPZBText = '';
-        var warningPZB = false;
-        var key;
-        var content;
-        var i;
-        var keyText;
-        var i18n = Lada.getApplication().bundle;
-        for (key in errors) {
-            if (key && key.indexOf('Ort') > -1) {
-                errorOrt = true;
-                content = errors[key];
-                keyText = i18n.getMsg(key);
-                for (i = 0; i < content.length; i++) {
-                    errorOrtText += keyText + ': ' +
-                        i18n.getMsg(content[i].toString()) + '\n';
-                }
-            }
-            if (key && key.indexOf('zusatzwert') > -1) {
-                errorPZB = true;
-                content = errors[key];
-                keyText = i18n.getMsg(key);
-                for (i = 0; i < content.length; i++) {
-                    errorPZBText += keyText + ': ' +
-                        i18n.getMsg(content[i].toString()) + '\n';
-                }
-            }
-        }
-        for (key in warnings) {
-            if (key && key.indexOf('Ort') > -1) {
-                warningOrt = true;
-                content = warnings[key];
-                keyText = i18n.getMsg(key);
-                for (i = 0; i < content.length; i++) {
-                    warningOrtText += keyText + ': ' +
-                        i18n.getMsg(content[i].toString()) + '\n';
-                }
-            }
-            if (key && key.indexOf('zusatzwert') > -1) {
-                warningPZB = true;
-                content = warnings[key];
-                keyText = i18n.getMsg(key);
-                for (i = 0; i < content.length; i++) {
-                    warningPZBText += keyText + ': ' +
-                        i18n.getMsg(content[i].toString()) + '\n';
-                }
-            }
-        }
-        this.down('fset[name=orte]').showWarningOrError(
-            warningOrt,
-            warningOrtText === '' ? null : warningOrtText,
-            errorOrt,
-            errorOrtText === '' ? null : errorOrtText);
-        this.down('fset[name=probenzusatzwerte]').showWarningOrError(
-            warningPZB,
-            warningPZBText === '' ? null : warningPZBText,
-            errorPZB,
-            errorPZBText === '' ? null : errorPZBText);
     }
 });

@@ -165,7 +165,7 @@ Ext.define('Lada.view.window.Messung', {
                 }]
             }, {
                 xtype: 'fset',
-                name: 'messwerte',
+                name: 'measVals',
                 title: i18n.getMsg('title.messwerte'),
                 padding: '5, 5',
                 margin: 5,
@@ -177,7 +177,7 @@ Ext.define('Lada.view.window.Messung', {
                 }]
             }, {
                 xtype: 'fset',
-                name: 'messungstatus',
+                name: 'statusProts',
                 title: i18n.getMsg('title.status'),
                 padding: '5, 5',
                 margin: 5,
@@ -186,7 +186,7 @@ Ext.define('Lada.view.window.Messung', {
                 }]
             }, {
                 xtype: 'fset',
-                name: 'messungskommentare',
+                name: 'commMeasms',
                 title: i18n.getMsg('title.kommentare'),
                 padding: '5, 5',
                 margin: 5,
@@ -350,65 +350,5 @@ Ext.define('Lada.view.window.Messung', {
      */
     setProbe: function(probeRecord) {
         this.probe = probeRecord;
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to set a message.
-     * @param errors These Errors shall be shown
-     * @param warnings These Warning shall be shown
-     */
-    setMessages: function(errors, warnings, notifications) {
-        this.down('messungform').setMessages(errors, warnings, notifications);
-        var errorMesswertText = '';
-        var errorMesswert = false;
-        var warningMesswertText = '';
-        var warningMesswert = false;
-        var notificationMesswertText = '';
-        var notificationMesswert = false;
-        var key;
-        var content;
-        var i;
-        var keyText;
-        var i18n = Lada.getApplication().bundle;
-        for (key in errors) {
-            if (key && key.indexOf('messwert') > -1) {
-                errorMesswert = true;
-                content = errors[key];
-                keyText = i18n.getMsg(key);
-                for (i = 0; i < content.length; i++) {
-                    errorMesswertText += keyText + ': ' +
-                        i18n.getMsg(content[i].toString()) + '\n';
-                }
-            }
-        }
-        for (key in warnings) {
-            if (key && key.indexOf('messwert') > -1) {
-                warningMesswert = true;
-                content = warnings[key];
-                keyText = i18n.getMsg(key);
-                for (i = 0; i < content.length; i++) {
-                    warningMesswertText += keyText + ': ' +
-                        i18n.getMsg(content[i].toString()) + '\n';
-                }
-            }
-        }
-        for (key in notifications) {
-            if (key && key.indexOf('messwert') > -1) {
-                notificationMesswert = true;
-                content = notifications[key];
-                keyText = i18n.getMsg(key);
-                for (i = 0; i < content.length; i++) {
-                    notificationMesswertText += keyText + ': ' +
-                        i18n.getMsg(content[i].toString()) + '\n';
-                }
-            }
-        }
-        this.down('fset[name=messwerte]').showWarningOrError(
-            warningMesswert,
-            warningMesswertText === '' ? null : warningMesswertText,
-            errorMesswert,
-            errorMesswertText === '' ? null : errorMesswertText,
-            notificationMesswert,
-            notificationMesswertText === '' ? null : notificationMesswertText);
     }
 });

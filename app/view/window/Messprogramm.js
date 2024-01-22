@@ -222,7 +222,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 xtype: 'messprogrammform'
             }, {
                 xtype: 'fset',
-                name: 'orte',
+                name: 'geolocatMpgs',
                 title: i18n.getMsg('title.ortsangabe'),
                 padding: '5, 5',
                 margin: 5,
@@ -248,13 +248,13 @@ Ext.define('Lada.view.window.Messprogramm', {
     },
 
     disableChildren: function() {
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+        this.down('fset[name=geolocatMpgs]').down('ortszuordnunggrid').setReadOnly(
             true);
         this.down('messmethodengrid').setReadOnly(true);
     },
 
     enableChildren: function() {
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+        this.down('fset[name=geolocatMpgs]').down('ortszuordnunggrid').setReadOnly(
             false);
         this.down('messmethodengrid').setReadOnly(false);
     },

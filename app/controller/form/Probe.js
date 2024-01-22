@@ -483,7 +483,7 @@ Ext.define('Lada.controller.form.Probe', {
 
         // Filter probenzusatzwerte
         var pzwFset = formPanel.up('window').down(
-            'fset[name=probenzusatzwerte]');
+            'fset[name=sampleSpecifMeasVals]');
         if (pzwFset !== null) {
             var params = {};
             if (umwId) {

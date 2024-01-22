@@ -291,5 +291,76 @@ Ext.define('Lada.view.window.RecordWindow', {
         var forms = this.query('ladaform');
         var components = fsets.concat(forms);
         components.forEach((comp => comp.clearMessages()));
+    },
+
+    /**
+     * Set validation messages for this window.
+     *
+     * Messages will be passed down to the forms and fieldsets.
+     * @param {*} errors Errors
+     * @param {*} warnings Warnings
+     * @param {*} notifications Notifications
+     */
+    setMessages: function(errors, warnings, notifications) {
+        var i18n = Lada.getApplication().bundle;
+        var forms = this.query('ladaform');
+        forms.forEach(
+            (form) => form.setMessages(errors, warnings, notifications));
+
+        var fieldsets = this.query('fset');
+        var fieldsetMap = {};
+        fieldsets.forEach((fset) => {
+            if (fset.name) {
+                fieldsetMap[fset.name] = {
+                    fieldset: fset,
+                    errors: '',
+                    warnings: ''
+                };
+            }
+        });
+        var getMessages = function(key, map) {
+            var result = '';
+            map[key].forEach(validationMessage =>
+                result +=
+                    i18n.getMsg(key) + ': '
+                    + i18n.getMsg(validationMessage.toString())
+                    + '\n');
+            return result;
+        };
+        //Parse errors
+        for (var key in errors) {
+            if (fieldsetMap[key]) {
+                fieldsetMap[key].errors += getMessages(key, errors);
+            }
+        }
+        //Parse warnings
+        for (var warnKey in warnings) {
+            if (fieldsetMap[warnKey]) {
+                fieldsetMap[warnKey].warnings += getMessages(warnKey, warnings);
+            }
+        }
+        //Parse notification
+        for (var notificationKey in notifications) {
+            if (fieldsetMap[notificationKey]) {
+                fieldsetMap[notificationKey].notifications
+                    += getMessages(notificationKey, notifications);
+            }
+        }
+        //Set messages in components
+        for (var fieldsetName in fieldsetMap) {
+            var fieldset = fieldsetMap[fieldsetName];
+            var component = this.down('fset[name=' + fieldsetName + ']');
+            var hasWarnings = fieldset.warnings !== '';
+            var hasErrors = fieldset.errors !== '';
+            var hasNotifications = fieldset.notifications !== '';
+            component.showWarningOrError(
+                hasWarnings,
+                hasWarnings ? fieldset.warnings : null,
+                hasErrors,
+                hasErrors ? fieldset.errors : null,
+                hasNotifications,
+                hasNotifications ? fieldset.notifications : null
+            );
+        }
     }
 });

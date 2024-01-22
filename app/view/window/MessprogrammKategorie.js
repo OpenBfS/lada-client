@@ -99,15 +99,5 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
                 record: this.record
             }]
         }]);
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to set a message.
-     * @param errors These Errors shall be shown
-     * @param warnings These Warning shall be shown
-     */
-    // TODO: this is never called
-    setMessages: function(errors, warnings) {
-        this.down('mprkatform').setMessages(errors, warnings);
     }
 });
