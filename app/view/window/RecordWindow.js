@@ -314,7 +314,8 @@ Ext.define('Lada.view.window.RecordWindow', {
                 fieldsetMap[fset.name] = {
                     fieldset: fset,
                     errors: '',
-                    warnings: ''
+                    warnings: '',
+                    notifications: ''
                 };
             }
         });
