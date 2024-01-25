@@ -328,23 +328,19 @@ Ext.define('Lada.view.window.RecordWindow', {
                     + '\n');
             return result;
         };
-        //Parse errors
-        for (var key in errors) {
-            if (fieldsetMap[key]) {
-                fieldsetMap[key].errors += getMessages(key, errors);
-            }
-        }
-        //Parse warnings
-        for (var warnKey in warnings) {
-            if (fieldsetMap[warnKey]) {
-                fieldsetMap[warnKey].warnings += getMessages(warnKey, warnings);
-            }
-        }
-        //Parse notification
-        for (var notificationKey in notifications) {
-            if (fieldsetMap[notificationKey]) {
-                fieldsetMap[notificationKey].notifications
-                    += getMessages(notificationKey, notifications);
+        const allMessages = {
+            errors: errors,
+            warnings: warnings,
+            notifications: notifications
+        };
+        //Parse message map by categories
+        for (const [category, messages] of Object.entries(allMessages)) {
+            //Get messages by fieldset
+            for (var field in messages) {
+                if (fieldsetMap[field]) {
+                    fieldsetMap[field][category]
+                        += getMessages(field, messages);
+                }
             }
         }
         //Set messages in components
