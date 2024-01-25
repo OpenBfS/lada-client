@@ -7,6 +7,9 @@
  */
 
 Ext.define('Lada.model.AdminUnit', {
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
     extend: 'Lada.model.LadaBase',
 
     fields: [{

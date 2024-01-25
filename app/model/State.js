@@ -7,6 +7,9 @@
  */
 
 Ext.define('Lada.model.State', {
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
     extend: 'Lada.model.LadaBase',
 
     fields: [{

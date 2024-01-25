@@ -7,8 +7,10 @@
  */
 
 Ext.define('Lada.model.Measm', {
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
     extend: 'Lada.model.ValidatedModel',
-
     fields: [{
         name: 'id'
     }, {

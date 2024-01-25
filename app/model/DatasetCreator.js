@@ -7,6 +7,9 @@
  */
 
 Ext.define('Lada.model.DatasetCreator', {
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
     extend: 'Lada.model.ValidatedModel',
 
     fields: [{

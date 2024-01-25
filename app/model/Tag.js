@@ -10,6 +10,9 @@
  * This class represents and defines the model of a Tag
  **/
 Ext.define('Lada.model.Tag', {
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
     extend: 'Lada.model.ValidatedModel',
 
     fields: [{

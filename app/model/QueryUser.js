@@ -7,6 +7,9 @@
  */
 
 Ext.define('Lada.model.QueryUser', {
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
     extend: 'Lada.model.ValidatedModel',
     autoLoad: true,
     proxy: {
