@@ -84,7 +84,10 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             items: [{
                 header: i18n.getMsg('pzs_id'),
                 dataIndex: 'sampleSpecifId',
-                flex: 1
+                flex: 1,
+                renderer: function(value) {
+                    return value;
+                }
             }, {
                 header: i18n.getMsg('pzw'),
                 dataIndex: 'sampleSpecifId',
@@ -146,8 +149,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 header: i18n.getMsg('measUnitId'),
                 dataIndex: 'sampleSpecifId',
                 flex: 1,
-                renderer: function(value, metaData, gridRec) {
-                    this.validationResultRenderer(value, metaData, gridRec);
+                renderer: function(value) {
                     if (!value || value === '') {
                         return '';
                     }
