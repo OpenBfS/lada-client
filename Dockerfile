@@ -13,7 +13,7 @@
 # The LADA-application will be available under http://yourdockerhost:8182
 #
 
-FROM httpd:2.4
+FROM httpd:bullseye
 MAINTAINER mlechner@bfs.de
 
 ENV DEBIAN_FRONTEND noninteractive
