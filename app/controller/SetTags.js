@@ -73,7 +73,8 @@ Ext.define('Lada.controller.SetTags', {
                     var successTags = [];
                     json.data.forEach(function(item) {
                         if (!item.success) {
-                            msgs += tagStore.getById(item.data.tagId).get('tag')
+                            msgs += tagStore.getById(item.data.tagId)
+                                .get('name')
                                 + ': ' + i18n.getMsg(item.message) + '<br>';
                         } else {
                             successTags.push(item.data.tagId);
