@@ -89,8 +89,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         });
                 } else {
                     var i18n = Lada.getApplication().bundle;
-                    Ext.Msg.alert(i18n.getMsg('err.messprogramm.copy'),
-                        i18n.getMsg('err.msg.generic.body'));
+                    me.handleServiceFailure(rec, op,
+                        i18n.getMsg('err.messprogramm.copy'));
                 }
             }
         });
@@ -131,8 +131,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         callback: function(rec, op, success) {
                             savedOZ++;
                             if (!success) {
-                                var responseObj2 = Ext.decode(
-                                    op.getResponse().responseText);
+                                var responseObj2 = me.handleServiceFailure(rec, op,
+                                    null, true);
                                 var errString = i18n.getMsg(
                                     'err.ortszuordnung.copy.text',
                                     rec.get('copyOf'),
@@ -163,6 +163,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var fetchedMmt = 0;
         var saveErrors = null;
         var i18n = Lada.getApplication().bundle;
+        var me = this;
 
         Ext.Ajax.request({
             url: Lada.model.LadaBase.schema.getUrlPrefix()
@@ -193,8 +194,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         callback: function(rec, op, success) {
                             savedMmt++;
                             if (!success) {
-                                var responseObj2 = Ext.decode(
-                                    op.getResponse().responseText);
+                                var responseObj2 = me.handleServiceFailure(
+                                    rec, op, null, true);
                                 var errString = i18n.getMsg(
                                     'err.mmt.copy.text', rec.get('copyOf'),
                                     i18n.getMsg(responseObj2.message));

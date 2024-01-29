@@ -120,11 +120,8 @@ Ext.define('Lada.controller.form.Probe', {
                 if (success) {
                     me.copyOrtszuordnung(probe, copy, callback, toolbar);
                 } else {
-                    var responseObj = Ext.decode(
-                        operation.getResponse().responseText);
-                    Ext.Msg.alert(
-                        i18n.getMsg('err.probe.copy'),
-                        i18n.getMsg(responseObj.message));
+                    me.handleServiceFailure(record, operation,
+                        i18n.getMsg('err.probe.copy'));
                     toolbar.setLoading(false);
                 }
             }
@@ -165,8 +162,8 @@ Ext.define('Lada.controller.form.Probe', {
                             savedOZ++;
                             if (!success) {
                                 var i18n = Lada.getApplication().bundle;
-                                var responseObj2 = Ext.decode(
-                                    op.getResponse().responseText);
+                                var responseObj2 = me.handleServiceFailure(rec, op,
+                                    null, true);
                                 var errString = i18n.getMsg(
                                     'err.ortszuordnung.copy.text',
                                     rec.get('copyOf'),
@@ -249,9 +246,12 @@ Ext.define('Lada.controller.form.Probe', {
                         callback: function(rec, op, success) {
                             savedMessungenCopies++;
                             if (!success) {
+                                var errorMsg = me.handleServiceFailure(rec, op,
+                                    null, true);
+                                var msg = rec.get('id') + ': ' + errorMsg;
                                 saveErrors = saveErrors ?
-                                    saveErrors + rec.get('id') + ' failed. ' :
-                                    '' + rec.get('id') + ' failed. ';
+                                    saveErrors + msg :
+                                    '' + msg;
                             }
                             if (savedMessungenCopies === fetchedMessungen) {
                                 if (saveErrors) {
@@ -285,6 +285,7 @@ Ext.define('Lada.controller.form.Probe', {
      * @param fininshedCallback Function to call after copying.
      */
     copyMesswerte: function(probeCopy, messungen, finishedCallback, toolbar) {
+        var me = this;
         //Number of messung objects to copy and objects already copied
         var numMessungen = messungen.length;
         var messungenFinished = 0;
@@ -303,6 +304,11 @@ Ext.define('Lada.controller.form.Probe', {
                 messungen[i].get('copyOfMessungId'),
                 messungen[i].get('id'));
         }
+        var handleMeasValSaveFailure = function(rec, op) {
+            me.handleServiceFailure(rec, op,
+                null);
+            toolbar.setLoading(false);
+        };
         for (var i2 = 0; i2 < messungen.length; i2++) {
             var messung = messungen[i2];
             Ext.Ajax.request({
@@ -412,9 +418,7 @@ Ext.define('Lada.controller.form.Probe', {
                         });
                     }
                 },
-                failure: function() {
-                    toolbar.setLoading(false);
-                }
+                failure: handleMeasValSaveFailure
             });
         }
     },
