@@ -14,6 +14,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     alias: 'widget.dynamicgrid',
     requires: [
         'Ext.grid.column.Widget',
+        'Lada.controller.grid.DynamicGrid',
         'Lada.view.grid.Messung',
         'Lada.view.grid.Messwert',
         'Lada.view.window.Probenehmer',
@@ -21,6 +22,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         'Lada.view.window.MessprogrammKategorie',
         'Lada.view.panel.Map'
     ],
+    controller: 'dynamicgridcontroller',
 
     store: null,
 

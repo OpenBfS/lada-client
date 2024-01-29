@@ -10,7 +10,8 @@
 * This is a controller for Tag assignment form
 */
 Ext.define('Lada.controller.SetTags', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.BaseController',
+    alias: 'controller.settags',
 
     init: function() {
         this.control({
@@ -44,6 +45,7 @@ Ext.define('Lada.controller.SetTags', {
     },
 
     editZuordnung: function(button, isDelete) {
+        var me = this;
         var i18n = Lada.getApplication().bundle;
         var win = button.up('settags');
         var selection = win.getSelection();
@@ -105,9 +107,8 @@ Ext.define('Lada.controller.SetTags', {
                                   i18n.getMsg(json.message));
                 }
             },
-            failure: function() {
-                Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                              i18n.getMsg('err.msg.generic.body'));
+            failure: function(response) {
+                me.handleRequestFailure(response);
             }
         });
     },

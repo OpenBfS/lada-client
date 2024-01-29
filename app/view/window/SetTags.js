@@ -13,9 +13,11 @@ Ext.define('Lada.view.window.SetTags', {
     extend: 'Ext.window.Window',
     alias: 'widget.settags',
     requires: [
+        'Lada.controller.SetTags',
         'Lada.view.window.TagManagement',
         'Lada.store.Tag'
     ],
+    controller: 'settags',
 
     layout: 'vbox',
     width: 400,

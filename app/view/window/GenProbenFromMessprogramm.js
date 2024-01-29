@@ -11,6 +11,7 @@
  */
 Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     extend: 'Ext.window.Window',
+    controller: 'basecontroller',
     alias: 'widget.genpfm',
 
     requires: [
@@ -184,11 +185,14 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                                 + '<br>'
                             );
                         }
+                        //Get detailed error message
+                        var msg = me.getController()
+                            .handleRequestFailure(response, null, null, true);
                         panel.setHtml(
                             i18n.getMsg(
                                 'gpfm.generated.requestfail',
                                 response.status,
-                                response.statusText));
+                                msg));
                         me.down('toolbar').down('button').setDisabled(false);
 
                     }

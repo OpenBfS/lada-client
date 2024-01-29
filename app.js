@@ -514,11 +514,9 @@ Ext.application({
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.GridExport',
-        'Lada.controller.grid.DynamicGrid',
         'Lada.controller.Global',
         'Lada.controller.Print',
         'Lada.controller.ElanScenario',
-        'Lada.controller.grid.Downloads',
-        'Lada.controller.SetTags'
+        'Lada.controller.grid.Downloads'
     ]
 });

@@ -10,7 +10,8 @@
  * Controller for dynamic grids.
  */
 Ext.define('Lada.controller.grid.DynamicGrid', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.BaseController',
+    alias: 'controller.dynamicgridcontroller',
     requires: [
         'Lada.view.window.DeleteMultipleItems',
         'Lada.view.window.GenProbenFromMessprogramm',
@@ -430,6 +431,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         this.doSetActive(true, button);
     },
     doSetActive: function(active, button) {
+        var me = this;
         var i18n = Lada.getApplication().bundle;
         var ids = [];
         var grid = button.up('grid');
@@ -439,7 +441,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         }
         if (ids.length) {
             Ext.Ajax.request({
-                url: 'lada-server/rest/mpg/active',
+                url: 'lada-server/rest/mpg/active1',
                 method: 'PUT',
                 jsonData: {
                     active: active,
@@ -490,29 +492,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                         grids[0].reload();
                     }
                 },
-                failure: function() {
-                    var errorWin = Ext.create('Ext.window.Window', {
-                        title: i18n.getMsg('setActiveMp.failure.title'),
-                        modal: true,
-                        layout: 'vbox',
-                        items: [{
-                            xtype: 'container',
-                            html: i18n.getMsg('export.failednoreason'),
-                            margin: '10, 5, 5, 5'
-                        }, {
-                            xtype: 'container',
-                            layout: 'hbox',
-                            items: [{
-                                xtype: 'button',
-                                text: i18n.getMsg('close'),
-                                margin: '5, 0, 5, 5',
-                                handler: function() {
-                                    errorWin.close();
-                                }
-                            }]
-                        }]
-                    });
-                    errorWin.show();
+                failure: function(response, options) {
+                    var errorTitle = i18n.getMsg('setActiveMp.failure.title');
+                    me.handleRequestFailure(response, options, errorTitle);
                 }
             });
         }
