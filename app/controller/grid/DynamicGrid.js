@@ -441,7 +441,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         }
         if (ids.length) {
             Ext.Ajax.request({
-                url: 'lada-server/rest/mpg/active1',
+                url: 'lada-server/rest/mpg/active',
                 method: 'PUT',
                 jsonData: {
                     active: active,
