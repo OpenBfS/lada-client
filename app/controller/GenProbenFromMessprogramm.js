@@ -137,14 +137,6 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
             failure: function(response) {
                 var panel = win.down('panel');
                 panel.setLoading(false);
-                if (reqJsondata.dryrun) {
-                    panel.setHtml(
-                        panel.html
-                            + '<br>'
-                            + i18n.getMsg('gpfm.window.test.result')
-                            + '<br>'
-                    );
-                }
                 //Get detailed error message
                 var msg = me.handleRequestFailure(response, null, null, true);
                 panel.setHtml(
