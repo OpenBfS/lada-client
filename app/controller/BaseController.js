@@ -22,21 +22,25 @@ Ext.define('Lada.controller.BaseController', {
      */
     handleRequestFailure: function(response, options, titleMsg, skipAlert) {
         var i18n = Lada.getApplication().bundle;
-        var msg;
+        var msg = '';
         if (response.status === 200) {
             return;
         }
         //Check for bean validation messages
         if (response.getResponseHeader('validation-exception')) {
-            var text = response.responseText;
-            var parts = text.split('\r');
-            msg = parts[2]
-                .trim()
-                .substring(1, parts[2].length - 1);
+            var errors = this.getBeanValidationErrors(response);
+            for (const [key, value] of Object.entries(errors)) {
+                var violations = '';
+                // eslint-disable-next-line no-loop-func
+                value.forEach(violation =>
+                    violations += `<br>    - ${violation}`);
+                msg += `${key}: ${violations}<br>`;
+            }
         } else {
             //Handle other Http error codes
             msg = this.getHttpError(response);
-        } if (!skipAlert) {
+        }
+        if (!skipAlert) {
             Ext.Msg.alert(i18n.getMsg(
                 titleMsg ? titleMsg : 'err.msg.generic.title'), msg);
         }
@@ -63,23 +67,7 @@ Ext.define('Lada.controller.BaseController', {
             } else {
                 var response = err.response;
                 if (response.getResponseHeader('validation-exception')) {
-                    // Translate RESTEasy validation violation report
-                    var violations = Ext.decode(response.responseText)
-                        .parameterViolations;
-                    var errors = {};
-                    for (var violation of violations) {
-                        var key = violation.path.split('\.').pop();
-                        key = key === 'arg0' // Key for class-level violations
-                            // Convert to snake_case to match audit-trail keys.
-                            ? record.entityName.match(/([A-Z][a-z]*)/g)
-                                .join('_').toLowerCase()
-                            : key;
-                        if (errors[key]) {
-                            errors[key].push(violation.message);
-                        } else {
-                            errors[key] = [violation.message];
-                        }
-                    }
+                    var errors = this.getBeanValidationErrors(response, record);
                     msg = i18n.getMsg('604');
                     responseJson = { data: { errors: errors }};
                 } else {
@@ -112,5 +100,28 @@ Ext.define('Lada.controller.BaseController', {
                 : response.statusText;
         }
         return msg;
+    },
+
+    getBeanValidationErrors: function(response, record) {
+        // Translate RESTEasy validation violation report
+        var violations = Ext.decode(response.responseText)
+            .parameterViolations;
+        var errors = {};
+        //If no record was given: use dummy entityname
+        var entityName = record ? record.entityName : 'entity';
+        for (var violation of violations) {
+            var key = violation.path.split('\.').pop();
+            key = key === 'arg0' // Key for class-level violations
+                // Convert to snake_case to match audit-trail keys.
+                ? entityName.match(/([A-Z][a-z]*)/g)
+                    .join('_').toLowerCase()
+                : key;
+            if (errors[key]) {
+                errors[key].push(violation.message);
+            } else {
+                errors[key] = [violation.message];
+            }
+        }
+        return errors;
     }
 });

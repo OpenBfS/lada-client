@@ -110,6 +110,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         + Lada.model.Sample.entityName.toLowerCase()
                         + '/messprogramm',
                     method: 'POST',
+                    headers: {
+                        Accept: 'application/json'
+                    },
                     timeout: 2 * 60 * 1000,
                     jsonData: reqJsondata,
                     success: function(response) {
