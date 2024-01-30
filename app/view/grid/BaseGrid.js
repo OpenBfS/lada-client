@@ -161,21 +161,20 @@ Ext.define('Lada.view.grid.BaseGrid', {
         var validationResultCls = null;
         ['notification', 'warning', 'error'].forEach(function(msgCat) {
             var messages = record.get(msgCat + 's');
-            if (messages) {
-                var candidateKeys = Object.keys(messages).filter(
-                    key => key.startsWith(dataIndex));
-                for (var key of candidateKeys) {
-                    var tmp = key;
-                    if (tmp === dataIndex) {
-                        // If key not found, assume message translated by server
-                        validationResult.push(
-                            Lada.util.I18n.getMsgIfDefined(messages[key])
-                        );
-                        validationResultCls =
-                            'x-lada-' + msgCat + '-grid-field';
-                    }
-                }
+            if (!messages) {
+                return;
             }
+            Object.keys(messages)
+                .filter(
+                    key => key === dataIndex)
+                .forEach(key => {
+                    // If key not found, assume message translated by server
+                    validationResult.push(
+                        Lada.util.I18n.getMsgIfDefined(messages[key])
+                    );
+                    validationResultCls =
+                        'x-lada-' + msgCat + '-grid-field';
+                });
         });
         if (validationResultCls) {
             metaData.tdCls = validationResultCls;
