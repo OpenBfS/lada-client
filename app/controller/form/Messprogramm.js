@@ -88,9 +88,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                             win.setPosition(pos);
                         });
                 } else {
-                    var i18n = Lada.getApplication().bundle;
-                    me.handleServiceFailure(rec, op,
-                        i18n.getMsg('err.messprogramm.copy'));
+                    me.handleServiceFailure(rec, op, 'err.messprogramm.copy');
                 }
             }
         });

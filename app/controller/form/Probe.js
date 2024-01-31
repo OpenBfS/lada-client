@@ -103,7 +103,6 @@ Ext.define('Lada.controller.form.Probe', {
      * @param toolbar toolbar to reactivate if finished (used in error cases)
      */
     copyProbe: function(probe, callback, toolbar) {
-        var i18n = Lada.getApplication().bundle;
         var me = this;
         //Copy probe and reset fields not to be copied
         var fieldsToReset = [
@@ -120,8 +119,7 @@ Ext.define('Lada.controller.form.Probe', {
                 if (success) {
                     me.copyOrtszuordnung(probe, copy, callback, toolbar);
                 } else {
-                    me.handleServiceFailure(record, operation,
-                        i18n.getMsg('err.probe.copy'));
+                    me.handleServiceFailure(record, operation, 'err.probe.copy');
                     toolbar.setLoading(false);
                 }
             }
