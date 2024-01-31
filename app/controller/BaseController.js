@@ -106,8 +106,6 @@ Ext.define('Lada.controller.BaseController', {
         var violations = Ext.decode(response.responseText)
             .parameterViolations;
         var errors = {};
-        //If no record was given: use dummy entityname
-        var entityName = record ? record.entityName : 'entity';
         for (var violation of violations) {
             var path = violation.path.split('\.');
             var key = path.pop();
@@ -117,9 +115,9 @@ Ext.define('Lada.controller.BaseController', {
             // misinterpreted as HTML
             key = key.search(/^<.+>$/) > -1 ? path.pop() : key;
 
-            key = key === 'arg0' // Key for class-level violations
+            key = record && key === 'arg0' // Key for class-level violations
                 // Convert to snake_case to match audit-trail keys.
-                ? entityName.match(/([A-Z][a-z]*)/g)
+                ? record.entityName.match(/([A-Z][a-z]*)/g)
                     .join('_').toLowerCase()
                 : key;
 
