@@ -15,11 +15,9 @@ Ext.define('Lada.controller.BaseController', {
     /**
      * Handle failures of requests that are not model operations
      * @param {*} response Response object
-     * @param {*} options request options
      * @param {*} titleMsg Title message, optional
-     * @param {*} skipAlert True to skip alert window
      */
-    handleRequestFailure: function(response, options, titleMsg, skipAlert) {
+    handleRequestFailure: function(response, titleMsg) {
         var i18n = Lada.getApplication().bundle;
         var msg = '';
         if (response.status === 200) {
@@ -39,11 +37,8 @@ Ext.define('Lada.controller.BaseController', {
             //Handle other Http error codes
             msg = this.getHttpError(response);
         }
-        if (!skipAlert) {
-            Ext.Msg.alert(i18n.getMsg(
-                titleMsg ? titleMsg : 'err.msg.generic.title'), msg);
-        }
-        return msg;
+        Ext.Msg.alert(
+            i18n.getMsg(titleMsg ? titleMsg : 'err.msg.generic.title'), msg);
     },
 
     /**

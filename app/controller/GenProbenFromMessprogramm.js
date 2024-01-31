@@ -32,24 +32,7 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
         win.endUTC = endUTC;
         var dryrun = win.down('checkbox[name=dryrun]').getValue();
         win.dryrun = dryrun;
-        var results = [];
-        win.removeAll();
-        win.down('toolbar').removeAll();
-        win.down('toolbar').add({
-            xtype: 'button',
-            text: i18n.getMsg('close'),
-            handler: win.close,
-            disabled: true,
-            scope: win
-        });
-        win.add({
-            xtype: 'panel',
-            border: false,
-            layout: 'fit',
-            margin: '5, 5, 0, 5',
-            html: ''
-        });
-        win.down('panel').setLoading(true);
+        win.setLoading(true);
         var reqJsondata = {
             ids: win.ids,
             start: Ext.Date.format(
@@ -70,8 +53,23 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
             timeout: 2 * 60 * 1000,
             jsonData: reqJsondata,
             success: function(response) {
+                win.removeAll();
+                win.down('toolbar').removeAll();
+                win.down('toolbar').add({
+                    xtype: 'button',
+                    text: i18n.getMsg('close'),
+                    handler: win.close,
+                    disabled: true,
+                    scope: win
+                });
+                win.add({
+                    xtype: 'panel',
+                    border: false,
+                    layout: 'fit',
+                    margin: '5, 5, 0, 5',
+                    html: ''
+                });
                 var panel = win.down('panel');
-                panel.setLoading(false);
                 var json = Ext.JSON.decode(response.responseText);
                 if (reqJsondata.dryrun) {
                     panel.setHtml(
@@ -89,6 +87,7 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
                     }
 
                     // Process response data
+                    var results = [];
                     Ext.Object.each(
                         json.data.proben,
                         function(key, result) {
@@ -133,18 +132,11 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
                     results,
                     json.data.tag ? json.data.tag : '',
                     reqJsondata);
+                win.setLoading(false);
             },
             failure: function(response) {
-                var panel = win.down('panel');
-                panel.setLoading(false);
-                //Get detailed error message
-                var msg = me.handleRequestFailure(response, null, null, true);
-                panel.setHtml(
-                    i18n.getMsg(
-                        'gpfm.generated.requestfail',
-                        response.status,
-                        msg));
-                win.down('toolbar').down('button').setDisabled(false);
+                win.close();
+                me.handleRequestFailure(response, 'gpfm.generated.requestfail');
             }
         });
     },

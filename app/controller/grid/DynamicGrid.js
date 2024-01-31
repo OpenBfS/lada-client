@@ -495,9 +495,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                         grids[0].reload();
                     }
                 },
-                failure: function(response, options) {
+                failure: function(response) {
                     me.handleRequestFailure(
-                        response, options, 'setActiveMp.failure.title');
+                        response, 'setActiveMp.failure.title');
                 }
             });
         }
