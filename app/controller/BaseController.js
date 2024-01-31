@@ -20,9 +20,6 @@ Ext.define('Lada.controller.BaseController', {
     handleRequestFailure: function(response, titleMsg) {
         var i18n = Lada.getApplication().bundle;
         var msg = '';
-        if (response.status === 200) {
-            return;
-        }
         //Check for bean validation messages
         if (response.getResponseHeader('validation-exception')) {
             var errors = this.getBeanValidationErrors(response);
