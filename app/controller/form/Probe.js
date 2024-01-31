@@ -160,8 +160,8 @@ Ext.define('Lada.controller.form.Probe', {
                             savedOZ++;
                             if (!success) {
                                 var i18n = Lada.getApplication().bundle;
-                                var responseObj2 = me.handleServiceFailure(rec, op,
-                                    null, true);
+                                var responseObj2 = me.handleServiceFailure(
+                                    rec, op, null, true);
                                 var errString = i18n.getMsg(
                                     'err.ortszuordnung.copy.text',
                                     rec.get('copyOf'),
@@ -244,12 +244,9 @@ Ext.define('Lada.controller.form.Probe', {
                         callback: function(rec, op, success) {
                             savedMessungenCopies++;
                             if (!success) {
-                                var errorMsg = me.handleServiceFailure(rec, op,
-                                    null, true);
-                                var msg = rec.get('id') + ': ' + errorMsg;
-                                saveErrors = saveErrors ?
-                                    saveErrors + msg :
-                                    '' + msg;
+                                saveErrors += rec.get('id') + ': '
+                                    + me.handleServiceFailure(
+                                        rec, op, null, true);
                             }
                             if (savedMessungenCopies === fetchedMessungen) {
                                 if (saveErrors) {
@@ -303,8 +300,7 @@ Ext.define('Lada.controller.form.Probe', {
                 messungen[i].get('id'));
         }
         var handleMeasValSaveFailure = function(rec, op) {
-            me.handleServiceFailure(rec, op,
-                null);
+            me.handleServiceFailure(rec, op);
             toolbar.setLoading(false);
         };
         for (var i2 = 0; i2 < messungen.length; i2++) {

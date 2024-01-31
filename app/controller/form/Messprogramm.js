@@ -129,8 +129,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         callback: function(rec, op, success) {
                             savedOZ++;
                             if (!success) {
-                                var responseObj2 = me.handleServiceFailure(rec, op,
-                                    null, true);
+                                var responseObj2 = me.handleServiceFailure(
+                                    rec, op, null, true);
                                 var errString = i18n.getMsg(
                                     'err.ortszuordnung.copy.text',
                                     rec.get('copyOf'),
@@ -363,7 +363,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     deskriptorSelect: function(field, records) {
-        field.up('messprogrammform').down('umwelt[name="envMediumId"]').clearValue();
+        field.up('messprogrammform').down('umwelt[name="envMediumId"]')
+            .clearValue();
         var desk = field.up('deskriptor');
         var media = field.up('messprogrammform')
             .down('textfield[name="envDescripDisplay"]');
