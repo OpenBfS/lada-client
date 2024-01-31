@@ -74,11 +74,12 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
                 panel.setLoading(false);
                 var json = Ext.JSON.decode(response.responseText);
                 if (reqJsondata.dryrun) {
-                    panel.setHtml(panel.html
-                                  + '<br>'
-                                  + i18n.getMsg('gpfm.window.test.result')
-                                  + '<br>'
-                                 );
+                    panel.setHtml(
+                        panel.html
+                            + '<br>'
+                            + i18n.getMsg('gpfm.window.test.result')
+                            + '<br>'
+                    );
                 }
                 if (json.success && json.data.proben) {
                     // Reload tag store to have generated tag available
@@ -123,8 +124,7 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
                                         i18n.getMsg(
                                             'gpfm.generated.error',
                                             key,
-                                            i18n.getMsg(
-                                                result.message)));
+                                            i18n.getMsg(result.message)));
                             }
                         });
                 }
