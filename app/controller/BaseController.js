@@ -109,12 +109,20 @@ Ext.define('Lada.controller.BaseController', {
         //If no record was given: use dummy entityname
         var entityName = record ? record.entityName : 'entity';
         for (var violation of violations) {
-            var key = violation.path.split('\.').pop();
+            var path = violation.path.split('\.');
+            var key = path.pop();
+
+            // Skip path suffixes such as "<list element>" that cannot
+            // be assigned to a concrete attribute and might be
+            // misinterpreted as HTML
+            key = key.search(/^<.+>$/) > -1 ? path.pop() : key;
+
             key = key === 'arg0' // Key for class-level violations
                 // Convert to snake_case to match audit-trail keys.
                 ? entityName.match(/([A-Z][a-z]*)/g)
                     .join('_').toLowerCase()
                 : key;
+
             if (errors[key]) {
                 errors[key].push(violation.message);
             } else {
