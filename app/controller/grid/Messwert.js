@@ -211,5 +211,30 @@ Ext.define('Lada.controller.grid.Messwert', {
             Ext.tip.QuickTipManager.unregister(cbox.getId());
             //attributes.removeNamedItem('data-qtip');
         }
+    },
+
+    normalize: function(button) {
+        Ext.Ajax.request({
+            url: 'lada-server/rest/measval/normalize',
+            params: {
+                measmId: button.up('messungedit').record.get('id')
+            },
+            method: 'PUT',
+            scope: this,
+            jsonData: {},
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                if (json.success === true) {
+                    button.up('messungedit').down('messwertgrid')
+                        .store.reload();
+                } else {
+                    var i18n = Lada.getApplication().bundle;
+                    Ext.Msg.alert('', i18n.getMsg('err.normalize'));
+                }
+            },
+            failure: function(response) {
+                this.handleRequestFailure(response, 'err.normalize');
+            }
+        });
     }
 });
