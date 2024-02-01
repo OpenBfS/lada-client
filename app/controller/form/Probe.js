@@ -319,7 +319,7 @@ Ext.define('Lada.controller.form.Probe', {
                     var messwertCopyArr = [];
                     var messwertRecArr = [];
                     var messungsId = messwertArr.length >= 1 ?
-                        messwertArr[0].messungsId :
+                        messwertArr[0].measmId :
                         null;
                     if (!messungsId) {
                         messungenFinished++;
