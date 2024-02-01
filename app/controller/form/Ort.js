@@ -289,6 +289,7 @@ Ext.define('Lada.controller.form.Ort', {
                     'y': win.down('selectabledisplayfield[name=originalY]')
                         .getValue()
                 },
+                scope: this,
                 success: function(response) {
                     win.setLoading(false);
                     if (response && response.responseText) {
@@ -321,15 +322,9 @@ Ext.define('Lada.controller.form.Ort', {
                         }
                     }
                 },
-                failure: function() {
+                failure: function(response) {
                     win.setLoading(false);
-                    var messageContainer = win.down(
-                        'container[name=messageContainer]');
-                    var messageField = win.down(
-                        'textareafield[name=message]');
-                    messageContainer.setHidden(false);
-                    messageField.setValue(
-                        i18n.getMsg('err.msg.ort.changeKda'));
+                    this.handleRequestFailure(response, 'err.msg.ort.changeKda');
                     win.down('button[action=apply]').setDisabled(true);
                     win.down('koordinatenart[name=newKDA]').setValue(
                         win.down('koordinatenart[name=originalKDA]')
