@@ -390,8 +390,6 @@ Ext.define('Lada.controller.form.Probe', {
                                     }
                                 } else {
                                     me.handleServiceFailure(rec, op);
-                                    //TODO Messwerte liefern immer einen Fehler
-                                    // durch die Konsistenzprüfung
                                     currentFinishedMesswerte++;
                                     messwertFinished.add(
                                         currentMessungsIDNew,
