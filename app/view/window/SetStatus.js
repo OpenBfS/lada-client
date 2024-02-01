@@ -21,7 +21,6 @@ Ext.define('Lada.view.window.SetStatus', {
 
     controller: 'setstatus',
 
-    store: Ext.create('Lada.store.StatusKombi'),
     grid: null,
     selection: null,
 
@@ -43,7 +42,6 @@ Ext.define('Lada.view.window.SetStatus', {
                 this.removeCls('x-unselectable');
             }
         });
-        var possibleStatusStore;
         if (this.grid) {
             this.dataId = this.grid.rowtarget.messungIdentifier ||
                 this.grid.rowtarget.dataIndex;
@@ -88,7 +86,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     fieldLabel: i18n.getMsg('erzeuger')
                 }, {
                     xtype: 'statuskombiselect',
-                    store: possibleStatusStore,
+                    store: Ext.create('Lada.store.StatusKombi'),
                     allowBlank: false,
                     fieldLabel: i18n.getMsg('header.statuskombi')
                 }, {
@@ -167,20 +165,19 @@ Ext.define('Lada.view.window.SetStatus', {
         win.close();
     },
 
-    getPossibleStatus: function(ids) {
-        var me = this;
+    getPossibleStatus: function() {
         Ext.Ajax.request({
             url: 'lada-server/rest/statusmp/getbyids',
-            jsonData: JSON.stringify(ids),
+            jsonData: this.sendIds,
             method: 'POST',
+            scope: this,
             success: function(response) {
                 var json = Ext.JSON.decode(response.responseText);
                 if (json.data) {
-                    me.store.setData(json.data);
-                    me.down('statuskombiselect').down(
+                    this.down('statuskombiselect').down(
                         'combobox').getStore().setData(json.data);
                     if (!json.data.length) {
-                        me.down('button[name=start]').disable();
+                        this.down('button[name=start]').disable();
                     }
                 }
             }
