@@ -299,8 +299,9 @@ Ext.define('Lada.controller.form.Probe', {
                 messungen[i].get('copyOfMessungId'),
                 messungen[i].get('id'));
         }
-        var handleMeasValSaveFailure = function(rec, op) {
-            me.handleServiceFailure(rec, op);
+        var handleMeasValRequestFailure = function(rec, op) {
+            me.handleRequestFailure(rec, op,
+                null);
             toolbar.setLoading(false);
         };
         for (var i2 = 0; i2 < messungen.length; i2++) {
@@ -388,6 +389,7 @@ Ext.define('Lada.controller.form.Probe', {
                                         finishedCallback(probeCopy);
                                     }
                                 } else {
+                                    me.handleServiceFailure(rec, op);
                                     //TODO Messwerte liefern immer einen Fehler
                                     // durch die Konsistenzprüfung
                                     currentFinishedMesswerte++;
@@ -412,7 +414,7 @@ Ext.define('Lada.controller.form.Probe', {
                         });
                     }
                 },
-                failure: handleMeasValSaveFailure
+                failure: handleMeasValRequestFailure
             });
         }
     },
