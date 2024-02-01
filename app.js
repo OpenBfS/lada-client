@@ -117,6 +117,11 @@ Ext.application({
             return '"' + Ext.Date.format(o, 'c') + '"';
         };
 
+        // Default headers for all requests
+        Ext.Ajax.setDefaultHeaders({
+            Accept: 'application/json'
+        });
+
         Lada.username = '';
         Lada.userroles = '';
         Lada.logintime = '';

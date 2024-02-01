@@ -64,9 +64,6 @@ Ext.define('Lada.controller.SetTags', {
         Ext.Ajax.request({
             url: 'lada-server/rest/tag/taglink' + (isDelete ? '/delete' : ''),
             method: 'POST',
-            headers: {
-                Accept: 'application/json'
-            },
             jsonData: payload,
             success: function(response) {
                 var json = Ext.decode(response.responseText);

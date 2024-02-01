@@ -82,6 +82,9 @@ Ext.define('Lada.controller.grid.Downloads', {
             Ext.Ajax.request({
                 url: url,
                 method: 'GET',
+                headers: {
+                    Accept: 'application/octet-stream'
+                },
                 binary: true,
                 timeout: 60000,
                 success: function(response) {

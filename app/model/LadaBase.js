@@ -18,9 +18,6 @@ Ext.define('Lada.model.LadaBase', {
         proxy: {
             type: 'rest',
             url: '{prefix}{entityName:lowercase}',
-            headers: {
-                Accept: 'application/json'
-            },
             reader: {
                 type: 'json',
                 rootProperty: 'data',

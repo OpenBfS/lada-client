@@ -443,9 +443,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             Ext.Ajax.request({
                 url: 'lada-server/rest/mpg/active',
                 method: 'PUT',
-                headers: {
-                    Accept: 'application/json'
-                },
                 jsonData: {
                     active: active,
                     ids: ids
