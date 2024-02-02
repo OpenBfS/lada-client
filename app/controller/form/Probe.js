@@ -183,7 +183,8 @@ Ext.define('Lada.controller.form.Probe', {
                     });
                 }
             },
-            failure: function() {
+            failure: function(response) {
+                me.handleRequestFailure(response, 'err.ortszuordnung.tile');
                 toolbar.setLoading(false);
             }
         });
@@ -264,7 +265,8 @@ Ext.define('Lada.controller.form.Probe', {
                     });
                 }
             },
-            failure: function() {
+            failure: function(response) {
+                me.handleRequestFailure(response, 'err.measm.copy');
                 toolbar.setLoading(false);
             }
         });
@@ -299,11 +301,6 @@ Ext.define('Lada.controller.form.Probe', {
                 messungen[i].get('copyOfMessungId'),
                 messungen[i].get('id'));
         }
-        var handleMeasValRequestFailure = function(rec, op) {
-            me.handleRequestFailure(rec, op,
-                null);
-            toolbar.setLoading(false);
-        };
         for (var i2 = 0; i2 < messungen.length; i2++) {
             var messung = messungen[i2];
             Ext.Ajax.request({
@@ -389,7 +386,8 @@ Ext.define('Lada.controller.form.Probe', {
                                         finishedCallback(probeCopy);
                                     }
                                 } else {
-                                    me.handleServiceFailure(rec, op);
+                                    me.handleServiceFailure(
+                                        rec, op, 'err.measval.copy');
                                     currentFinishedMesswerte++;
                                     messwertFinished.add(
                                         currentMessungsIDNew,
@@ -412,7 +410,10 @@ Ext.define('Lada.controller.form.Probe', {
                         });
                     }
                 },
-                failure: handleMeasValRequestFailure
+                failure: function(response) {
+                    me.handleRequestFailure(response, 'err.measval.copy');
+                    toolbar.setLoading(false);
+                }
             });
         }
     },
