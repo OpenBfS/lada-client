@@ -325,7 +325,7 @@ Ext.define('Lada.view.window.RecordWindow', {
                 result +=
                     i18n.getMsg(key) + ': '
                     + i18n.getMsg(validationMessage.toString())
-                    + '\n');
+                    + '<br>');
             return result;
         };
         const allMessages = {
