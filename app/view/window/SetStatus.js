@@ -86,7 +86,6 @@ Ext.define('Lada.view.window.SetStatus', {
                     fieldLabel: i18n.getMsg('erzeuger')
                 }, {
                     xtype: 'statuskombiselect',
-                    store: Ext.create('Lada.store.StatusKombi'),
                     allowBlank: false,
                     fieldLabel: i18n.getMsg('header.statuskombi')
                 }, {
