@@ -53,7 +53,6 @@ Ext.define('Lada.view.window.SetStatus', {
         for (var i = 0; i < this.selection.length; i++) {
             this.sendIds.push(this.selection[i].get(this.dataId));
         }
-        this.getPossibleStatus(this.sendIds);
         this.items = [{
             xtype: 'form',
             name: 'valueselection',
@@ -87,7 +86,10 @@ Ext.define('Lada.view.window.SetStatus', {
                 }, {
                     xtype: 'statuskombiselect',
                     allowBlank: false,
-                    fieldLabel: i18n.getMsg('header.statuskombi')
+                    fieldLabel: i18n.getMsg('header.statuskombi'),
+                    listenersJson: {
+                        added: 'getPossibleStatus'
+                    }
                 }, {
                     xtype: 'textarea',
                     height: 100,
@@ -162,25 +164,6 @@ Ext.define('Lada.view.window.SetStatus', {
     closeWindow: function(button) {
         var win = button.up('window');
         win.close();
-    },
-
-    getPossibleStatus: function() {
-        Ext.Ajax.request({
-            url: 'lada-server/rest/statusmp/getbyids',
-            jsonData: this.sendIds,
-            method: 'POST',
-            scope: this,
-            success: function(response) {
-                var json = Ext.JSON.decode(response.responseText);
-                if (json.data) {
-                    this.down('statuskombiselect').down(
-                        'combobox').getStore().setData(json.data);
-                    if (!json.data.length) {
-                        this.down('button[name=start]').disable();
-                    }
-                }
-            }
-        });
     },
 
     addLogItem: function(text, id) {

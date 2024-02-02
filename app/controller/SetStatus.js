@@ -13,6 +13,27 @@ Ext.define('Lada.controller.SetStatus', {
     extend: 'Lada.controller.BaseController',
     alias: 'controller.setstatus',
 
+    getPossibleStatus: function() {
+        var win = this.getView();
+        Ext.Ajax.request({
+            url: 'lada-server/rest/statusmp/getbyids',
+            jsonData: win.sendIds,
+            method: 'POST',
+            scope: this,
+            success: function(response) {
+                var json = Ext.JSON.decode(response.responseText);
+                if (json.data) {
+                    win.down('statuskombiselect').down(
+                        'combobox').getStore().setData(json.data);
+                    if (!json.data.length) {
+                        win.down('button[name=start]').disable();
+                    }
+                }
+            },
+            failure: this.handleRequestFailure
+        });
+    },
+
     /**
      * A handler to set status in bulk.
      */
