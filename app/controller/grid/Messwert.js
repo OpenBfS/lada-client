@@ -232,8 +232,8 @@ Ext.define('Lada.controller.grid.Messwert', {
                     Ext.Msg.alert('', i18n.getMsg('err.normalize'));
                 }
             },
-            failure: function(response) {
-                this.handleRequestFailure(response, 'err.normalize');
+            failure: function(response, opts) {
+                this.handleRequestFailure(response, opts, 'err.normalize');
             }
         });
     }

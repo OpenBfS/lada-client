@@ -17,7 +17,7 @@ Ext.define('Lada.controller.BaseController', {
      * @param {*} response Response object
      * @param {*} titleMsg Title message, optional
      */
-    handleRequestFailure: function(response, titleMsg) {
+    handleRequestFailure: function(response, opts, titleMsg) {
         var i18n = Lada.getApplication().bundle;
         var msg = '';
         //Check for bean validation messages

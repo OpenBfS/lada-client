@@ -183,8 +183,9 @@ Ext.define('Lada.controller.form.Probe', {
                     });
                 }
             },
-            failure: function(response) {
-                me.handleRequestFailure(response, 'err.ortszuordnung.tile');
+            failure: function(response, opts) {
+                me.handleRequestFailure(
+                    response, opts, 'err.ortszuordnung.tile');
                 toolbar.setLoading(false);
             }
         });
@@ -265,8 +266,8 @@ Ext.define('Lada.controller.form.Probe', {
                     });
                 }
             },
-            failure: function(response) {
-                me.handleRequestFailure(response, 'err.measm.copy');
+            failure: function(response, opts) {
+                me.handleRequestFailure(response, opts, 'err.measm.copy');
                 toolbar.setLoading(false);
             }
         });
@@ -410,8 +411,8 @@ Ext.define('Lada.controller.form.Probe', {
                         });
                     }
                 },
-                failure: function(response) {
-                    me.handleRequestFailure(response, 'err.measval.copy');
+                failure: function(response, opts) {
+                    me.handleRequestFailure(response, opts, 'err.measval.copy');
                     toolbar.setLoading(false);
                 }
             });

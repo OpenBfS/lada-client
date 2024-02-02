@@ -153,8 +153,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     });
                 }
             },
-            failure: function(response) {
-                me.handleRequestFailure(response, 'err.ortszuordnung.tile');
+            failure: function(response, opts) {
+                me.handleRequestFailure(
+                    response, opts, 'err.ortszuordnung.tile');
             }
         });
     },
@@ -215,8 +216,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     });
                 }
             },
-            failure: function(response) {
-                me.handleRequestFailure(response, 'err.mmt.copy');
+            failure: function(response, opts) {
+                me.handleRequestFailure(response, opts, 'err.mmt.copy');
             }
         });
     },

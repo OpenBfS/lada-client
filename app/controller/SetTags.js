@@ -45,7 +45,6 @@ Ext.define('Lada.controller.SetTags', {
     },
 
     editZuordnung: function(button, isDelete) {
-        var me = this;
         var i18n = Lada.getApplication().bundle;
         var win = button.up('settags');
         var selection = win.getSelection();
@@ -65,6 +64,7 @@ Ext.define('Lada.controller.SetTags', {
             url: 'lada-server/rest/tag/taglink' + (isDelete ? '/delete' : ''),
             method: 'POST',
             jsonData: payload,
+            scope: this,
             success: function(response) {
                 var json = Ext.decode(response.responseText);
                 if (json.success) {
@@ -107,9 +107,7 @@ Ext.define('Lada.controller.SetTags', {
                                   i18n.getMsg(json.message));
                 }
             },
-            failure: function(response) {
-                me.handleRequestFailure(response);
-            }
+            failure: this.handleRequestFailure
         });
     },
 

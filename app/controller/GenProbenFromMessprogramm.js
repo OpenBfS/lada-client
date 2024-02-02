@@ -131,9 +131,10 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
                     reqJsondata);
                 win.setLoading(false);
             },
-            failure: function(response) {
+            failure: function(response, opts) {
                 win.close();
-                me.handleRequestFailure(response, 'gpfm.generated.requestfail');
+                me.handleRequestFailure(
+                    response, opts, 'gpfm.generated.requestfail');
             }
         });
     },

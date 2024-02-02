@@ -322,9 +322,10 @@ Ext.define('Lada.controller.form.Ort', {
                         }
                     }
                 },
-                failure: function(response) {
+                failure: function(response, opts) {
                     win.setLoading(false);
-                    this.handleRequestFailure(response, 'err.msg.ort.changeKda');
+                    this.handleRequestFailure(
+                        response, opts, 'err.msg.ort.changeKda');
                     win.down('button[action=apply]').setDisabled(true);
                     win.down('koordinatenart[name=newKDA]').setValue(
                         win.down('koordinatenart[name=originalKDA]')
