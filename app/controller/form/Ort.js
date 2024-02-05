@@ -142,6 +142,7 @@ Ext.define('Lada.controller.form.Ort', {
                             newrecord.get('errors'),
                             newrecord.get('warnings'),
                             newrecord.get('notifications'));
+                        formpanel.updateReferences();
                         win.setTitleAndReadOnly();
                     }
                 },

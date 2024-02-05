@@ -234,15 +234,10 @@ Ext.define('Lada.view.form.Ort', {
             allowDecimals: true
         }, {
             xtype: 'label',
+            name: 'referenceCounter',
             style: 'font-style: italic',
             border: 10,
-            text: i18n.getMsg('orte.references') + ': ' +
-                this.record.get('referenceCount') +
-                ' /' +
-                this.record.get('plausibleReferenceCount') +
-                ' /' +
-                this.record.get('referenceCountMp') + ' ' +
-                i18n.getMsg('orte.references.text')
+            text: null
         }];
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -301,5 +296,19 @@ Ext.define('Lada.view.form.Ort', {
             this.down('netzbetreiber').down('combobox').setEditable(false);
             this.down('netzbetreiber').down('combobox').setReadOnly(true);
         }
+        this.updateReferences();
+    },
+
+    updateReferences: function() {
+        var i18n = Lada.getApplication().bundle;
+        var labelText =
+            i18n.getMsg('orte.references') + ': ' +
+            this.record.get('referenceCount') +
+            ' /' +
+            this.record.get('plausibleReferenceCount') +
+            ' /' +
+            this.record.get('referenceCountMp') + ' ' +
+            i18n.getMsg('orte.references.text');
+        this.down('label[name=referenceCounter]').setText(labelText);
     }
 });
