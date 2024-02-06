@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.GridColumn', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.GridColumn',
+    model: 'Lada.model.GridColMp',
     sorters: [{
         property: 'dataIndex',
         direction: 'ASC'

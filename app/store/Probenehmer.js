@@ -11,5 +11,5 @@
  */
 Ext.define('Lada.store.Probenehmer', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Probenehmer'
+    model: 'Lada.model.Sampler'
 });

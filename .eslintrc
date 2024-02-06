@@ -1,6 +1,6 @@
 {
     "env": {
-        "es2016": true
+        "es6": true
     },
     "globals": {
         "Ext": true,

@@ -13,6 +13,7 @@
 Ext.define('Lada.util.Date', {
 
     statics: {
+
         /*
          * Toggled if time should be displayed in UTC
          */
@@ -47,8 +48,9 @@ Ext.define('Lada.util.Date', {
         },
 
         /**
-         * Create a time string from a timestamp using the defined format
-         * @param {Number} timestamp Unix timestamp to use
+         * Create a time string from a given input using the defined format
+         * @param {Number|Date} timestamp Date object or Unix timestamp to
+         *                                format
          * @param {String} format Format string to use
          * @param {Boolean} extFormat True if format string is a ExtJS format,
          *                      false if format is a moment.js format string
@@ -64,15 +66,14 @@ Ext.define('Lada.util.Date', {
             if (!timestamp) {
                 return null;
             }
-            var me = this;
             var timezone = this.utc ? 'UTC' : moment.tz.guess();
             var date = moment(timestamp);
             if (extFormat) {
                 var converted = [];
                 var chars = format.split('');
                 for (var i = 0; i < chars.length; i++ ) {
-                    if (me.extFormatMap[chars[i]]) {
-                        converted.push(me.extFormatMap[chars[i]]);
+                    if (this.extFormatMap[chars[i]]) {
+                        converted.push(this.extFormatMap[chars[i]]);
                     } else {
                         converted.push(chars[i]);
                     }
@@ -115,26 +116,6 @@ Ext.define('Lada.util.Date', {
                 var offset = moment.tz.zone(tz).utcOffset(date.valueOf());
                 return new Date(date.valueOf() - offset * 60000);
             }
-        },
-
-        /**
-         * centralized 'convert' function for time-based model entries.
-         * @param {*} v
-         */
-        convertTimeFn: function(v) {
-            if (!v) {
-                return null;
-            }
-            return new Date(v);
-        },
-
-        /**
-         * centralized 'convert' function for time-based model entries with
-         * defaults set to 'now'
-         * @param {*} v
-         */
-        convertTimeFnDefaultNow: function(v) {
-            return v ? new Date(v) : new Date();
         }
     }
 });

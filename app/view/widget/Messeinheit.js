@@ -13,7 +13,7 @@ Ext.define('Lada.view.widget.Messeinheit', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.messeinheit',
     store: null,
-    displayField: 'einheit',
+    displayField: 'unitSymbol',
     valueField: 'id',
 
     // Enable filtering of comboboxes

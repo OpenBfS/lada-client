@@ -38,6 +38,11 @@ Ext.define('Lada.controller.Print', {
     printUrlPrefix: 'lada-printer/print/',
     irixServletURL: 'irix-servlet',
 
+    //Templates requiring additional server data
+    specialTemplates: [
+        'lada_erfassungsbogen_01', 'lada_erfassungsbogen_02',
+        'lada_probenbegleitschein', 'lada_probenetikett'],
+
     init: function() {
         this.control({
             'button[action=print]': { // generic print button
@@ -206,7 +211,7 @@ Ext.define('Lada.controller.Print', {
                             xtype: 'checkbox',
                             fieldLabel: i18n.getMsg(attributes[i].name),
                             name: attributes[i].name,
-                            labelWidth: 130,
+                            labelWidth: 230,
                             margin: '5, 5, 5, 5',
                             anchor: '100%',
                             value: value
@@ -222,7 +227,7 @@ Ext.define('Lada.controller.Print', {
         try {
             fields = recursiveFields(capabilitiesForLayout.attributes);
         } catch (e) {
-            if (e === 'lada_erfassungsbogen') {
+            if (Ext.Array.contains(this.specialTemplates, e)) {
                 fields = null;
             } else {
                 throw new Error('unknown template');
@@ -442,12 +447,23 @@ Ext.define('Lada.controller.Print', {
                 cols[i].text &&
                 (ignored.indexOf(cols[i].dataIndex) === -1)
             ) {
-                visibleColumns.push({
-                    dataIndex: cols[i].dataIndex,
-                    renderer: (cols[i].renderer.$name === 'defaultRenderer') ?
-                        null :
-                        cols[i].renderer
-                });
+                if (cols[i].dataType === undefined) {
+                    visibleColumns.push({
+                        dataIndex: cols[i].dataIndex,
+                        dataType: 'text',
+                        renderer: (cols[i].renderer.$name === 'defaultRenderer') ?
+                            null :
+                            cols[i].renderer
+                    });
+                } else {
+                    visibleColumns.push({
+                        dataIndex: cols[i].dataIndex,
+                        dataType: cols[i].dataType.name,
+                        renderer: (cols[i].renderer.$name === 'defaultRenderer') ?
+                            null :
+                            cols[i].renderer
+                    });
+                }
                 columnNames.push(cols[i].text);
             }
         }
@@ -460,7 +476,7 @@ Ext.define('Lada.controller.Print', {
             //Lookup every column and write to data array;
             for (i = 0; i < visibleColumns.length; i++) {
                 var rawData = row[visibleColumns[i].dataIndex];
-                if (visibleColumns[i].renderer) {
+                if (visibleColumns[i].renderer && visibleColumns[i].dataType !== 'textLineBr') {
                     out.push(visibleColumns[i].renderer(rawData));
                 } else {
                     out.push(rawData);
@@ -526,23 +542,18 @@ Ext.define('Lada.controller.Print', {
         var probenAttribute = null;
         for (var i = 0; i < attributes.length; i++) {
             var attribute = attributes[i];
-            if (attribute.name === 'proben') {
+            if (attribute.name === 'samples') {
                 probenAttribute = attribute;
             }
         }
         var qitem = this.addQueueItem(filename, 'lada-print');
-        if (probenAttribute
-            && probenAttribute.clientParams.attributes.some(
-                function(p) {
-                    return p.name === 'messungen';
-                })
-        ) {
+        if (probenAttribute) {
             //TODO: preset fields are ignored here as they are no longer needed
             // see printSelection, prepareData, createSheetData
             // (moved without major adaption)
-
             this.printSelection(
-                grid, filename, format, callbackFn, isIrix, qitem
+                grid, filename, format, callbackFn, isIrix, qitem,
+                capabilities.app, capabilities.layouts[layout].name
             );
         } else {
             var selection;
@@ -643,8 +654,8 @@ Ext.define('Lada.controller.Print', {
     },
 
     /**
-     * (Legacy) Send the selection to a Printservice. Special handling for an
-     * lada_erfassungsbogen. First it needs to query the lada-server, then
+     * (Legacy) Send the selection to a Printservice. Special handling for
+     * lada_erfassungsbogen templates. First it needs to query the lada-server, then
      * this response is aggregated (see pepareData)
      * TODO: lacks handling for server errors/timeouts
      */
@@ -654,19 +665,23 @@ Ext.define('Lada.controller.Print', {
         format,
         callbackFn,
         isIrix,
-        queueitem
+        queueitem,
+        templateName,
+        layout
     ) {
         // The Data is loaded from the server again, so we need
         // to be a little bit asynchronous here...
         var callback = function(response) {
             var data = response.responseText;
+            //In case erfassungsschein is printed: Merge samples
+            var mergeSamples = templateName === 'lada_erfassungsbogen_02';
             // Wraps all messstellen and deskriptoren objects into an array
-            data = this.prepareData(data);
+            data = this.prepareData(data, mergeSamples);
             var printData = {
-                layout: 'A4 portrait',
+                layout: layout,
                 outputFormat: format,
                 attributes: {
-                    proben: data,
+                    samples: data,
                     // TODO: hard coded submission of time zone data.
                     // Not elegant, but required because of separate
                     // Erfassungsbogen handling
@@ -675,7 +690,7 @@ Ext.define('Lada.controller.Print', {
 
             this.sendRequest(
                 printData,
-                'lada_erfassungsbogen',
+                templateName,
                 filename,
                 callbackFn,
                 isIrix,
@@ -689,24 +704,49 @@ Ext.define('Lada.controller.Print', {
      * (legacy function) Aggregates json responses from lada server in order
      * to satisfy lada_erfassungsbogen template demands
      */
-    prepareData: function(data) {
+    prepareData: function(data, mergeSamples = false) {
         // Copy data
         var prep = Ext.JSON.decode(data, true);
         if (prep === null) {
             this.handleError(null, 'err.msg.print.failed');
             return null;
         }
-        data = Ext.JSON.decode(data, true);
-        // ensure data and prep are equal, not sure
-        // if parsing changes order of things
+        if (!mergeSamples) {
+            // ensure data and prep are equal, not sure
+            // if parsing changes order of things
+            data = Ext.JSON.decode(data, true);
+        } else {
+            var mergedPrep = [];
+            var samples = {};
+            prep.forEach((sample) => {
+                var id = sample['id'];
+                //If sample is seen for the first time
+                if (!samples[id]) {
+                    //store it
+                    samples[id] = sample;
+                    mergedPrep.push(samples[id]);
+                } else {
+                    //Else append measms to stored sample if not already present
+                    sample.measms.forEach((measm) => {
+                        const found = samples[id].measms.findIndex(
+                            item => item.id === measm.id) !== -1;
+                        if (!found) {
+                            samples[id].measms.push(measm);
+                        }
+                    });
+                }
+            });
+            prep = mergedPrep;
+            data = Ext.JSON.decode(JSON.stringify(prep), true);
+        }
 
         var emptyMessstelle = {
             'id': null,
-            'amtskennung': null,
-            'beschreibung': null,
-            'messStelle': null,
-            'mstTyp': null,
-            'netzbetreiberId': null
+            'trunkCode': null,
+            'address': null,
+            'name': null,
+            'measFacilType': null,
+            'networkId': null
         };
 
         var emptyDeskriptor = {
@@ -726,41 +766,45 @@ Ext.define('Lada.controller.Print', {
 
         for (var i in data) {
             var probe = data[i];
-            var deskriptoren = probe.deskriptoren;
-            var messstelle = probe.messstelle;
-            var labormessstelle = probe.labormessstelle;
-            var ortszuordnung = probe.ortszuordnung;
+            var deskriptoren = probe.envDescrip;
+            var messstelle = probe.measFacil;
+            var labormessstelle = probe.apprLab;
+            var ortszuordnung = probe.geolocat;
 
             if (messstelle !== null) {
-                prep[i].messstelle = [];
-                prep[i].messstelle[0] = messstelle;
-                prep[i]['messstelle.messStelle'] = messstelle.messStelle;
+                prep[i].measFacil = [];
+                prep[i].measFacil[0] = messstelle;
+                prep[i]['measFacil.name'] = messstelle.name;
             } else {
-                prep[i].messstelle = [];
-                prep[i].messstelle[0] = emptyMessstelle;
-                prep[i]['messstelle.messStelle'] = '';
+                prep[i].measFacil = [];
+                prep[i].measFacil[0] = emptyMessstelle;
+                prep[i]['measFacil.name'] = '';
             }
 
             if (labormessstelle !== null) {
-                prep[i]['labormessstelle.messStelle'] =
-                    labormessstelle.messStelle;
+                prep[i]['apprLab.name'] =
+                    labormessstelle.name;
             } else {
-                prep[i]['labormessstelle.messStelle'] = '';
+                prep[i]['apprLab.name'] = '';
             }
             if ((deskriptoren)) {
-                prep[i].deskriptoren = [];
-                prep[i].deskriptoren[0] = deskriptoren;
+                prep[i].envDescrip = [];
+                prep[i].envDescrip[0] = deskriptoren;
             } else {
-                prep[i].deskriptoren = [];
-                prep[i].deskriptoren[0] = emptyDeskriptor;
+                prep[i].envDescrip = [];
+                prep[i].envDescrip[0] = emptyDeskriptor;
             }
 
             // Flatten the Ortszuodnung Array
             for (var o in ortszuordnung) {
                 var oz = ortszuordnung[o];
-                for (var e in oz.ort) {
-                    prep[i].ortszuordnung[o]['ort'] = null;
-                    prep[i].ortszuordnung[o]['ort.' + e] = oz.ort[e];
+                for (var e in oz.site) {
+                    prep[i].geolocat[o]['site'] = null;
+                    prep[i].geolocat[o]['site.' + e] = oz.site[e];
+                }
+                if (oz.typeRegulation === 'E' || oz.typeRegulation === 'R') {
+                    prep[i].adminUnit = oz.site.adminUnit;
+                    prep[i].siteExtId = oz.site.extId;
                 }
             }
         }
@@ -779,16 +823,24 @@ Ext.define('Lada.controller.Print', {
         var selection = grid.getView().getSelectionModel().getSelection();
         var ids = [];
         for (var item in selection) {
-            var probeId = selection[item].get(grid.rowtarget.probeIdentifier);
+            if (selection[item].get(grid.rowtarget.probeIdentifier)) {
+                var Id = selection[item].get(grid.rowtarget.probeIdentifier);
+            } else {
+                var Id = selection[item].get(grid.rowtarget.messungIdentifier);
+            }
 
             // avoids printing more than one sheet per probe
-            if (ids.indexOf(probeId < 0)) {
-                ids.push(probeId);
+            if (ids.indexOf(Id < 0)) {
+                ids.push(Id);
             }
         }
         //basically, thats the same as the downloadFile
         // code does.
-        var data = '{ "proben": [' + ids.toString() + '] }';
+        if (selection[item].get(grid.rowtarget.probeIdentifier)) {
+            var data = '{ "proben": [' + ids.toString() + '] }';
+        } else {
+            var data = '{ "messungen": [' + ids.toString() + '] }';
+        }
         var me = this;
         Ext.Ajax.request({
             url: 'lada-server/data/export/json',
@@ -822,18 +874,22 @@ Ext.define('Lada.controller.Print', {
                     var grid = window.parentGrid;
                     if (Array.isArray(json)) {
                         for (var i = 0; i < json.length; i++) {
-                            if (json[i] !== 'lada_erfassungsbogen') {
+                            if (!Ext.Array.contains(
+                                me.specialTemplates, json[i])) {
                                 data.push({name: json[i]});
-                            } else if (grid.rowtarget.probeIdentifier) {
-                            // special handling for "lada_erfassungsbogen":
-                            // only usable if we have some non-null probe
-                            // identifier
+                            } else if (grid.rowtarget.probeIdentifier
+                                || grid.rowtarget.messungIdentifier) {
+                                // special handling for templates
+                                // requiring server data
                                 var selection = grid.getSelectionModel()
                                     .getSelection()[0];
                                 if (
                                     selection &&
                                     selection.data[
                                         grid.rowtarget.probeIdentifier] !==
+                                            undefined ||
+                                     selection.data[
+                                        grid.rowtarget.messungIdentifier] !==
                                             undefined
                                 ) {
                                     data.push({name: json[i]});

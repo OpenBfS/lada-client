@@ -31,13 +31,20 @@ Ext.define('Lada.view.window.AuditTrail', {
     pendingRequest: null,
 
     dateItems: [
-        'probeentnahme_beginn',
-        'probeentnahme_ende',
-        'solldatum_beginn',
-        'solldatum_ende',
-        'messzeitpunkt',
-        'ursprungszeit',
-        'datum'
+        'sample_start_date',
+        'sample_end_date',
+        'sched_start_date',
+        'sched_end_date',
+        'measm_start_date',
+        'date'
+    ],
+
+    /**
+     * Types that have a date string as identifier.
+     */
+    dateIdentifier: [
+        'comm_sample',
+        'comm_measm'
     ],
 
 
@@ -98,6 +105,7 @@ Ext.define('Lada.view.window.AuditTrail', {
         if (this.type === null || this.objectId === null) {
             return;
         }
+        this.showLoadingMask();
         Ext.Ajax.request({
             url: 'lada-server/rest/audit/' + this.type + '/' + this.objectId,
             method: 'GET',
@@ -133,6 +141,8 @@ Ext.define('Lada.view.window.AuditTrail', {
                     container.update(this.createHtmlMessprogramm(json));
             }
         }
+        Ext.ComponentQuery.query('panel#' + this.down('panel')
+            .getId())[0].loadingMask.hide();
     },
 
     loadFailure: function() {
@@ -165,17 +175,17 @@ Ext.define('Lada.view.window.AuditTrail', {
                         audit[i].timestamp, 'd.m.Y H:i', true) +
                     '</b>';
                 if (!Ext.isObject(audit[i].identifier)) {
-                    if (audit[i].type !== 'probe') {
+                    if (audit[i].type !== 'sample') {
                         html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                         html += audit[i].identifier === '(deleted)' ?
                             i18n.getMsg('deleted') :
-                            audit[i].identifier;
+                            this.getIdentifier(audit[i]);
                     }
                 } else {
                     html += '<br>' + i18n.getMsg('messung') + ': ' +
-                        audit[i].identifier.messung + ' -> ' +
+                        audit[i].identifier.measm + ' -> ' +
                         i18n.getMsg(audit[i].type) + ': ' +
-                        audit[i].identifier.identifier;
+                        this.getIdentifier(audit[i]);
 
                 }
                 html += this.createHtmlChangedFields(audit[i]);
@@ -205,7 +215,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                     Lada.util.Date.formatTimestamp(
                         audit[i].timestamp, 'd.m.Y H:i', true) +
                     '</b>';
-                if (audit[i].type !== 'messung') {
+                if (audit[i].type !== 'measm') {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                     html += audit[i].identifier === '(deleted)' ?
                         i18n.getMsg('deleted') :
@@ -236,7 +246,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                         + (Ext.Date.format(
                             new Date(audit[i].timestamp), 'd.m.Y H:i'))
                         + '</b>';
-                if (audit[i].type !== 'messprogramm') {
+                if (audit[i].type !== 'mpg') {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                     html += audit[i].identifier;
                 }
@@ -254,7 +264,7 @@ Ext.define('Lada.view.window.AuditTrail', {
         for (var key in audit.changedFields) {
             var value = '';
             if (Ext.Array.contains(this.dateItems, key)) {
-                if (key === 'solldatum_beginn' || key === 'solldatum_ende') {
+                if (key === 'sched_start_date' || key === 'sched_end_date') {
                     value = Lada.util.Date.formatTimestamp(
                         audit.changedFields[key], 'd.m.Y', true);
                 } else {
@@ -270,9 +280,8 @@ Ext.define('Lada.view.window.AuditTrail', {
                 value = i18n.getMsg('true');
             } else if (value === false) {
                 value = i18n.getMsg('false');
-            } else if (key === 'messwert' ||
-                key === 'messwert_pzs' ||
-                key === 'nwg_zu_messwert'
+            } else if (key === 'meas_val' ||
+                key === 'detect_lim'
             ) {
                 var strValue = Lada.getApplication().toExponentialString(
                     value, 2)
@@ -287,11 +296,11 @@ Ext.define('Lada.view.window.AuditTrail', {
             if (key === 'ext_id') {
                 switch (audit.type) {
                     case 'probe':
-                        html += '' + i18n.getMsg('extProbeId') + ': ' +
+                        html += '' + i18n.getMsg('sample.ext_id') + ': ' +
                             value + '<br>';
                         break;
                     case 'messung':
-                        html += '' + i18n.getMsg('extMessungsId') + ': ' +
+                        html += '' + i18n.getMsg('measm.ext_id') + ': ' +
                             value + '<br>';
                         break;
                 }
@@ -310,5 +319,35 @@ Ext.define('Lada.view.window.AuditTrail', {
             this.pendingRequest.abort();
         }
         this.callParent(arguments);
+    },
+
+    showLoadingMask: function() {
+        var at = this.down('panel');
+        if (!at.loadingMask) {
+            at.loadingMask = Ext.create('Ext.LoadMask', {
+                target: at
+            });
+        }
+        at.loadingMask.show();
+    },
+
+    /**
+     * Get the identier of the given audit entry.
+     *
+     * If identifier is a date, convert to local time
+     * @param {*} auditEntry Audit Entry
+     * @returns Identifier string.
+     */
+    getIdentifier: function(auditEntry) {
+        var id = !Ext.isObject(auditEntry.identifier)
+            ? auditEntry.identifier
+            : auditEntry.identifier.identifier;
+        if (Ext.Array.contains(this.dateIdentifier, auditEntry.type)) {
+            id = Lada.util.Date.formatTimestamp(
+                id.replaceAll('"', ''),
+                'd.m.Y H:i', true);
+            id = '"' + id + '"';
+        }
+        return id;
     }
 });

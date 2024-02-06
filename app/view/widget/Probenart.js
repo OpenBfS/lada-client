@@ -13,7 +13,7 @@ Ext.define('Lada.view.widget.Probenart', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.probenart',
     store: 'Probenarten',
-    displayField: 'probenart',
+    displayField: 'extId',
     valueField: 'id',
     // Enable filtering of comboboxes
     queryMode: 'local',
@@ -24,7 +24,7 @@ Ext.define('Lada.view.widget.Probenart', {
     maxChars: 1,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{probenart} - {beschreibung}</div></tpl>'),
+            '{extId} - {name}</div></tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

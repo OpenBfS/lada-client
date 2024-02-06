@@ -7,17 +7,16 @@
  */
 
 /**
- * This Widget creates a (selectable, but read-only) textField to replace
- * non-selectable displayFields
+ * This widget creates a selectable displayfield.
  */
 Ext.define('Lada.view.widget.base.SelectableDisplayField', {
-    extend: 'Ext.form.field.Text',
+    extend: 'Ext.form.field.Display',
     alias: 'widget.selectabledisplayfield',
 
-    editable: false,
-    inputWrapCls: '',
-    triggerWrapCls: '',
     fieldStyle: 'background:none',
-    submitValue: false
 
+    onRender: function() {
+        this.callParent(arguments);
+        this.inputEl.selectable();
+    }
 });

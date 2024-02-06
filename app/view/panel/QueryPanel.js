@@ -10,15 +10,17 @@
  * Panel to show and manipulate queries and their filters
  */
 Ext.define('Lada.view.panel.QueryPanel', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.querypanel',
     id: 'querypanelid',
     requires: [
+        'Lada.controller.Query',
         'Lada.view.widget.ColumnChoser',
         'Lada.view.widget.ColumnSort',
         'Lada.store.GridColumnValue',
         'Lada.store.Query'
     ],
+    controller: 'queryform',
     gridColumnStore: null,
     gridColumnValueStore: null,
 
@@ -103,8 +105,8 @@ Ext.define('Lada.view.panel.QueryPanel', {
                         flex: 0.3
                     }]
                 }, {
-                    xtype: 'textarea',
-                    name: 'description',
+                    xtype: 'tarea',
+                    name: 'descr',
                     width: '100%',
                     allowBlank: false,
                     fieldLabel: i18n.getMsg('query.comment'),
@@ -133,7 +135,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 disabled: false
             }]
         }, {
-            xtype: 'fieldset',
+            xtype: 'fset',
             name: 'querydetails',
             title: i18n.getMsg('query.details'),
             style: {'border': '2px solid grey;'},
@@ -145,7 +147,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 align: 'stretch'
             },
             items: [{
-                xtype: 'textfield',
+                xtype: 'tfield',
                 name: 'name',
                 fieldLabel: i18n.getMsg('query.name'),
                 maxLength: 80,
@@ -178,8 +180,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     }]
                 }),
                 valueField: 'messStellesIds',
-                displayField: 'messStellesIds',
-                searchValueField: 'mst_name',
+                displayField: 'mst_name',
                 tpl: Ext.create(
                     'Ext.XTemplate',
                     '<tpl for=".">' +
@@ -202,19 +203,19 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 // Needs to be different from Ext.getStore('columnstore')
                 // because of extra filters:
                 store: Ext.create('Ext.data.Store', {
-                    model: 'Lada.model.GridColumn',
-                    autoLoad: true}),
+                    model: 'Lada.model.GridColMp',
+                    autoLoad: false}),
                 valueField: 'dataIndex',
-                displayField: 'name',
+                displayField: 'gridCol',
                 fieldLabel: i18n.getMsg('title.filter'),
                 tpl: Ext.create(
                     'Ext.XTemplate',
                     '<tpl for=".">' +
                     '<div class="x-combo-list-item  x-boundlist-item" >' +
-                    '{name}</div></tpl>'),
+                    '{gridCol}</div></tpl>'),
                 displayTpl: Ext.create(
                     'Ext.XTemplate',
-                    '<tpl for=".">{name}</tpl>'),
+                    '<tpl for=".">{gridCol}</tpl>'),
                 persist: false
 
             }, {
@@ -226,7 +227,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 disabled: true
             }]
         }, {
-            xtype: 'fieldset',
+            xtype: 'fset',
             name: 'filtervariables',
             title: i18n.getMsg('query.filters.visible'),
             style: {'border': '2px solid grey;'},
@@ -306,7 +307,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
 
                 // Select first query that belongs to the user, if any, ...
                 var hasUserQuery = true;
-                var record0 = this.findRecord('userId', Lada.userId);
+                var record0 = this.findRecord('ladaUserId', Lada.userId);
                 if (!record0) {
                     // ... else select first in store
                     hasUserQuery = false;
@@ -333,15 +334,22 @@ Ext.define('Lada.view.panel.QueryPanel', {
         var mst_store = Ext.data.StoreManager.get('messstellen');
         mst_store.load({
             scope: this,
-            callback: function(records) {
-                var qp = this;
-                var groupstore = qp.down('cbox[name=messStellesIds]').down(
-                    'tagfield').getStore();
-                for ( var i = 0; i < records.length; i++) {
-                    groupstore.add({
-                        messStellesIds: records[i].get('id'),
-                        mst_name: records[i].get('messStelle')
-                    });
+            callback: function(records, op, success) {
+                if (success) {
+                    var qp = this;
+                    var groupstore = qp.down('cbox[name=messStellesIds]').down(
+                        'tagfield').getStore();
+                    for ( var i = 0; i < records.length; i++) {
+                        groupstore.add({
+                            messStellesIds: records[i].get('id'),
+                            mst_name: records[i].get('name')
+                        });
+                    }
+                } else {
+                    Ext.Msg.alert(
+                        i18n.getMsg('err.msg.generic.title'),
+                        i18n.getMsg('err.msg.generic.body')
+                    );
                 }
             }
         });
@@ -375,10 +383,10 @@ Ext.define('Lada.view.panel.QueryPanel', {
 
             // Server-side filters
             this.gridColumnStore.proxy.extraParams = {
-                'qid': record.get('baseQuery')
+                'baseQueryId': record.get('baseQueryId')
             };
             this.gridColumnValueStore.proxy.extraParams = {
-                'qid': qid
+                'queryUser': qid
             };
 
             // Actually load stores for gridColumns and gridColumnValues
@@ -386,6 +394,13 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 scope: this,
                 callback: this.loadGridColumnValueStore
             });
+
+            // Load filter widget columns
+            var filterwidget = this.down('cbox[name=activefilters]');
+            filterwidget.store.proxy.extraParams = {
+                'baseQueryId': record.get('baseQueryId')
+            };
+            filterwidget.store.load();
         }
     },
 
@@ -419,7 +434,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     for (var i = 0; i < items.length; i++) {
                         var gridColumn = me.gridColumnStore.findRecord(
                             'id',
-                            items[i].get('gridColumnId'),
+                            items[i].get('gridColMpId'),
                             0,
                             false,
                             false,
@@ -427,8 +442,8 @@ Ext.define('Lada.view.panel.QueryPanel', {
                         if (gridColumn) {
                             items[i].set(
                                 'dataIndex', gridColumn.get('dataIndex'));
-                            items[i].set('name', gridColumn.get('name'));
-                            if (items[i].get('filterActive')) {
+                            items[i].set('gridCol', gridColumn.get('gridCol'));
+                            if (items[i].get('isFilterActive')) {
                                 activeFilters.push(gridColumn.get('dataIndex'));
                             }
                         }
@@ -443,11 +458,6 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 var record = me.getForm().getRecord();
                 var filterwidget = me.down('cbox[name=activefilters]');
                 filterwidget.store.clearFilter();
-                filterwidget.store.filter({
-                    property: 'baseQuery',
-                    value: record.get('baseQuery'),
-                    exactMatch: true
-                });
                 filterwidget.store.filter(function(item) {
                     if (item.get('filter')) {
                         return true;
@@ -458,9 +468,6 @@ Ext.define('Lada.view.panel.QueryPanel', {
 
                 me.down('cbox[name=messStellesIds]').setValue(
                     record.get('messStellesIds'));
-
-                me.down('button[action=save]').setDisabled(
-                    me.isQueryReadonly());
 
                 if (record.get('clonedFrom') !== 'empty' || !record.phantom) {
                     me.down('button[name=search]').setDisabled(false);
@@ -476,7 +483,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
         if (query.phantom && (query.get('clonedFrom') === 'empty')) {
             return true;
         }
-        if (Lada.userId === query.get('userId') || query.phantom) {
+        if (Lada.userId === query.get('ladaUserId') || query.phantom) {
             return false;
         }
         return true;

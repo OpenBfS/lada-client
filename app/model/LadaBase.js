@@ -13,6 +13,23 @@ Ext.define('Lada.model.LadaBase', {
     extend: 'Ext.data.Model',
 
     schema: {
-        namespace: 'Lada.model'
+        namespace: 'Lada.model',
+        urlPrefix: 'lada-server/rest/',
+        proxy: {
+            type: 'rest',
+            url: '{prefix}{entityName:lowercase}',
+            reader: {
+                type: 'json',
+                rootProperty: 'data',
+                totalProperty: 'totalCount'
+            },
+            writer: {
+                type: 'json',
+                writeAllFields: true,
+                allDataOptions: {
+                    associated: true
+                }
+            }
+        }
     }
 });

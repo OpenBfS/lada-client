@@ -13,15 +13,20 @@ Ext.define('Lada.view.window.Ort', {
     extend: 'Lada.view.window.RecordWindow',
     alias: 'window.ort',
     requires: [
-        'Lada.model.Ort',
+        'Lada.model.Site',
+        'Lada.view.panel.SiteImages',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.form.Ort'
     ],
+    width: 1200,
+    minWidth: 640,
 
-    minWidth: 440,
-
-    maxHeight: 700,
+    height: 700,
 
     margin: 10,
+
+    maximizable: true,
+    collapsible: true,
 
     shadow: false,
 
@@ -29,7 +34,7 @@ Ext.define('Lada.view.window.Ort', {
 
     bodyStyle: {background: '#fff'},
 
-    layout: 'fit',
+    layout: 'border',
 
     mode: null,
 
@@ -46,12 +51,6 @@ Ext.define('Lada.view.window.Ort', {
     record: null,
 
     recordType: 'ort',
-
-    /**
-     * Original record if record is a copy. Will only be set if the copy is
-     * created.
-     */
-    original: null,
 
     parentWindow: null,
 
@@ -85,7 +84,7 @@ Ext.define('Lada.view.window.Ort', {
             scope: this,
             handler: this.close
         }];
-        this.modelClass = Lada.model.Ort;
+        this.modelClass = Lada.model.Site;
         this.callParent(arguments);
         if (this.record) {
             this.initData(this.record);
@@ -95,78 +94,65 @@ Ext.define('Lada.view.window.Ort', {
     initData: function(record) {
         this.record = record;
         this.initializeUi();
+        this.down('ortform').setMessages(
+            record.get('errors'),
+            record.get('warnings'),
+            record.get('notifications')
+        );
     },
 
     initializeUi: function() {
-        var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.removeAll();
         if (this.record === null) {
-            this.record = Ext.create('Lada.model.Ort');
+            this.record = Ext.create('Lada.model.Site');
         }
 
-        if (this.record.phantom) {
-            this.mode = 'new';
-            this.setTitle(i18n.getMsg('orte.new'));
-        } else {
-            if (this.parentWindow !== null) {
-                if (
-                    this.parentWindow.xtype === 'ortszuordnungwindow' ||
-                    this.parentWindow.xtype === 'ortstammdatengrid'
-                ) {
-                    this.mode = 'show';
-                    this.setTitle(i18n.getMsg('orte.show') + ' - ' +
-                        i18n.getMsg('orte.ortId') + ': ' +
-                        this.record.get('ortId'));
+        this.add([{
+            xtype: 'ortform',
+            record: this.record,
+            split: {
+                size: 10,
+                border: 5,
+                style: {
+                    borderColor: '#3892d4',
+                    borderStyle: 'solid'
                 }
-            } else {
-                if (this.record.get('readonly') === true) {
-                    this.mode = 'show';
-                    this.setTitle(i18n.getMsg('orte.show') + ' - ' +
-                        i18n.getMsg('orte.ortId') + ': ' +
-                        this.record.get('ortId'));
-                } else {
-                    this.mode = 'edit';
-                    this.setTitle(i18n.getMsg('orte.edit') + ' - ' +
-                        i18n.getMsg('orte.ortId') + ': ' +
-                        this.record.get('ortId'));
-                }
-            }
-        }
+            },
+            flex: 1.2,
+            region: 'west'
+        }, {
+            xtype: 'siteimages',
+            site: this.record,
+            region: 'center',
+            split: true,
+            flex: 2
+        }]);
 
-        this.add([
-            Ext.create('Lada.view.form.Ort', {
-                record: me.record,
-                original: me.original,
-                mode: this.mode,
-                listeners: {
-                    destroy: {fn: function() {
-                        me.close();
-                    }}
-                }
-            })
-        ]);
+        this.setTitleAndReadOnly();
     },
 
-    setMode: function(mode) {
+    setTitleAndReadOnly: function() {
         var i18n = Lada.getApplication().bundle;
-        this.mode = mode;
-        if (this.mode) {
-            this.setTitle(
-                this.record.phantom ?
-                    i18n.getMsg('orte.new') :
-                    this.record.get('readonly') ?
-                        i18n.getMsg('orte.show') + ' - ' +
-                         i18n.getMsg('orte.ortId') + ': ' +
-                         this.record.get('ortId') :
-                        (i18n.getMsg('orte.edit') + ' - '
-                    + i18n.getMsg('orte.ortId') + ': '
-                    + this.record.get('ortId'))
-            );
+
+        var title = '';
+        if (this.record.phantom) {
+            title = i18n.getMsg('orte.new');
         } else {
-            this.title = this.record.phantom ?
-                i18n.getMsg('orte.new') :
-                i18n.getMsg('orte.edit');
+            if (this.parentWindow !== null
+                && (this.parentWindow.xtype === 'ortszuordnungwindow'
+                    || this.parentWindow.xtype === 'ortstammdatengrid')
+                || this.record.get('readonly')
+            ) {
+                this.down('ortform').setReadOnly(true);
+                title = i18n.getMsg('orte.show');
+            } else {
+                title = i18n.getMsg('orte.edit');
+            }
+            title += ' - ' + i18n.getMsg('orte.ortId') + ': ' +
+                this.record.get('extId');
+            this.down('siteimages').setReadonly(this.record.get('readonly'));
         }
+
+        this.setTitle(title);
     }
 });

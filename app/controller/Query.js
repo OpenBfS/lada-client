@@ -7,12 +7,14 @@
  */
 
 Ext.define('Lada.controller.Query', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.queryform',
     requires: [
         'Lada.view.widget.base.DateRange',
         'Lada.store.GridColumnValue',
         'Lada.store.GenericResults',
         'Lada.store.Orte',
+        'Lada.view.widget.base.DateTimeRange',
         'Lada.view.widget.Messstelle',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.Staat',
@@ -94,20 +96,10 @@ Ext.define('Lada.controller.Query', {
             'dynamicgrid': {
                 columnresize: me.dataChanged
             },
-            'querypanel textarea[name=description]': {
-                change: me.dataChanged
-            },
-            'querypanel textfield[name=name]': {
-                change: me.dataChanged
-            },
-            'querypanel combobox[name=messStellesIds]': {
-                change: me.dataChanged
-            },
-            'querypanel columnchoser': {
-                change: me.dataChanged
-            },
-            'querypanel columnsort': {
-                change: me.dataChanged
+            'querypanel': {
+                validitychange: me.dataChanged,
+                dirtychange: me.dataChanged,
+                gridreload: me.drawGeometryColumns
             }
 
         });
@@ -116,36 +108,6 @@ Ext.define('Lada.controller.Query', {
     createResultStore: function() {
         if (!this.resultStore) {
             this.resultStore = Ext.create('Lada.store.GenericResults');
-
-            // map <-> dynamic grid data exchange listener
-            this.resultStore.addListener('load', function() {
-                var dgrid = Ext.getCmp('dynamicgridid');
-                if (
-                    dgrid &&
-                    dgrid.rowtarget.dataType === 'ortId' &&
-                    dgrid.ortstore
-                ) {
-                    var data = dgrid.getStore().getData().items;
-                    var request = [];
-                    for (var i = 0; i < data.length; i++) {
-                        request.push(data[i].get(dgrid.rowtarget.dataIndex));
-                    }
-                    if (request.length) {
-                        Ext.Ajax.request({
-                            url: 'lada-server/rest/ort/getbyids',
-                            jsonData: JSON.stringify(request),
-                            method: 'POST',
-                            success: function(response) {
-                                var json = Ext.JSON.decode(
-                                    response.responseText);
-                                if (json.data && dgrid.ortstore) {
-                                    dgrid.ortstore.setData(json.data);
-                                }
-                            }
-                        });
-                    }
-                }
-            });
         }
     },
 
@@ -159,14 +121,14 @@ Ext.define('Lada.controller.Query', {
         var qStore = queryBox.getStore();
         qStore.clearFilter();
         var filterFn = function(item) {
-            if (cbOwn && item.get('userId') === Lada.userId) {
+            if (cbOwn && item.get('ladaUserId') === Lada.userId) {
                 return true;
-            } else if ( cbGlobal && item.get('userId') === 0) {
+            } else if ( cbGlobal && item.get('ladaUserId') === 0) {
                 return true;
             } else if (
                 cbAvail &&
-                item.get('userId') !== Lada.userId &&
-                item.get('userId') !== 0
+                item.get('ladaUserId') !== Lada.userId &&
+                item.get('ladaUserId') !== 0
             ) {
                 return true;
             }
@@ -182,11 +144,21 @@ Ext.define('Lada.controller.Query', {
     },
 
     cloneQuery: function(button) {
-        this.showLoadingMask();
-
+        var i18n = Lada.getApplication().bundle;
         // Create new query record
         var qp = button.up('querypanel');
+        qp.clearMessages();
         var cbox = qp.down('combobox[name=selectedQuery]');
+        if (!cbox.getSelection()) {
+            Ext.Msg.alert(
+                i18n.getMsg('query.error.search.title'),
+                i18n.getMsg(
+                    'err.msg.clonequery.noquery')
+            );
+            qp.down('combobox[name=selectedQuery]').setValue();
+            return;
+        }
+        this.showLoadingMask();
         var cquery = cbox.getSelection();
         var name = qp.down('textfield[name=name]').getValue();
         if (name.length > 70) {
@@ -195,11 +167,11 @@ Ext.define('Lada.controller.Query', {
             name = name + '(' + Lada.username + ')';
         }
         var messStellesIds = qp.down('cbox[name=messStellesIds]').getValue();
-        var newrecord = Ext.create('Lada.model.Query', {
-            baseQuery: cquery.get('baseQuery'),
+        var newrecord = Ext.create('Lada.model.QueryUser', {
+            baseQueryId: cquery.get('baseQueryId'),
             name: name,
-            userId: Lada.userId,
-            description: cquery.get('description'),
+            ladaUserId: Lada.userId,
+            descr: cquery.get('descr'),
             messStellesIds: messStellesIds,
             clonedFrom: cquery.get('id')
         });
@@ -212,21 +184,21 @@ Ext.define('Lada.controller.Query', {
             var saved = 0;
             return new Ext.Promise(function(resolve) {
                 columnValues.each(function(item) {
-                    var clonedModel = Ext.create('Lada.model.GridColumnValue', {
-                        columnIndex: item.get('columnIndex'),
-                        gridColumnId: item.get('gridColumnId'),
-                        visible: item.get('visible'),
+                    var clonedModel = Ext.create('Lada.model.GridColConf', {
+                        colIndex: item.get('colIndex'),
+                        gridColMpId: item.get('gridColMpId'),
+                        isVisible: item.get('isVisible'),
                         sort: item.get('sort'),
                         sortIndex: item.get('sortIndex'),
-                        filterActive: item.get('filterActive'),
-                        filterNegate: item.get('filterNegate'),
-                        filterRegex: item.get('filterRegex'),
-                        filterValue: item.get('filterValue'),
+                        isFilterActive: item.get('isFilterActive'),
+                        isFilterNegate: item.get('isFilterNegate'),
+                        isFilterRegex: item.get('isFilterRegex'),
+                        filterVal: item.get('filterVal'),
                         width: me.getVisibleColumnWidth(item)
                     });
                     clonedModel.set('id', null);
                     clonedModel.set('queryUserId', savedQuery.get('id'));
-                    clonedModel.set('userId', null);
+                    clonedModel.set('ladaUserId', null);
                     clonedModel.save({
                         success: function() {
                             saved++;
@@ -234,6 +206,7 @@ Ext.define('Lada.controller.Query', {
                                 resolve();
                             }
                         },
+                        scope: this,
                         failure: this.handleSaveFailure
                     });
                 });
@@ -250,7 +223,7 @@ Ext.define('Lada.controller.Query', {
         if (!query) {
             return;
         }
-        if ( (Lada.userId === query.get('userId'))) {
+        if ( (Lada.userId === query.get('ladaUserId'))) {
             var i18n = Lada.getApplication().bundle;
             var me = this;
             Ext.MessageBox.confirm(i18n.getMsg('delete'),
@@ -299,6 +272,7 @@ Ext.define('Lada.controller.Query', {
         var contentPanel = qp.up('panel[name=main]').down(
             'panel[name=contentpanel]');
         contentPanel.removeAll();
+        qp.clearMessages();
 
         var newquery = combobox.getStore().findRecord(
             'id',
@@ -309,11 +283,11 @@ Ext.define('Lada.controller.Query', {
             true);
         if (!newquery) {
             combobox.clearValue();
-            newquery = Ext.create('Lada.model.Query', {
-                baseQuery: null,
+            newquery = Ext.create('Lada.model.QueryUser', {
+                baseQueryId: null,
                 name: null,
-                userId: null,
-                description: null,
+                ladaUserId: null,
+                descr: null,
                 messStellesIds: null,
                 clonedFrom: 'empty'
             });
@@ -323,13 +297,11 @@ Ext.define('Lada.controller.Query', {
         qp.down('button[action=newquery]').setDisabled(newquery.phantom);
         qp.down('button[action=delquery]').setDisabled(
             qp.isQueryReadonly());
-        qp.down('button[action=save]').setDisabled(true);
         Lada.view.window.PrintGrid.getInstance().parentGrid = null;
     },
 
     handleSaveClicked: function(button) {
         this.showLoadingMask();
-        button.setDisabled(true);
 
         var query = button.up('querypanel').getForm().getRecord();
         var me = this;
@@ -349,6 +321,7 @@ Ext.define('Lada.controller.Query', {
                                 resolve();
                             }
                         },
+                        scope: this,
                         failure: this.handleSaveFailure
                     });
                 });
@@ -364,7 +337,8 @@ Ext.define('Lada.controller.Query', {
      *     If present, it will replace the saving of gridColumns
      */
     saveQuery: function(record, callback) {
-        var qp = Ext.ComponentQuery.query('querypanel')[0];
+        var qp = this.getView();
+        qp.clearMessages();
         record.set(qp.getForm().getFieldValues(true));
         var me = this;
         record.save({
@@ -376,7 +350,6 @@ Ext.define('Lada.controller.Query', {
 
                     // Trigger filtering the store
                     if (op.getRequest().getAction() === 'create') {
-                        cstore.clearFilter();
                         cbox.up('querypanel')
                             .down('checkbox[name=filterQueriesOwn]')
                             .setValue(true);
@@ -391,6 +364,7 @@ Ext.define('Lada.controller.Query', {
                     qp.loadingMask.hide();
                 });
             },
+            scope: this,
             failure: this.handleSaveFailure
         });
     },
@@ -451,6 +425,13 @@ Ext.define('Lada.controller.Query', {
                     }
                 });
             }
+            //If grid still exists suspend paging toolbar events to prevent
+            //eventhandler from accessing a grid that may already have been
+            //cleared and will be destroyed after loading
+            var resultGrid = Ext.getCmp('dynamicgridid');
+            if (resultGrid) {
+                resultGrid.down('pagingtoolbar').suspendEvent('change');
+            }
             this.resultStore.loadPage(1, {
                 scope: this,
                 callback: function(responseData, operation, success) {
@@ -459,7 +440,6 @@ Ext.define('Lada.controller.Query', {
                         var contentPanel = button.up('panel[name=main]').down(
                             'panel[name=contentpanel]');
                         contentPanel.removeAll();
-                        var resultGrid = Ext.getCmp('dynamicgridid');
                         if (resultGrid) {
                             resultGrid.destroy();
                         }
@@ -468,7 +448,7 @@ Ext.define('Lada.controller.Query', {
                                 id: 'dynamicgridid',
                                 emptyText: 'query.nodata',
                                 basequery: qp.getForm().getRecord()
-                                    .get('baseQuery'),
+                                    .get('baseQueryId'),
                                 selModel: Ext.create(
                                     'Ext.selection.CheckboxModel', {
                                         checkOnly: true,
@@ -481,44 +461,41 @@ Ext.define('Lada.controller.Query', {
                         resultGrid.setStore(this.resultStore);
                         contentPanel.add(resultGrid);
                         contentPanel.show();
-                        if (rowtarget.dataType === 'ortId') {
-                            this.setMapOrte(resultGrid);
-                        }
+                        this.drawGeometryColumns();
                         //Update print window instance
                         Lada.view.window.PrintGrid.getInstance()
                             .updateGrid(resultGrid);
                     } else {
+                        //If loading failed, resume paging events
+                        if (resultGrid) {
+                            resultGrid.down('pagingtoolbar')
+                                .resumeEvent('change');
+                        }
                         var i18n = Lada.getApplication().bundle;
-                        if (operation.error === undefined
-                            && operation.getResponse()
-                        ) {
-                            var json = Ext.decode(
-                                operation.getResponse().responseText);
-                            if (json.message) {
-                                var out = [];
-                                var errors = json.errors;
-                                for (var key in errors) {
-                                    out.push(key);
-                                }
-                                Ext.Msg.alert(i18n.getMsg(json.message),
-                                    out);
-                            }
-                        } else {
-                            if (operation.error.response
-                                        && operation.error.response.timedout) {
-                                Ext.Msg.alert(
-                                    i18n.getMsg('query.error.search.title'),
-                                    i18n.getMsg(
-                                        'query.error.search.querytimeout.message')
-                                );
-                            } else if (operation.error.status !== 0) {
-                                /* Server response has HTTP error code.
-                                   If it's 0, we probably got a 302 from SSO,
-                                   which is handled elsewhere. */
-                                Ext.Msg.alert(
-                                    i18n.getMsg('query.error.search.title'),
-                                    i18n.getMsg('query.error.search.message'));
-                            }
+                        if (operation.error.response
+                                && operation.error.response.timedout) {
+                            Ext.Msg.alert(
+                                i18n.getMsg('query.error.search.title'),
+                                i18n.getMsg(
+                                    'query.error.search.querytimeout.message')
+                            );
+                        } else if (operation.error.status !== 0) {
+                            /* Server response has HTTP error code.
+                                If it's 0, we probably got a 302 from SSO,
+                                which is handled elsewhere.
+                                If the response contains a error message:
+                                show to user
+                                */
+                            var responseText
+                                = operation.error.response.responseText;
+                            var errorMessage = responseText ?
+                                i18n.getMsg(
+                                    'query.error.search.message-reason',
+                                    responseText)
+                                : i18n.getMsg('query.error.search.message');
+                            Ext.Msg.alert(
+                                i18n.getMsg('query.error.search.title'),
+                                errorMessage);
                         }
                     }
                 }
@@ -540,25 +517,26 @@ Ext.define('Lada.controller.Query', {
             method: 'POST',
             jsonData: jsonData,
             success: function(response) {
-                if (response) {
-                    var json = Ext.decode(response.responseText);
-                    if (json.success && json.data) {
-                        Ext.create('Lada.view.window.SqlDisplay', {
-                            sql: json.data
-                        }).show();
-                    } else {
-                        var i18n = Lada.getApplication().bundle;
-                        var errors = json.errors;
-                        var out = [];
-                        for (var key in errors) {
-                            out.push(key);
-                        }
-                        Ext.Msg.alert(i18n.getMsg(json.message), out);
-                    }
+                var json = Ext.decode(response.responseText);
+                if (json.success && json.data) {
+                    Ext.create('Lada.view.window.SqlDisplay', {
+                        sql: json.data
+                    }).show();
                 }
             },
-            failure: function() {
+            failure: function(response) {
                 Ext.log({msg: 'Unable to get sql query', lvl: 'warn'});
+                var i18n = Lada.getApplication().bundle;
+                var responseText
+                    = response.responseText;
+                var errorMessage = responseText ?
+                    i18n.getMsg(
+                        'query.error.sql.message-reason',
+                        responseText)
+                    : i18n.getMsg('query.error.sql.message');
+                Ext.Msg.alert(
+                    i18n.getMsg('query.error.sql.title'),
+                    errorMessage);
             }
         });
     },
@@ -578,14 +556,14 @@ Ext.define('Lada.controller.Query', {
         var jsonData = {columns: []};
         for (var i = 0; i < csdata.length; i++ ) {
             var columnObj = {
-                gridColumnId: csdata[i].get('gridColumnId'),
-                filterActive: csdata[i].get('filterActive'),
-                filterValue: csdata[i].get('filterValue') || '',
-                filterRegex: csdata[i].get('filterRegex') || false,
-                filterNegate: csdata[i].get('filterNegate') || false,
-                filterIsNull: csdata[i].get('filterIsNull') || false,
-                visible: csdata[i].get('visible'),
-                columnIndex: csdata[i].get('columnIndex'),
+                gridColMpId: csdata[i].get('gridColMpId'),
+                isFilterActive: csdata[i].get('isFilterActive'),
+                filterVal: csdata[i].get('filterVal') || '',
+                isFilterRegex: csdata[i].get('isFilterRegex') || false,
+                isFilterNegate: csdata[i].get('isFilterNegate') || false,
+                isFilterNull: csdata[i].get('isFilterNull') || false,
+                isVisible: csdata[i].get('isVisible'),
+                colIndex: csdata[i].get('colIndex'),
                 sortIndex: csdata[i].get('sortIndex'),
                 sort: csdata[i].get('sort')
             };
@@ -593,8 +571,8 @@ Ext.define('Lada.controller.Query', {
                 jsonData.columns.push(columnObj);
                 continue;
             }
-            if (csdata[i].get('visible') === true ||
-                csdata[i].get('filterActive') === true ) {
+            if (csdata[i].get('isVisible') === true ||
+                csdata[i].get('isFilterActive') === true ) {
                 jsonData.columns.push(columnObj);
             }
         }
@@ -614,25 +592,25 @@ Ext.define('Lada.controller.Query', {
         var recs = panel.gridColumnValueStore.getData().items;
         var filters = [];
         for (var i = 0; i < recs.length; i++) {
-            if (recs[i].get('filterActive') !== true) {
+            if (recs[i].get('isFilterActive') !== true) {
                 continue;
             }
             var fixcolumn = fixColumnStore.findRecord('id',
-                recs[i].get('gridColumnId'), false, false, false, true);
+                recs[i].get('gridColMpId'), false, false, false, true);
             if (fixcolumn) {
-                var dt = fixcolumn.get('dataType');
+                var dt = fixcolumn.get('disp');
                 var field = null;
                 var negateCheckbox = false;
                 var regexCheckbox = false;
                 var options = {
                     name: fixcolumn.get('dataIndex'),
-                    columnIndex: recs[i].get('columnIndex'),
+                    colIndex: recs[i].get('colIndex'),
                     labelWidth: 125,
                     margin: '10,0,0,0',
-                    fieldLabel: fixcolumn.get('name'),
-                    negateValue: recs[i].get('filterNegate'),
-                    regexValue: recs[i].get('filterRegex'),
-                    isNullValue: recs[i].get('filterIsNull'),
+                    fieldLabel: fixcolumn.get('gridCol'),
+                    negateValue: recs[i].get('isFilterNegate'),
+                    regexValue: recs[i].get('isFilterRegex'),
+                    isNullValue: recs[i].get('isFilterNull'),
                     width: '100%',
                     editable: true,
                     border: false,
@@ -641,7 +619,7 @@ Ext.define('Lada.controller.Query', {
                         clear: {
                             extraCls: 'x-form-clear-trigger',
                             handler: function() {
-                                this.clearValue();
+                                this.setValue('');
                             }
                         }
                     }
@@ -660,7 +638,7 @@ Ext.define('Lada.controller.Query', {
                                 }
                             }
                         };
-                        options.value = recs[i].get('filterValue') || null;
+                        options.value = recs[i].get('filterVal') || null;
                         field = Ext.create(
                             'Lada.view.widget.base.TextField',
                             options);
@@ -676,11 +654,17 @@ Ext.define('Lada.controller.Query', {
                                 }
                             }
                         };
-                        field = Ext.create(
-                            'Lada.view.widget.base.DateTimeRange',
+                        if (dt.format === 'd.m.Y') {
+                            field = Ext.create(
+                                'Lada.view.widget.base.DateRange',
                             options);
+                        } else {
+                            field = Ext.create(
+                                'Lada.view.widget.base.DateTimeRange',
+                            options);
+                        }
                         negateCheckbox = true;
-                        field.setValue(recs[i].get('filterValue'));
+                        field.setValue(recs[i].get('filterVal'));
                         break;
                     case 'number':
                         options.allowDecimals = true;
@@ -688,7 +672,7 @@ Ext.define('Lada.controller.Query', {
                         options.keyNavEnabled = false;
                         options.mouseWheelEnabled = false;
                         options.decimalPrecision = 10;
-                        options.value = recs[i].get('filterValue') || null;
+                        options.value = recs[i].get('filterVal') || null;
                         if (dt.format === '###########') {
                             field = Ext.create('Lada.view.widget.base.IntegerRange',
                                 options);
@@ -697,7 +681,7 @@ Ext.define('Lada.controller.Query', {
                                 options);
                         }
                         negateCheckbox = true;
-                        field.setValue(recs[i].get('filterValue'));
+                        field.setValue(recs[i].get('filterVal'));
                         break;
                     case 'land':
                         options.multiSelect = true;
@@ -737,7 +721,7 @@ Ext.define('Lada.controller.Query', {
                     case 'umwbereich':
                         options.multiSelect = true;
                         options.store = Ext.getStore('umwelt');
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create('Lada.view.widget.Umwelt', options);
                         negateCheckbox = true;
                         break;
@@ -749,7 +733,7 @@ Ext.define('Lada.controller.Query', {
                         field = Ext.create('Lada.view.widget.Status', options);
                         negateCheckbox = true;
                         break;
-                    case 'geom':// TODO: how/if to implement
+                    case 'geom':
                         break;
                     case 'egem':
                         options.multiSelect = true;
@@ -826,7 +810,7 @@ Ext.define('Lada.controller.Query', {
                     case 'anlage':
                         options.multiSelect = true;
                         options.store = Ext.getStore('ktaGruppe');
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create('Lada.view.widget.KtaGruppe',
                             options);
                         negateCheckbox = true;
@@ -834,7 +818,7 @@ Ext.define('Lada.controller.Query', {
                     case 'reiproggrp':
                         options.multiSelect = true;
                         options.editable = true;
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create(
                             'Lada.view.widget.ReiProgpunktGruppe',
                             options);
@@ -843,7 +827,7 @@ Ext.define('Lada.controller.Query', {
                     case 'mpl':
                         options.multiSelect = true;
                         options.editable = true;
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create('Lada.view.widget.MessprogrammLand',
                             options);
                         negateCheckbox = true;
@@ -851,7 +835,7 @@ Ext.define('Lada.controller.Query', {
                     case 'prnId':
                         options.multiSelect = true;
                         options.editable = true;
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create('Lada.view.widget.Probenehmer',
                             options);
                         negateCheckbox = true;
@@ -859,7 +843,7 @@ Ext.define('Lada.controller.Query', {
                     case 'mmtId':
                         options.multiSelect = true;
                         options.editable = true;
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create('Lada.view.widget.Messmethode',
                             options);
                         negateCheckbox = true;
@@ -867,7 +851,7 @@ Ext.define('Lada.controller.Query', {
                     case 'messgroesse':
                         options.multiSelect = true;
                         options.editable = true;
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create('Lada.view.widget.Messgroesse',
                             options);
                         negateCheckbox = true;
@@ -898,9 +882,16 @@ Ext.define('Lada.controller.Query', {
                         break;
                     case 'ortszusatz':
                         options.multiSelect = true;
-                        options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.OrtsZusatz',
+                            options);
+                        negateCheckbox = true;
+                        break;
+                    case 'ortTyp':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.OrtTyp',
                             options);
                         negateCheckbox = true;
                         break;
@@ -935,20 +926,20 @@ Ext.define('Lada.controller.Query', {
                             'tag.filterwidget.label');
                         options.emptyText = '';
                         options.monitorChanges = false;
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create(
                             'Lada.view.widget.TagFilter', options);
                         negateCheckbox = false;
                         break;
                     case 'tagTyp':
                         options.multiSelect = true;
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create('Lada.view.widget.TagTyp',
                             options);
                         negateCheckbox = true;
                         break;
                     default:
-                        options.value = recs[i].get('filterValue');
+                        options.value = recs[i].get('filterVal');
                         field = Ext.create('Lada.view.widget.base.TextField',
                             options);
                         negateCheckbox = true;
@@ -962,8 +953,8 @@ Ext.define('Lada.controller.Query', {
             }
         }
         filters.sort(function(item0, item1) {
-            var a = item0.columnIndex;
-            var b = item1.columnIndex;
+            var a = item0.colIndex;
+            var b = item1.colIndex;
             if (a === -1 || a === null) {
                 if (b === -1 || b === null) {
                     // both no columns; sort alphabetically by dataIndex?
@@ -988,7 +979,7 @@ Ext.define('Lada.controller.Query', {
                 var rec = store.findRecord('dataIndex', oldvalue[i],
                     false, false, false, true);
                 if (rec) {
-                    rec.set('filterActive', false);
+                    rec.set('isFilterActive', false);
                 }
             }
         }
@@ -998,16 +989,16 @@ Ext.define('Lada.controller.Query', {
             if (!nrec) {
                 var fixrecord = cs.findRecord('dataIndex', newvalue[j],
                     false, false, false, true);
-                var col = Ext.create('Lada.model.GridColumnValue', {
-                    gridColumnId: fixrecord.get('id'),
-                    visible: false,
-                    filterActive: true,
+                var col = Ext.create('Lada.model.GridColConf', {
+                    gridColMpId: fixrecord.get('id'),
+                    isVisible: false,
+                    isFilterActive: true,
                     dataIndex: fixrecord.get('dataIndex'),
-                    name: fixrecord.get('name')
+                    gridCol: fixrecord.get('gridCol')
                 });
                 store.add(col);
             } else {
-                nrec.set('filterActive', true);
+                nrec.set('isFilterActive', true);
             }
         }
         this.showFilter(box);
@@ -1044,9 +1035,9 @@ Ext.define('Lada.controller.Query', {
                 newvalue = newvalue.join(',');
             }
             if (newvalue === '') {
-                rec.set('filterValue', null);
+                rec.set('filterVal', null);
             } else {
-                rec.set('filterValue', newvalue);
+                rec.set('filterVal', newvalue);
             }
         }
         this.dataChanged();
@@ -1057,9 +1048,9 @@ Ext.define('Lada.controller.Query', {
         var rec = store.findRecord('dataIndex', widget.name, false, false,
             false, true);
         if (widget.getValue() === '') {
-            rec.set('filterValue', null);
+            rec.set('filterVal', null);
         } else {
-            rec.set('filterValue', widget.getValue());
+            rec.set('filterVal', widget.getValue());
         }
     },
 
@@ -1076,11 +1067,11 @@ Ext.define('Lada.controller.Query', {
         var dataIndex = checkbox.name.slice(0, checkbox.name.lastIndexOf('_'));
         var model = checkbox.name.slice(checkbox.name.lastIndexOf('_') + 1 );
         if (
-            ['filterNegate', 'filterRegex', 'filterIsNull']
+            ['isFilterNegate', 'isFilterRegex', 'isFilterNull']
                 .indexOf(model) >= 0
         ) {
             if (
-                model === 'filterIsNull' &&
+                model === 'isFilterNull' &&
                 checkbox.getValue() === true
             ) {
                 var field = checkbox.up('querypanel')
@@ -1126,15 +1117,15 @@ Ext.define('Lada.controller.Query', {
         };
         var csdata = Ext.getStore('columnstore').getData().items;
         for (var i = 0; i < csdata.length; i++ ) {
-            if (csdata[i].get('dataType').name === 'probeId') {
+            if (csdata[i].get('disp').name === 'probeId') {
                 result.probeIdentifier = csdata[i].get('dataIndex');
             }
-            if (csdata[i].get('dataType').name === 'messungId') {
+            if (csdata[i].get('disp').name === 'messungId') {
                 result.messungIdentifier = csdata[i].get('dataIndex');
             }
-            var idx = rowHierarchy.indexOf(csdata[i].get('dataType').name);
+            var idx = rowHierarchy.indexOf(csdata[i].get('disp').name);
             if (idx > -1 && idx < result.idx) {
-                result.dataType = csdata[i].get('dataType').name;
+                result.dataType = csdata[i].get('disp').name;
                 result.dataIndex = csdata[i].get('dataIndex');
                 result.idx = idx;
             }
@@ -1176,7 +1167,7 @@ Ext.define('Lada.controller.Query', {
     },
 
     getFilterValueMulti: function(record) {
-        var filterValue = record.get('filterValue');
+        var filterValue = record.get('filterVal');
         if (!filterValue) {
             return null;
         } else {
@@ -1187,29 +1178,14 @@ Ext.define('Lada.controller.Query', {
         }
     },
 
-    setMapOrte: function(grid) {
-        grid.ortstore = Ext.create(
-            'Lada.store.Orte', {
-                autoLoad: false,
-                remoteFilter: true
-            });
-        grid.ortstore.addListener('datachanged', function() {
-            var dgrid = Ext.getCmp('dynamicgridid');
-            dgrid.down('map').addLocations(dgrid.ortstore);
-        });
-        grid.getStore().fireEvent('load');
-    },
-
     dataChanged: function() {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
-        var savedisabled = qp.isQueryReadonly();
-        if (qp.isValid()) {
-            qp.down('button[action=save]').setDisabled(savedisabled);
-            qp.down('button[action=newquery]').setDisabled(false);
-        } else {
-            qp.down('button[action=save]').setDisabled(true);
-            qp.down('button[action=newquery]').setDisabled(true);
-        }
+        var isValid = qp.isValid();
+        qp.down('button[action=save]').setDisabled(
+            // TODO: Saving includes more fields than form fields,
+            // thus dirty state of the form cannot be used here.
+            !isValid || qp.isQueryReadonly());
+        qp.down('button[action=newquery]').setDisabled(!isValid);
     },
 
 
@@ -1238,7 +1214,7 @@ Ext.define('Lada.controller.Query', {
             checkboxRow.add(
                 Ext.create('Ext.form.field.Checkbox', {
 
-                    name: options.name + '_filterNegate',
+                    name: options.name + '_isFilterNegate',
                     boxLabel: i18n.getMsg('query.negate'),
                     value: options.negateValue
                 })
@@ -1247,7 +1223,7 @@ Ext.define('Lada.controller.Query', {
         if (regexBox) {
             checkboxRow.add(
                 Ext.create('Ext.form.field.Checkbox', {
-                    name: options.name + '_filterRegex',
+                    name: options.name + '_isFilterRegex',
                     boxLabel: i18n.getMsg('query.regex'),
                     value: options.regexValue
                 })
@@ -1255,7 +1231,7 @@ Ext.define('Lada.controller.Query', {
         }
         checkboxRow.add(
             Ext.create('Ext.form.field.Checkbox', {
-                name: options.name + '_filterIsNull',
+                name: options.name + '_isFilterNull',
                 boxLabel: i18n.getMsg('query.isNull'),
                 value: options.isNullValue
             })
@@ -1269,18 +1245,54 @@ Ext.define('Lada.controller.Query', {
     },
 
     /**
+     * Draw the content of the geometry column if available.
+     */
+    drawGeometryColumns: function() {
+        //Get geom column index
+        var geomColIdx = this.getGeomColumnIndex();
+        if (geomColIdx <= -1) {
+            return;
+        }
+        var dataIdx = this.getVisibleColumns()[geomColIdx]
+            .dataIndex;
+        var featureTextDataIdx
+            = this.getFeatureTextDataIndex();
+        var featuresJson = {
+            type: 'FeatureCollection',
+            features: []
+        };
+        //For each geometry, construct a geojson feature
+        //containing the needed properties
+        this.resultStore.getData().each(function(item) {
+            var feature = {
+                type: 'Feature',
+                properties: {}
+            };
+            var geomString = item.get(dataIdx);
+            if (geomString) {
+                var geomJson = Ext.decode(geomString);
+                feature.properties.id = item.get('id');
+                if (featureTextDataIdx) {
+                    feature.properties.bez
+                        = item.get(featureTextDataIdx);
+                }
+                feature.geometry = geomJson;
+                featuresJson.features.push(feature);
+            }
+        });
+        if (featuresJson.features.length > 0) {
+            Ext.getCmp('dynamicgridid').down('map').drawGeoJson(featuresJson);
+        }
+    },
+
+    /**
      * Get the width of the given column in the grid.
      * @param {Lada.model.GridColumnValue} col Column
      * @returns Grid column width if visible, else width stored
      * in the column record
      */
     getVisibleColumnWidth: function(col) {
-        // Visible columns for saving column width
-        var dgs = Ext.ComponentQuery.query('dynamicgrid');
-        var visibleCols;
-        if (dgs && dgs[0]) {
-            visibleCols = dgs[0].getVisibleColumns();
-        }
+        var visibleCols = this.getVisibleColumns();
         // Get width of visible columns
         var vcIdx;
         // eslint-disable-next-line no-loop-func
@@ -1307,9 +1319,66 @@ Ext.define('Lada.controller.Query', {
     },
 
     handleSaveFailure: function() {
-        var i18n = Lada.getApplication().bundle;
         Ext.ComponentQuery.query('querypanel')[0].loadingMask.hide();
-        Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
-                      i18n.getMsg('query.error.save.message'));
+        this.callParent(arguments);
+    },
+
+    /**
+     * Get visible grid columns
+     * @returns {Lada.model.GridColumn} Array of column models
+     */
+    getVisibleColumns: function() {
+        var dgs = Ext.ComponentQuery.query('dynamicgrid');
+        var visibleCols;
+        if (dgs && dgs[0]) {
+            visibleCols = dgs[0].getVisibleColumns();
+        }
+        return visibleCols;
+    },
+
+    /**
+     * Check if the given column is visible.
+     * @param {String} dataIndex
+     * @return True if visible
+     */
+    isColumnVisible: function(dataIndex) {
+        var columns = this.getVisibleColumns();
+        var foundCol = Ext.Array.findBy(columns, function(col) {
+            if (col.dataIndex) {
+                return col.dataIndex === dataIndex;
+            }
+            return false;
+        });
+        return foundCol !== null;
+    },
+
+    /**
+     * Get the array index of the geometry column in the visible columns.
+     * @returns Index or -1 if not visible
+     */
+    getGeomColumnIndex: function() {
+        return this.getVisibleColumns().findIndex(
+            function(i) {
+                return i.dataType ?
+                    i.dataType.name === 'geom' :
+                    false;
+            });
+    },
+
+    /**
+     * Get the dataindex for the column used for geojson feature texts for the
+     * given columns.
+     *
+     * The dataIndex is guessed based upon the given rowtarget and picked from
+     * the visible columns.
+     * @return {String} dataIndex or null if no suitable column could be found
+     */
+    getFeatureTextDataIndex: function() {
+        switch (this.setrowtarget().dataType) {
+            //For ort queries: Show ortId
+            case 'ortId':
+                return this.isColumnVisible('ortId') ? 'ortId' : null;
+            default: return null;
+        }
     }
 });

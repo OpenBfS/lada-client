@@ -11,10 +11,10 @@
  */
 Ext.define('Lada.store.Messwerte', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Messwert',
+    model: 'Lada.model.MeasVal',
     sorters: [
         {
-            property: 'messgroesseId',
+            property: 'measdId',
             direction: 'ASC'
         }],
     sortOnLoad: true

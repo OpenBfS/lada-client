@@ -10,35 +10,34 @@
  * This class represents and defines the model of a Tag
  **/
 Ext.define('Lada.model.Tag', {
-    extend: 'Lada.model.LadaBase',
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
+    extend: 'Lada.model.ValidatedModel',
 
     fields: [{
-        name: 'tag',
-        type: 'string'
+        name: 'name',
+        type: 'nonblankstring'
     }, {
-        name: 'mstId',
+        name: 'measFacilId',
         type: 'string',
         allowNull: true
     }, {
-        name: 'netzbetreiberId',
+        name: 'networkId',
         type: 'string',
         allowNull: true
     }, {
         name: 'createdAt',
-        type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        type: 'date'
     }, {
-        name: 'typId',
+        name: 'tagType',
         type: 'string'
     }, {
-        name: 'autoTag',
+        name: 'isAutoTag',
         type: 'boolean'
     }, {
-        name: 'gueltigBis',
-        type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        name: 'valUntil',
+        type: 'date'
     }, {
         name: 'readonly',
         type: 'boolean'
@@ -77,12 +76,12 @@ Ext.define('Lada.model.Tag', {
          * Check whether the user might assign the tag, given as plain object.
          */
         isTagAssignable: function(tag) {
-            switch (tag.typId) {
+            switch (tag.tagType) {
                 case 'netz':
                     return Ext.Array.contains(
-                        Lada.netzbetreiber, tag.netzbetreiberId);
+                        Lada.netzbetreiber, tag.networkId);
                 case 'mst':
-                    return Ext.Array.contains(Lada.mst, tag.mstId);
+                    return Ext.Array.contains(Lada.mst, tag.measFacilId);
                 default:
                     return true;
             }

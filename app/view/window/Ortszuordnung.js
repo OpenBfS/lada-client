@@ -15,12 +15,13 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     alias: 'widget.ortszuordnungwindow',
 
     requires: [
-        'Lada.model.Ortszuordnung',
-        'Lada.model.OrtszuordnungMp',
+        'Lada.model.Geolocat',
+        'Lada.model.GeolocatMpg',
         'Lada.view.form.Ortszuordnung',
         'Lada.store.Orte',
         'Lada.view.form.Ort',
         'Lada.view.panel.Map',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.grid.Orte',
         'Lada.view.grid.Staaten',
         'Lada.view.grid.Verwaltungseinheiten'
@@ -57,66 +58,29 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                     load: {
                         scope: this,
                         fn: function(store) {
-                            var id = this.probe.get('datenbasisId');
+                            var id = this.probe.get('regulationId');
                             if (!id) {
                                 this.datenbasis = null;
                             } else {
                                 this.datenbasis = store.getById(
-                                    this.probe.get('datenbasisId'))
+                                    this.probe.get('regulationId'))
                                     .get('datenbasis');
                             }
                         }
                     }
                 }
             });
-            if (this.record) {
-                // A probe record will be edited
-                this.title = i18n.getMsg('ortszuordnung.window.title')
-                            + ' '
-                            + i18n.getMsg('ortszuordnung.window.title2')
-                            + ' '
-                            + i18n.getMsg('probe')
-                            + ' '
-                            + this.probe.get('hauptprobenNr')
-                            + ' '
-                            + i18n.getMsg('edit');
-            } else {
-                // A new probe record will be created
-                this.title = i18n.getMsg('ortszuordnung.window.title')
-                            + ' '
-                            + i18n.getMsg('ortszuordnung.window.title2')
-                            + ' '
-                            + i18n.getMsg('probe')
-                            + ' '
-                            + this.probe.get('hauptprobenNr')
-                            + ' '
-                            + i18n.getMsg('create');
-            }
+            var mainSampleId = this.probe.get('mainSampleId');
+            this.title += ' ' + i18n.getMsg('ortszuordnung.window.title2') + ' '
+                + i18n.getMsg('probe') + ' '
+                + (mainSampleId ? mainSampleId : this.probe.get('extId'));
         } else if (this.messprogramm) {
-            if (this.record) {
-                // A messprogramm record will be edited
-                this.title = i18n.getMsg('ortszuordnung.window.title')
-                            + ' '
-                            + i18n.getMsg('ortszuordnung.window.title2')
-                            + ' '
-                            + i18n.getMsg('messprogramm')
-                            + ' '
-                            + this.messprogramm.get('id')
-                            + ' '
-                            + i18n.getMsg('edit');
-            } else {
-                // A new messprogramm record will be created
-                this.title = i18n.getMsg('ortszuordnung.window.title')
-                            + ' '
-                            + i18n.getMsg('ortszuordnung.window.title2')
-                            + ' '
-                            + i18n.getMsg('messprogramm')
-                            + ' '
-                            + this.messprogramm.get('id')
-                            + ' '
-                            + i18n.getMsg('create');
-            }
+            this.title += ' ' + i18n.getMsg('ortszuordnung.window.title2') + ' '
+                + i18n.getMsg('messprogramm') + ' '
+                + this.messprogramm.get('id');
         }
+        this.title += ' ' + (
+            this.record ? i18n.getMsg('edit') : i18n.getMsg('create'));
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -190,9 +154,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 externalOrteStore: true
             }, {
                 xtype: 'ortszuordnungform',
-                region: 'east',
-                type: this.probe ? 'probe' : 'mpr',
-                datenbasis: this.datenbasis
+                region: 'east'
             }, {
                 xtype: 'tabpanel',
                 tabBarPosition: 'top',
@@ -251,32 +213,34 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.down('staatengrid').getStore().clearFilter();
         if (!this.record) {
             if (this.probe) {
-                this.record = Ext.create('Lada.model.Ortszuordnung');
-                this.record.set('probeId', this.probe.get('id'));
+                this.record = Ext.create('Lada.model.Geolocat');
+                this.record.set('sampleId', this.probe.get('id'));
             } else {
-                this.record = Ext.create('Lada.model.OrtszuordnungMp');
-                this.record.set('messprogrammId', this.messprogramm.get('id'));
+                this.record = Ext.create('Lada.model.GeolocatMpg');
+                this.record.set('mpgId', this.messprogramm.get('id'));
             }
         }
         var mstId = this.probe ?
-            this.probe.get('mstId') :
-            this.messprogramm.get('mstId');
+            this.probe.get('measFacilId') :
+            this.messprogramm.get('measFacilId');
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
-        this.netzbetreiberId = mst.getAt(ndx).get('netzbetreiberId');
+        this.netzbetreiberId = mst.getAt(ndx).get('networkId');
         this.down('ortszuordnungform').setRecord(this.record);
         var osg = this.down('ortstammdatengrid');
         var map = this.down('map');
         osg.setLoading(false);
         map.setLoading(false);
-        this.ortstore = Ext.create('Lada.store.Orte');
+        this.ortstore = Ext.create('Lada.store.Orte', {
+            pageSize: Lada.pagingSize
+        });
         this.ortstore.setProxy(Ext.clone(this.ortstore.getProxy()));
         // leave the ortstore empty at begin.
         // TODO check when changing filter method to remote/local
         this.ortstore.removeAll();
-        var ortId = this.record.get('ortId');
-        if (ortId || ortId === 0) {
-            Lada.model.Ort.load(ortId, {
+        var ortId = this.record.get('siteId');
+        if (ortId) {
+            Lada.model.Site.load(ortId, {
                 success: function(rec) {
                     me.down('ortszuordnungform').setFirstOrt(rec);
                     map.addPreviousOrt(rec);
@@ -296,23 +260,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     },
 
     /**
-     * Instructs the fields / forms listed in this method to set a message.
-     * @param errors These Errors shall be shown
-     * @param warnings These Warning shall be shown
-     */
-    setMessages: function() {
-        //todo this is a stub
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to clear their
-     * messages.
-     */
-    clearMessages: function() {
-        //todo this is a stub
-    },
-
-    /**
      * childs will be populated with store entries after all entries are loaded
      * from all sources
      */
@@ -324,9 +271,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         map.addLocations(this.ortstore);
         var ortId;
         if (this.messprogramm) {
-            ortId = this.record.get('ort');
+            ortId = this.record.get('site');
         } else {
-            ortId = this.record.get('ortId');
+            ortId = this.record.get('siteId');
         }
         var ortrecord = this.ortstore.findRecord('id', ortId);
         if (ortrecord) {

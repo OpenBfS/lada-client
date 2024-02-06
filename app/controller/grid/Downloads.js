@@ -12,7 +12,7 @@
  */
 Ext.define('Lada.controller.grid.Downloads', {
     extend: 'Ext.app.Controller',
-    record: null,
+
     ladaPrintUrlPrefix: 'lada-printer/print/',
     exportUrls: {
         status: 'lada-server/data/asyncexport/status/',
@@ -23,7 +23,7 @@ Ext.define('Lada.controller.grid.Downloads', {
      * Initialize the controller, request polling to run every 2 seconds
      */
     init: function() {
-        window.setInterval(this.refreshQueue, 2000);
+        window.setInterval(() => this.refreshQueue(), 2000);
     },
 
     /**
@@ -82,6 +82,9 @@ Ext.define('Lada.controller.grid.Downloads', {
             Ext.Ajax.request({
                 url: url,
                 method: 'GET',
+                headers: {
+                    Accept: 'application/octet-stream'
+                },
                 binary: true,
                 timeout: 60000,
                 success: function(response) {
@@ -114,43 +117,37 @@ Ext.define('Lada.controller.grid.Downloads', {
         }
         var store0 = Ext.data.StoreManager.get('downloadqueue-print');
         var store1 = Ext.data.StoreManager.get('downloadqueue-export');
-        var controller = Lada.app.getController(
-            'Lada.controller.grid.Downloads');
+        var me = this;
         if (store0) {
             Ext.each(store0.getData().items, function(item) {
-                if (item.get('done') !== true) {
-                    controller.refreshItemInfo(item);
-                }
+                me.refreshItemInfo(item);
             });
         }
         if (store1) {
             Ext.each(store1.getData().items, function(item) {
-                if (item.get('done') !== true) {
-                    controller.refreshItemInfo(item);
-                }
+                me.refreshItemInfo(item);
             });
         }
     },
 
     /**
-     * Polls the status of an queue item
-     * @param {*} item Lada.model.DownloadQuque instance
+     * Polls the status of a queue item
+     * @param {*} item Lada.model.DownloadQueue instance
      */
     refreshItemInfo: function(item) {
         // potentially submits wrong prefix part if url is proxied
         // var url = item.get('mapfish_statusURL');
-        var type = item.get('type');
-        var url;
         var refId = item.get('refId');
-        switch (type) {
-            case 'lada-print':
-                url = this.ladaPrintUrlPrefix + '/status/' + refId + '.json';
-                break;
-            case 'export':
-                url = this.exportUrls.status + refId;
-                break;
-        }
-        if (url && refId) {
+        if (refId && !item.get('done')) {
+            var url;
+            switch (item.get('type')) {
+                case 'lada-print':
+                    url = this.ladaPrintUrlPrefix + '/status/' + refId + '.json';
+                    break;
+                case 'export':
+                    url = this.exportUrls.status + refId;
+                    break;
+            }
             var me = this;
             return new Ext.Promise(function() {
                 Ext.Ajax.request({
@@ -180,12 +177,15 @@ Ext.define('Lada.controller.grid.Downloads', {
                     failure: function(response) {
                         item.set('done', true);
                         item.set('status', 'error');
-                        if (response.status === 404) {
-                            item.set('message', 'URL not found');
 
-                        } else {
-                            item.set('message', 'bad server answer');
+                        var msg = response.responseText;
+                        if (!msg) {
+                            var i18n = Lada.getApplication().bundle;
+                            msg = response.timedout
+                                ? i18n.getMsg('err.msg.timeout')
+                                : response.statusText;
                         }
+                        item.set('message', msg);
                     }
                 });
             });

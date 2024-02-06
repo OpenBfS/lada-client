@@ -12,7 +12,7 @@
 Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
 
     setMediaDeskImpl: function(scheduler, record) {
-        var media = record.get('mediaDesk');
+        var media = record.get('envDescripDisplay');
         if (media) {
             var mediaParts = media.split(' ');
             scheduler.enqueue(
@@ -25,7 +25,7 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
     },
 
     setMediaSN: function(scheduler, ndx, media, beschreibung) {
-        var mediabeschreibung = this.getForm().findField('media');
+        var mediabeschreibung = this.down('tfield[name=envDescripName]');
         if (ndx >= 12) {
             scheduler.finished();
             mediabeschreibung.setValue(beschreibung);
@@ -34,7 +34,7 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
         cbox.store.proxy.extraParams = {
-            'layer': ndx
+            'lev': ndx
         };
         if (ndx >= 1) {
             var parents = current.getParents(cbox);
@@ -42,24 +42,24 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
                 scheduler.finished();
                 return;
             }
-            cbox.store.proxy.extraParams.parents = parents;
+            cbox.store.proxy.extraParams.predId = parents;
         }
 
         var me = this;
         cbox.store.load(function(records, op, success) {
             try {
-                if (success) {
+                if (success && !cbox.destroyed) {
                     var mediatext;
                     mediatext = cbox.store.findRecord(
-                        'sn', parseInt(media[ndx + 1], 10), 0,
+                        'levVal', parseInt(media[ndx + 1], 10), 0,
                         false, false, true);
                     cbox.select(mediatext);
                     if (mediatext !== null) {
-                        if (mediatext.data.beschreibung !== 'leer'
+                        if (mediatext.data.name !== 'leer'
                             && (ndx <= 3 && media[1] === '01'
                                 || ndx <= 1 && media[1] !== '01')
                            ) {
-                            beschreibung = mediatext.data.beschreibung;
+                            beschreibung = mediatext.data.name;
                         }
                     }
                     var nextNdx = ++ndx;

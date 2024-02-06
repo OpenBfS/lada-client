@@ -11,9 +11,9 @@
  */
 Ext.define('Lada.store.Messgroessen', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Messgroesse',
+    model: 'Lada.model.Measd',
     sorters: [{
-        property: 'messgroesse',
+        property: 'name',
         direction: 'ASC',
         transform: function(val) {
             if (val) {
@@ -22,15 +22,5 @@ Ext.define('Lada.store.Messgroessen', {
             return '';
         }
     }],
-    autoLoad: true,
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/messgroesse',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
-
+    autoLoad: true
 });

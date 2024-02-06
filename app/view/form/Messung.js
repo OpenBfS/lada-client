@@ -10,31 +10,29 @@
  * Form to edit a Messung
  */
 Ext.define('Lada.view.form.Messung', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.messungform',
     requires: [
         'Ext.layout.container.Table',
+        'Lada.controller.form.Messung',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.base.CheckBox',
         'Lada.view.widget.Messmethode',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
+        'Lada.view.widget.base.DisplayCheckbox',
         'Lada.view.widget.base.NumberField',
+        'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.widget.Statuskombi'
     ],
 
-    model: 'Lada.model.Messung',
+    model: 'Lada.model.Measm',
+    controller: 'messungform',
     minWidth: 650,
     margin: 5,
     border: false,
 
-    recordId: null,
-
     record: null,
-    //The probe model instance connected to this messung
-    probe: null,
-    //The probes datenbasis connected to this messung
-    probedatenbasis: null,
 
     trackResetOnLoad: true,
 
@@ -55,7 +53,7 @@ Ext.define('Lada.view.form.Messung', {
                     qtip: i18n.getMsg('qtip.audit'),
                     icon: 'resources/img/distribute-vertical-center.png',
                     action: 'audit',
-                    disabled: this.recordId === null
+                    disabled: true
                 }, {
                     text: i18n.getMsg('save'),
                     qtip: i18n.getMsg('save.qtip'),
@@ -94,9 +92,9 @@ Ext.define('Lada.view.form.Messung', {
                         },
                         items: [{
                             xtype: 'selectabledisplayfield',
-                            name: 'externeMessungsId',
+                            name: 'extId',
                             maxLength: 4,
-                            fieldLabel: i18n.getMsg('extMessungsId'),
+                            fieldLabel: i18n.getMsg('measm.ext_id'),
                             width: 300,
                             labelWidth: 100
                         }, {
@@ -113,14 +111,13 @@ Ext.define('Lada.view.form.Messung', {
                             enforceMaxLength: true,
                             maxLength: 10,
                             minValue: 0,
-                            name: 'messdauer',
-                            fieldLabel: i18n.getMsg('messdauer'),
+                            name: 'measPd',
+                            fieldLabel: i18n.getMsg('measPd'),
                             width: 300,
                             labelWidth: 100
                         }, {
-                            xtype: 'chkbox',
-                            name: 'geplant',
-                            readOnly: true,
+                            xtype: 'displaycheckbox',
+                            name: 'isScheduled',
                             fieldLabel: i18n.getMsg('geplant'),
                             width: 300,
                             labelWidth: 100
@@ -131,22 +128,22 @@ Ext.define('Lada.view.form.Messung', {
                         },
                         items: [{
                             xtype: 'tfield',
-                            name: 'nebenprobenNr',
+                            name: 'minSampleId',
                             maxLength: 4,
-                            fieldLabel: i18n.getMsg('nebenprobenNr'),
+                            fieldLabel: i18n.getMsg('minSampleId'),
                             width: 300,
                             labelWidth: 100
                         }, {
                             xtype: 'datetime',
-                            name: 'messzeitpunkt',
-                            fieldLabel: i18n.getMsg('messzeitpunkt'),
+                            name: 'measmStartDate',
+                            fieldLabel: i18n.getMsg('measm_start_date'),
                             width: 300,
                             format: 'd.m.Y H:i',
                             labelWidth: 100
                         }, {
                             xtype: 'chkbox',
-                            name: 'fertig',
-                            fieldLabel: i18n.getMsg('fertig'),
+                            name: 'isCompleted',
+                            fieldLabel: i18n.getMsg('isCompleted'),
                             width: 300,
                             labelWidth: 100
                         }]
@@ -156,35 +153,8 @@ Ext.define('Lada.view.form.Messung', {
                     name: 'statuskombi',
                     width: '100%',
                     padding: '0,5,0,5',
-                    readOnly: true,
                     isFormField: false,
-                    fieldLabel: i18n.getMsg('header.statuskombi'),
-                    buttonListener: {
-                        click: {
-                            fn: function() {
-                                if ((this.probedatenbasis === 'REI-E' ||
-                                        this.probedatenbasis === 'REI-I') &&
-                                    (this.probe.get(
-                                        'reiprogpunktgruppe') === null ||
-                                        this.probe.get(
-                                            'reiprogpunktgruppe') === '') &&
-                                    (this.probe.get('ktagruppe') === null ||
-                                        this.probe.get('ktagruppe') === '')
-                                ) {
-                                    Ext.Msg.alert(
-                                        i18n.getMsg('err.msg.status.title'),
-                                        i18n.getMsg(
-                                            'err.msg.status.consistency')
-                                    );
-                                    return false;
-                                }
-                            },
-                            scope: this,
-                            options: {
-                                priority: 999
-                            }
-                        }
-                    }
+                    fieldLabel: i18n.getMsg('header.statuskombi')
                 }]
             }]
         }];
@@ -192,6 +162,7 @@ Ext.define('Lada.view.form.Messung', {
     },
 
     setRecord: function(record) {
+        this.clearMessages();
         this.record = record;
         var me = this;
         var form = me.getForm();
@@ -199,116 +170,12 @@ Ext.define('Lada.view.form.Messung', {
         if (record.getId()) {
             me.down('statuskombi').setValue(
                 record.get('status'), false, record.get('statusEdit'));
-        } else {
-            //remove the Statuskombi field from the form
-            me.down('statuskombi').hide();
         }
 
-        //Get the connected Probe instance and Datenbasis
-        Lada.model.Probe.load(this.record.get('probeId'), {
-            success: function(proberecord) {
-                me.probe = proberecord;
-                var dbid = proberecord.get('datenbasisId');
-                if (!dbid) {
-                    return;
-                }
-                Lada.model.Datenbasis.load(dbid, {
-                    success: function(dbrecord) {
-                        me.probedatenbasis = dbrecord.get('datenbasis');
-                    },
-                    failure: function() {
-                        //TODO: handle failure
-                    }
-                });
-            },
-            failure: function() {
-                //TODO: handle failure
-            }
-        });
+        this.down('button[action=audit]').setDisabled(record.phantom);
     },
 
     getCurrentStatus: function() {
         return this.currentStatus;
-    },
-
-    setMessages: function(errors, warnings, notifications) {
-        var key;
-        var element;
-        var content;
-        var tmp;
-        var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (notifications) {
-            for (key in notifications) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = notifications[key];
-                var notificationText = '';
-                for (var k = 0; k < content.length; k++) {
-                    notificationText += i18n.getMsg(
-                        content[k].toString()) + '\n';
-                }
-                element.showNotifications(notificationText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var j = 0; j < content.length; j++) {
-                    errorText += i18n.getMsg(content[j].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
-    clearMessages: function() {
-        this.down('tfield[name=nebenprobenNr]').clearWarningOrError();
-        //this.down('messmethode[name=mmtId]').clearWarningOrError();
-        this.down('datetime[name=messzeitpunkt]').clearWarningOrError();
-        this.down('numfield[name=messdauer]').clearWarningOrError();
-        this.down('chkbox[name=fertig]').clearWarningOrError();
-        this.down('chkbox[name=geplant]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.readOnly = value;
-        this.down('tfield[name=nebenprobenNr]').setReadOnly(value);
-        this.down('messmethode[name=mmtId]').setReadOnly(value);
-        this.down('datetime[name=messzeitpunkt]').setReadOnly(value);
-        this.down('numfield[name=messdauer]').setReadOnly(value);
-        this.down('chkbox[name=fertig]').setReadOnly(value);
     }
 });

@@ -24,6 +24,7 @@ Ext.application({
         'Lada.override.RowExpander',
         'Lada.override.FilteredComboBox',
         'Lada.override.Date',
+        'Lada.override.DatePicker',
         'Lada.override.UnderlayPool',
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
@@ -54,17 +55,17 @@ Ext.application({
         'Lada.store.MessprogrammKategorie',
         'Lada.store.GridColumn',
         'Lada.store.Query',
-        'Lada.model.Messstelle',
+        'Lada.model.MeasFacil',
         'Lada.model.GenericResults',
-        'Lada.model.GridColumn',
-        'Lada.model.Query',
+        'Lada.model.GridColMp',
+        'Lada.model.QueryUser',
         'Lada.model.DownloadQueue',
         'Lada.model.UploadQueue',
         'Lada.view.widget.TimeZoneButton',
-        'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.ElanScenarioWindow',
         'Lada.view.window.TrackedWindow',
         'Lada.util.Date',
+        'Lada.util.I18n',
         'Lada.util.WindowTracker',
         'Lada.util.LocalStorage',
         'Lada.util.WindowTracker',
@@ -116,12 +117,17 @@ Ext.application({
             return '"' + Ext.Date.format(o, 'c') + '"';
         };
 
+        // Default headers for all requests
+        Ext.Ajax.setDefaultHeaders({
+            Accept: 'application/json'
+        });
+
         Lada.username = '';
         Lada.userroles = '';
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '4.5.0-SNAPSHOT';
+        Lada.clientVersion = '4.8.0-SNAPSHOT';
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [
@@ -246,9 +252,9 @@ Ext.application({
         });
 
         // Used in: widget.Messstelle, form.Messprogramm, form.Datensatzerzeuger,
-        // form.Probe, window.Messprogramm, window.MessungEdit,
+        // form.Probe, window.Messprogramm, window.Messung,
         // window.Ortszuordnung, window.GenProbenFromMessprogramm,
-        // window.ProbeEdit, window.MessungCreate, panel.Map, panel.QueryPanel,
+        // window.Probe, panel.Map, panel.QueryPanel,
         // grid.PKommentar, ...
         // Load-callback here fills data into store 'leitstellenwidget'.
         // Server service: MessstelleService via model.Messstelle
@@ -317,13 +323,13 @@ Ext.application({
                     var recr = [];
                     this.each(function(rr) {
                         rec.push(rr.copy());
-                        if (rr.get('isBundesland')) {
+                        if (rr.get('isState')) {
                             recb.push(rr.copy());
                         }
-                        if (rr.get('isLandkreis')) {
+                        if (rr.get('isRuralDist')) {
                             recl.push(rr.copy());
                         }
-                        if (rr.get('isRegbezirk')) {
+                        if (rr.get('isGovDist')) {
                             recr.push(rr.copy());
                         }
                     });
@@ -341,7 +347,7 @@ Ext.application({
             storeId: 'probenehmer',
             proxy: {
                 type: 'rest',
-                url: 'lada-server/rest/probenehmer',
+                url: 'lada-server/rest/sampler',
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
@@ -360,7 +366,7 @@ Ext.application({
             storeId: 'datensatzerzeuger',
             proxy: {
                 type: 'rest',
-                url: 'lada-server/rest/datensatzerzeuger',
+                url: 'lada-server/rest/datasetcreator',
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
@@ -377,7 +383,7 @@ Ext.application({
             storeId: 'messprogrammkategorie',
             proxy: {
                 type: 'rest',
-                url: 'lada-server/rest/messprogrammkategorie',
+                url: 'lada-server/rest/mpgcateg',
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
@@ -510,32 +516,12 @@ Ext.application({
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
-        'Lada.controller.grid.ProbeList',
-        'Lada.controller.grid.MessprogrammeList',
-        'Lada.controller.grid.MessungList',
-        'Lada.controller.form.DatensatzErzeuger',
-        'Lada.controller.form.Probenehmer',
-        'Lada.controller.form.Probe',
-        'Lada.controller.form.Messung',
-        'Lada.controller.form.Ort',
-        'Lada.controller.grid.Probenzusatzwert',
-        'Lada.controller.grid.PKommentar',
-        'Lada.controller.grid.MKommentar',
         'Lada.controller.grid.Messung',
-        'Lada.controller.grid.Messwert',
         'Lada.controller.grid.Ortszuordnung',
-        'Lada.controller.form.Ortszuordnung',
-        'Lada.controller.form.Messprogramm',
-        'Lada.controller.form.MessprogrammKategorie',
-        'Lada.controller.grid.Messmethode',
         'Lada.controller.GridExport',
-        'Lada.controller.grid.DynamicGrid',
-        'Lada.controller.Query',
         'Lada.controller.Global',
         'Lada.controller.Print',
         'Lada.controller.ElanScenario',
-        'Lada.controller.grid.Downloads',
-        'Lada.controller.SetTags',
-        'Lada.controller.form.Tag'
+        'Lada.controller.grid.Downloads'
     ]
 });

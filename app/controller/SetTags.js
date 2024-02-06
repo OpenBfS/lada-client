@@ -10,7 +10,8 @@
 * This is a controller for Tag assignment form
 */
 Ext.define('Lada.controller.SetTags', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.BaseController',
+    alias: 'controller.settags',
 
     init: function() {
         this.control({
@@ -53,16 +54,17 @@ Ext.define('Lada.controller.SetTags', {
         selection.forEach(function(selected) {
             taglist.forEach(function(tag) {
                 if (win.recordType === 'messung') {
-                    payload.push({messungId: selected, tagId: tag});
+                    payload.push({measmId: selected, tagId: tag});
                 } else {
-                    payload.push({probeId: selected, tagId: tag});
+                    payload.push({sampleId: selected, tagId: tag});
                 }
             });
         });
         Ext.Ajax.request({
-            url: 'lada-server/rest/tag/zuordnung' + (isDelete ? '/delete' : ''),
+            url: 'lada-server/rest/tag/taglink' + (isDelete ? '/delete' : ''),
             method: 'POST',
             jsonData: payload,
+            scope: this,
             success: function(response) {
                 var json = Ext.decode(response.responseText);
                 if (json.success) {
@@ -73,7 +75,8 @@ Ext.define('Lada.controller.SetTags', {
                     var successTags = [];
                     json.data.forEach(function(item) {
                         if (!item.success) {
-                            msgs += tagStore.getById(item.data.tagId).get('tag')
+                            msgs += tagStore.getById(item.data.tagId)
+                                .get('name')
                                 + ': ' + i18n.getMsg(item.message) + '<br>';
                         } else {
                             successTags.push(item.data.tagId);
@@ -104,10 +107,7 @@ Ext.define('Lada.controller.SetTags', {
                                   i18n.getMsg(json.message));
                 }
             },
-            failure: function() {
-                Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                              i18n.getMsg('err.msg.generic.body'));
-            }
+            failure: this.handleRequestFailure
         });
     },
 

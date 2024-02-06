@@ -14,7 +14,7 @@ Ext.define('Lada.view.widget.Staat', {
     alias: 'widget.staat',
     requires: ['Lada.store.Staaten'],
     store: null,
-    displayField: 'staat',
+    displayField: 'ctry',
     valueField: 'id',
     // Enable filtering of comboboxes
     autoSelect: false,

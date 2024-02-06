@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.widget.Statuskombi', {
     extend: 'Lada.view.widget.base.TextField',
-    readOnly: true,
     editable: false,
     alias: 'widget.statuskombi',
     layout: 'hbox',
@@ -35,11 +34,10 @@ Ext.define('Lada.view.widget.Statuskombi', {
     initComponent: function() {
         this.textFieldCls = 'status-empty';
         this.callParent(arguments);
-    },
 
-    changebutton: function() {
         var i18n = Lada.getApplication().bundle;
-        var btn = Ext.create('Ext.Button', {
+        this.add({
+            xtype: 'button',
             text: i18n.getMsg('button.changestatus'),
             tooltip: i18n.getMsg('button.changestatus.qtip'),
             action: 'newstatus',
@@ -47,7 +45,6 @@ Ext.define('Lada.view.widget.Statuskombi', {
             disabled: true,
             listeners: this.buttonListener
         });
-        return btn;
     },
 
 
@@ -63,16 +60,16 @@ Ext.define('Lada.view.widget.Statuskombi', {
         this.reset = reset !== undefined ? reset : false;
         this.statusEdit = statusEdit !== undefined ? statusEdit : false;
         var me = this;
-        Ext.ClassManager.get('Lada.model.Status').load(value, {
+        Ext.ClassManager.get('Lada.model.StatusProt').load(value, {
             success: function(record) {
                 var statuskombistore = Ext.data.StoreManager.get('statuskombi');
-                var kombi = statuskombistore.getById(record.data.statusKombi);
-                var text = kombi.get('statusStufe').stufe + ' - ' +
-                        kombi.get('statusWert').wert;
+                var kombi = statuskombistore.getById(record.data.statusMpId);
+                var text = kombi.get('statusLev').lev + ' - ' +
+                        kombi.get('statusVal').val;
 
                 me.currentValue = {
-                    statusStufe: kombi.get('statusStufe'),
-                    statusWert: kombi.get('statusWert')
+                    statusStufe: kombi.get('statusLev'),
+                    statusWert: kombi.get('statusVal')
                 };
                 //Try updating the view
                 try {
@@ -88,16 +85,11 @@ Ext.define('Lada.view.widget.Statuskombi', {
 
             }
         });
-        // instead of overwriting/appending initComponent, add the button at
-        // loading of values
-        var button = this.down('button[action=newstatus]');
-        if (!button) {
-            this.add(this.changebutton());
-        }
     },
 
 
-    /**Checks if the current value is unresetable
+    /**
+     * Checks if the current value is unresetable
      * @return True if state is resetable, else false
      */
     checkResetableState: function() {
@@ -114,21 +106,11 @@ Ext.define('Lada.view.widget.Statuskombi', {
     },
 
     setReadOnly: function(readonly) {
-        var button = this.down('button[action=newstatus]');
-        if (!readonly) {
-            button.setDisabled(false);
-        } else {
-            button.setDisabled(true);
-        }
+        this.down('button[action=newstatus]').setDisabled(readonly);
     },
 
     setResetable: function(resetable) {
-        var button = this.down('button[action=resetstatus]');
-        if (resetable) {
-            button.setDisabled(false);
-        } else {
-            button.setDisabled(true);
-        }
+        this.down('button[action=resetstatus]').setDisabled(!resetable);
     }
 
 });

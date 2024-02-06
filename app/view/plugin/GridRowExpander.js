@@ -120,13 +120,12 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
         var me = this;
 
         var gridConfig = config.gridConfig;
-
+        var parentId = record.get(me.idRow);
         Ext.apply(gridConfig, {
-            recordId: record.get(me.idRow),
             cls: 'row-expander-grid'
         });
         var grid = Ext.create(me.type, gridConfig);
-
+        grid.initData(parentId);
         return grid;
     },
 

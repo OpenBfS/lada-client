@@ -37,7 +37,7 @@ Ext.define('Lada.view.widget.PagingSize', {
                 if (pageStore) {
                     pageStore.setPageSize(newVal);
                 }
-                tb.doRefresh();
+                pageStore.loadPage(1);
             }
         }
     }, {

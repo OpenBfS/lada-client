@@ -12,9 +12,8 @@
 Ext.define('Lada.view.widget.KoordinatenArt', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.koordinatenart',
-    store: 'KoordinatenArt',
     requires: ['Lada.store.KoordinatenArt'],
-    displayField: 'id',
+    displayField: 'name',
     valueField: 'id',
     // Enable filtering of comboboxes
     queryMode: 'local',
@@ -25,9 +24,9 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
     forceSelection: true,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{id} - {koordinatenart}</div></tpl>'),
+            '{id} - {name}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {koordinatenart}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

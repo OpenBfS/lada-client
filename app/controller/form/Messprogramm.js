@@ -10,7 +10,8 @@
  * A Controller for a Messprogramm form
  */
 Ext.define('Lada.controller.form.Messprogramm', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.messprogrammform',
 
     /**
      * Initialize the Controller
@@ -28,7 +29,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             'messprogrammform': {
                 dirtychange: this.dirtyForm,
-                save: this.saveHeadless
+                validitychange: this.dirtyForm
             },
             'messprogrammform button[action=audit]': {
                 click: this.showAuditTrail
@@ -49,7 +50,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 change: this.umweltChanged
             },
             // eslint-disable-next-line max-len
-            'messprogrammform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
+            'messprogrammform reiprogpunktgruppe combobox': {
                 change: this.reiProgpunktGruppeChanged
             },
             'messprogrammform datenbasis combobox': {
@@ -64,13 +65,17 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     copy: function(button) {
         var me = this;
-        var origRecord = button.up('messprogrammform').getRecord();
+
         var pos = button.up('messprogrammform').up().getPosition();
         pos[0] += 10;
         pos[1] += 10;
 
+        var origRecord = button.up('messprogrammform').getRecord();
         var copy = origRecord.copy(null);
         copy.set('id', null);
+        // Associated data are not automatically included in copy
+        copy.sampleSpecifs().add(origRecord.sampleSpecifs().getRange());
+
         copy.save({
             callback: function(rec, op, success) {
                 if (success) {
@@ -86,9 +91,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                             win.setPosition(pos);
                         });
                 } else {
-                    var i18n = Lada.getApplication().bundle;
-                    Ext.Msg.alert(i18n.getMsg('err.messprogramm.copy'),
-                        i18n.getMsg('err.msg.generic.body'));
+                    me.handleServiceFailure(rec, op, 'err.messprogramm.copy');
                 }
             }
         });
@@ -102,9 +105,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var i18n = Lada.getApplication().bundle;
 
         Ext.Ajax.request({
-            url: 'lada-server/rest/ortszuordnungmp',
+            url: Lada.model.LadaBase.schema.getUrlPrefix()
+                + Lada.model.GeolocatMpg.entityName.toLowerCase(),
             params: {
-                messprogrammId: mp.get('id')
+                mpgId: mp.get('id')
             },
             method: 'GET',
             success: function(response) {
@@ -117,19 +121,19 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 }
 
                 for (var i = 0; i < ortszuordnungArr.length; i++) {
-                    var copy = Ext.create('Lada.model.OrtszuordnungMp',
+                    var copy = Ext.create('Lada.model.GeolocatMpg',
                         ortszuordnungArr[i]);
                     copy.set('copyOf', copy.get('id'));
                     copy.set('id', null);
-                    copy.set('messprogrammId', mpCopy.get('id'));
+                    copy.set('mpgId', mpCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
                         // eslint-disable-next-line no-loop-func
                         callback: function(rec, op, success) {
                             savedOZ++;
                             if (!success) {
-                                var responseObj2 = Ext.decode(
-                                    op.getResponse().responseText);
+                                var responseObj2 = me.handleServiceFailure(
+                                    rec, op, null, true);
                                 var errString = i18n.getMsg(
                                     'err.ortszuordnung.copy.text',
                                     rec.get('copyOf'),
@@ -151,6 +155,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         }
                     });
                 }
+            },
+            failure: function(response, opts) {
+                me.handleRequestFailure(
+                    response, opts, 'err.ortszuordnung.tile');
             }
         });
     },
@@ -160,11 +168,13 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var fetchedMmt = 0;
         var saveErrors = null;
         var i18n = Lada.getApplication().bundle;
+        var me = this;
 
         Ext.Ajax.request({
-            url: 'lada-server/rest/messprogrammmmt',
+            url: Lada.model.LadaBase.schema.getUrlPrefix()
+                + Lada.model.MpgMmtMp.entityName.toLowerCase(),
             params: {
-                messprogrammId: mp.get('id')
+                mpgId: mp.get('id')
             },
             method: 'GET',
             success: function(response) {
@@ -178,19 +188,19 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 }
 
                 for (var i = 0; i < mmtArr.length; i++) {
-                    var copy = Ext.create('Lada.model.MmtMessprogramm',
+                    var copy = Ext.create('Lada.model.MpgMmtMp',
                         mmtArr[i]);
                     copy.set('copyOf', copy.get('id'));
                     copy.set('id', null);
-                    copy.set('messprogrammId', mpCopy.get('id'));
+                    copy.set('mpgId', mpCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
                         // eslint-disable-next-line no-loop-func
                         callback: function(rec, op, success) {
                             savedMmt++;
                             if (!success) {
-                                var responseObj2 = Ext.decode(
-                                    op.getResponse().responseText);
+                                var responseObj2 = me.handleServiceFailure(
+                                    rec, op, null, true);
                                 var errString = i18n.getMsg(
                                     'err.mmt.copy.text', rec.get('copyOf'),
                                     i18n.getMsg(responseObj2.message));
@@ -208,6 +218,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         }
                     });
                 }
+            },
+            failure: function(response, opts) {
+                me.handleRequestFailure(response, opts, 'err.mmt.copy');
             }
         });
     },
@@ -233,11 +246,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var intervall = form.down('probenintervall').down('combobox')
             .getValue();
         if (intervall === 'J') {
-            if (field.getName() === 'gueltigVon') {
-                form.down('[name=teilintervallVon]')
+            if (field.getName() === 'validStartDate') {
+                form.down('[name=samplePdStartDate]')
                     .setValue(field.getValue());
             } else {
-                form.down('[name=teilintervallBis]')
+                form.down('[name=samplePdEndDate]')
                     .setValue(field.getValue());
             }
         }
@@ -250,30 +263,28 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     save: function(button) {
         var formPanel = button.up('form');
-        var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
+
+        // Update record with values changed in the form
+        record.set(formPanel.getForm().getFieldValues(true));
         if (record.phantom) {
             record.set('id', null);
         }
+
         //Update selected ProbeZusatz objects
-        var pzwField = formPanel.down('tagfield[name=probenZusatzs]');
+        var pzwField = formPanel.down('tagfield[name=sampleSpecifs]');
         var pzwStore = Ext.getStore('probenzusaetze');
         var selectedPZW = pzwField.getValue();
         var selectObjects = [];
         Ext.Array.forEach(selectedPZW, function(item) {
             selectObjects.push(pzwStore.getById(item));
         });
-        var asocStore = record.probenZusatzs();
+        var asocStore = record.sampleSpecifs();
         asocStore.clearData();
         if (selectObjects.length > 0) {
             asocStore.add(selectObjects);
         }
+
         record.save({
             success: function(rec, response) {
                 var json = Ext.decode(response.getResponse().responseText);
@@ -295,96 +306,25 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     button.up('toolbar').down('button[action=audit]')
                         .setDisabled(false);
                 }
-            },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(newRecord);
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.clearMessages();
-                        formPanel.setMessages(json.errors, json.warnings);
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-            }
-        });
-    },
 
-    /**
-     * Saves the current form content without manipulating the gui.
-     */
-    saveHeadless: function(panel) {
-        var formPanel = panel;
-        var data = formPanel.getForm().getFieldValues(false);
-        var record = formPanel.getForm().getRecord();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
-        if (record.phantom) {
-            record.set('id', null);
-        }
-        record.save({
-            success: function(newRecord, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
+                var win = button.up('window');
+                if (win.closeRequested) {
+                    win.doClose();
+                } else {
+                    formPanel.setRecord(rec);
+                    formPanel.setMessages(
+                        rec.get('errors'),
+                        rec.get('warnings'),
+                        rec.get('notifications'));
+
+                    win.record = rec;
+                    win.enableChildren();
+                    win.down('button[name=reload]').setDisabled(false);
                 }
             },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(rec);
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-            }
+            failure: this.handleSaveFailure
         });
     },
-
 
     /**
       * The discard function resets the form
@@ -400,35 +340,26 @@ Ext.define('Lada.controller.form.Messprogramm', {
         formPanel.getForm().owner.populateIntervall(record);
         formPanel.setMediaDesk(record);
 
-        var field = formPanel.down('tagfield[name=probenZusatzs]');
-        field.value = record.probenZusatzs().getData().items;
-        formPanel.filterProbenZusatzs(record.get('umwId'));
+        var field = formPanel.down('tagfield[name=sampleSpecifs]');
+        field.value = record.sampleSpecifs().getData().items;
+        formPanel.filterProbenZusatzs(record.get('envMediumId'));
     },
 
     /**
-      * The dirtyForm function enables or disables the save and discard
-      * button which are present in the toolbar of the form.
-      * The Buttons are only active if the content of the form was altered
-      * (the form is dirty).
+      * The dirtyForm function enables or disables the
+      * buttons which are present in the toolbar of the form.
       */
-    dirtyForm: function(form, dirty) {
-        if (!form.getRecord().get('readonly') && dirty) {
-            form.owner.down('button[action=save]').setDisabled(false);
-            form.owner.down('button[action=discard]').setDisabled(false);
-        } else {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=discard]').setDisabled(true);
-        }
-        if (form.getRecord().phantom || dirty ||
-            form.getRecord().get('readonly') === true) {
-            form.owner.up('messprogramm').down(
-                'button[action=generateproben]').setDisabled(true);
-            form.owner.down('button[action=copy]').setDisabled(true);
-        } else {
-            form.owner.up('messprogramm').down(
-                'button[action=generateproben]').setDisabled(false);
-            form.owner.down('button[action=copy]').setDisabled(false);
-        }
+    dirtyForm: function(form) {
+        var enableForm = !form.getRecord().get('readonly') && form.isDirty();
+        form.owner.down('button[action=save]').setDisabled(
+            !enableForm || !form.isValid());
+        form.owner.down('button[action=discard]').setDisabled(!enableForm);
+
+        var disableActions = form.getRecord().phantom
+            || form.isDirty() || form.getRecord().get('readonly');
+        form.owner.up('messprogramm').down(
+            'button[action=generateproben]').setDisabled(disableActions);
+        form.owner.down('button[action=copy]').setDisabled(disableActions);
     },
 
     /**
@@ -456,10 +387,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     deskriptorSelect: function(field, records) {
-        field.up('messprogrammform').down('umwelt[name="umwId"]').clearValue();
+        field.up('messprogrammform').down('umwelt[name="envMediumId"]')
+            .clearValue();
         var desk = field.up('deskriptor');
         var media = field.up('messprogrammform')
-            .down('textfield[name="mediaDesk"]');
+            .down('textfield[name="envDescripDisplay"]');
         var current = media.getValue().split(' ');
         var value;
         if (current.length < 12) {
@@ -467,10 +399,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 if (i === 0) {
                     current.push('D:');
                 } else if (i === desk.layer + 1) {
-                    if (records.get('sn') < 10) {
-                        value = '0' + records.get('sn');
+                    if (records.get('levVal') < 10) {
+                        value = '0' + records.get('levVal');
                     } else {
-                        value = records.get('sn');
+                        value = records.get('levVal');
                     }
                     current.push(value);
                 } else {
@@ -478,10 +410,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 }
             }
         } else {
-            if (records.get('sn') < 10) {
-                value = '0' + records.get('sn');
+            if (records.get('levVal') < 10) {
+                value = '0' + records.get('levVal');
             } else {
-                value = records.get('sn');
+                value = records.get('levVal');
             }
             current[desk.layer + 1] = value;
             if (desk.layer < 2) {
@@ -500,29 +432,29 @@ Ext.define('Lada.controller.form.Messprogramm', {
             current.splice(0, 1);
         }
         var mediatext = field.up('messprogrammform')
-            .down('textfield[name="media"]');
+            .down('textfield[name="envDescripName"]');
 
-        if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
+        if ( (desk.layer === 0 ) && (records.get('levVal') === 0) ) {
             media.setValue('');
             mediatext.setValue('');
         } else {
             if ( current[1] === '01') {
                 if ( (current[4] !== '00') && (desk.layer === 3) ) {
-                    mediatext.setValue(records.data.beschreibung);
+                    mediatext.setValue(records.data.name);
                 } else if ( (current[3] !== '00') && (desk.layer === 2) ) {
-                    mediatext.setValue(records.data.beschreibung);
+                    mediatext.setValue(records.data.name);
                 } else if ( (current[2] !== '00') && (desk.layer === 1) ) {
-                    mediatext.setValue(records.data.beschreibung);
+                    mediatext.setValue(records.data.name);
                 } else if ( (current[1] !== '00') && (desk.layer === 0 )) {
-                    mediatext.setValue(records.data.beschreibung);
+                    mediatext.setValue(records.data.name);
                 }
             }
 
             if ( current[1] !== '01') {
                 if ((current[2] !== '00') && (desk.layer === 1 )) {
-                    mediatext.setValue(records.data.beschreibung);
+                    mediatext.setValue(records.data.name);
                 } else if ((current[1] !== '00') && (desk.layer === 0 )) {
-                    mediatext.setValue(records.data.beschreibung);
+                    mediatext.setValue(records.data.name);
                 }
             }
         }
@@ -541,7 +473,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     reiProgpunktGruppeChanged: function(combo) {
         // avoids endless loop
-        if (combo.name !== 'reiProgpunktGrpId') {
+        if (combo.name !== 'reiAgGrId') {
             return true;
         }
         //Check if reiprogpunktgruppe widget is contained in a messprogrammform
@@ -557,21 +489,21 @@ Ext.define('Lada.controller.form.Messprogramm', {
             return true;
         }
         var umweltStore = umweltCombo.store;
-        var reiId = combo.getModelData().reiProgpunktGrpId;
-        umweltStore.proxy.extraParams = {};
+        var reiId = combo.getModelData().reiAgGrId;
+        var params = {};
         if (reiId || reiId === 0) {
-            umweltStore.proxy.extraParams.reiprogpunktgruppe = reiId;
+            params.reiAgGrId = reiId;
         }
-        umweltStore.load();
+        umweltStore.load({params: params});
     },
 
     /**
-     * Called if umweltBereich value has changed. filters reiProgpunktgruppe
-     * values according to the new value.
+     * Called if umweltBereich value has changed. Filters other comboboxes
+     * according to the new value.
      */
     umweltChanged: function(combo) {
         // avoids endless loop
-        if (combo.name !== 'umwId') {
+        if (combo.name !== 'envMediumId') {
             return true;
         }
         //Check if umwelt widget is contained in a messprogrammform
@@ -585,12 +517,12 @@ Ext.define('Lada.controller.form.Messprogramm', {
             return true;
         }
         var reiStore = reiCombo.store;
-        reiStore.proxy.extraParams = {};
-        var umwId = combo.getModelData().umwId;
+        var reiStoreParams = {};
+        var umwId = combo.getModelData().envMediumId;
         if (umwId || umwId === 0) {
-            reiStore.proxy.extraParams.umwelt = umwId;
+            reiStoreParams.envMediumId = umwId;
         }
-        reiStore.load();
+        reiStore.load({params: reiStoreParams});
 
         var masseinheitCombo = formPanel.down('messeinheit').down('combobox');
         var masseinheitStore = masseinheitCombo.store;
@@ -603,14 +535,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var umwStore = formPanel.down('umwelt').down('combobox').store;
         umwStore.getModel().load(umwId, {
             success: function(rec) {
-                var defaultMehId = rec.get('mehId');
-                var secMehId = rec.get('secMehId');
+                var defaultMehId = rec.get('unit1');
+                var secMehId = rec.get('unit2');
                 var params = {};
                 if (defaultMehId) {
-                    params['mehId'] = defaultMehId;
+                    params['measUnitId'] = defaultMehId;
                 }
                 if (secMehId) {
-                    params['secMehId'] = secMehId;
+                    params['secMeasUnitId'] = secMehId;
                 }
                 masseinheitStore.load({
                     scope: this,
@@ -632,15 +564,15 @@ Ext.define('Lada.controller.form.Messprogramm', {
             .down('container[name=reiComboContainer]');
         if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
             reiComboContainer.down(
-                'reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
-            reiComboContainer.down('ktagruppe[name=ktaGruppeId]').show();
+                'reiprogpunktgruppe[name=reiAgGrId]').setHidden(false);
+            reiComboContainer.down('ktagruppe[name=nuclFacilGrId]').show();
         } else {
             var reiCombo = reiComboContainer.down(
-                'reiprogpunktgruppe[name=reiProgpunktGrpId]');
+                'reiprogpunktgruppe[name=reiAgGrId]');
             reiCombo.setHidden(true);
             reiCombo.setValue(null);
             var ktaCombo = reiComboContainer.down(
-                'ktagruppe[name=ktaGruppeId]');
+                'ktagruppe[name=nuclFacilGrId]');
             ktaCombo.hide();
             ktaCombo.setValue(null);
         }

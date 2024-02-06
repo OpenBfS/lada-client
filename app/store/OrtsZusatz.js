@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.OrtsZusatz', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.OrtsZusatz',
+    model: 'Lada.model.Poi',
     sorters: [
         {
             property: 'ozsId',

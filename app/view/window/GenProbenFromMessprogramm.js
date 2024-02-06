@@ -14,9 +14,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     alias: 'widget.genpfm',
 
     requires: [
+        'Lada.controller.GenProbenFromMessprogramm',
         'Lada.store.Proben',
         'Lada.store.Umwelt'
     ],
+    controller: 'genprobenfrommessprogramm',
 
     collapsible: true,
     maximizable: true,
@@ -59,137 +61,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             handler: this.close
         }, {
             text: i18n.getMsg('generateproben'),
-            scope: this,
-            handler: function() {
-                var me = this;
-                var startDate = new Date(
-                    me.down('datefield[name=start]').getValue());
-                var startUTC = Date.UTC(
-                    startDate.getFullYear(),
-                    startDate.getMonth(),
-                    startDate.getDate());
-                this.startUTC = startDate;
-                var endDate = new Date(
-                    me.down('datefield[name=end]').getValue());
-                var endUTC = Date.UTC(
-                    endDate.getFullYear(),
-                    endDate.getMonth(),
-                    endDate.getDate());
-                this.endUTC = endUTC;
-                var dryrun = me.down('checkbox[name=dryrun]').getValue();
-                this.dryrun = dryrun;
-                var results = [];
-                this.removeAll();
-                this.down('toolbar').removeAll();
-                this.down('toolbar').add({
-                    xtype: 'button',
-                    text: i18n.getMsg('close'),
-                    handler: this.close,
-                    disabled: true,
-                    scope: this
-                });
-                this.add({
-                    xtype: 'panel',
-                    border: false,
-                    layout: 'fit',
-                    margin: '5, 5, 0, 5',
-                    html: ''
-                });
-                this.down('panel').setLoading(true);
-                var reqJsondata = {
-                    ids: me.ids,
-                    start: startUTC,
-                    end: endUTC,
-                    dryrun: dryrun
-                };
-                Ext.Ajax.request({
-                    url: 'lada-server/rest/probe/messprogramm',
-                    method: 'POST',
-                    timeout: 2 * 60 * 1000,
-                    jsonData: reqJsondata,
-                    success: function(response) {
-                        var panel = me.down('panel');
-                        panel.setLoading(false);
-                        var json = Ext.JSON.decode(response.responseText);
-                        if (reqJsondata.dryrun) {
-                            panel.setHtml(panel.html
-                                + '<br>'
-                                + i18n.getMsg('gpfm.window.test.result')
-                                + '<br>'
-                            );
-                        }
-                        if (json.success && json.data.proben) {
-                            // Reload tag store to have generated tag available
-                            var store = Ext.data.StoreManager.get('tags');
-                            if (store) {
-                                store.reload();
-                            }
-
-                            // Process response data
-                            Ext.Object.each(json.data.proben,
-                                function(key, result) {
-                                    if (result.success) {
-                                        results.push(result);
-                                        var newRes = result.data.filter(
-                                            function(r) {
-                                                return r.found !== true;
-                                            });
-                                        var foundRes = result.data.filter(
-                                            function(r) {
-                                                return r.found === true;
-                                            });
-                                        panel.setHtml(
-                                            panel.html +
-                                            '<br>' +
-                                            i18n.getMsg(
-                                                'gpfm.generated.success',
-                                                key)
-                                            + ':<br>'
-                                            + '<ul><li>'
-                                            + i18n.getMsg(
-                                                'gpfm.generated.found',
-                                                foundRes.length)
-                                            + ' </li><li>'
-                                            + newRes.length
-                                            + ' Probe(n) erzeugt</li></ul>'
-                                        );
-                                    } else {
-                                        panel.setHtml(panel.html +
-                                                '<br>' +
-                                                i18n.getMsg(
-                                                    'gpfm.generated.error',
-                                                    key,
-                                                    i18n.getMsg(
-                                                        result.message)));
-                                    }
-                                });
-                        }
-                        me.down('toolbar').down('button').setDisabled(false);
-                        me.processResults(
-                            results,
-                            json.data.tag ? json.data.tag : '',
-                            reqJsondata);
-                    },
-                    failure: function(response) {
-                        var panel = me.down('panel');
-                        panel.setLoading(false);
-                        if (reqJsondata.dryrun) {
-                            panel.setHtml(panel.html
-                                + '<br>'
-                                + i18n.getMsg('gpfm.window.test.result')
-                                + '<br>'
-                            );
-                        }
-                        panel.setHtml(
-                            i18n.getMsg(
-                                'gpfm.generated.requestfail',
-                                response.status,
-                                response.statusText));
-                        me.down('toolbar').down('button').setDisabled(false);
-
-                    }
-                });
-            }
+            handler: 'generateSamples'
         }];
         this.on({
             activate: function() {
@@ -205,9 +77,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             }
         });
 
-        // InitialConfig is the config object passed to the constructor on
-        // creation of this window. We need to pass it throuh to the form as
-        // we need the "Id" param to load the correct item.
         this.items = [{
             border: false,
             width: 340,
@@ -262,36 +131,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
     /**
      * @private
-     * Handle results of Probe creation from Messprogramm
-     * @param results Array of results object
-     * @param genTagName Generated tag name
-     * @param request the original request used
-     */
-    processResults: function(results, genTagName, request) {
-        var data = [];
-        for (var r in results) {
-            var result = results[r];
-            if (result === null) {
-                continue;
-            }
-            data = data.concat(result.data);
-        }
-        if (data.length === 0) {
-            return;
-        }
-        var umwStore = Ext.create('Lada.store.Umwelt', {
-            asynchronousLoad: false
-        });
-        var me = this;
-        umwStore.load({
-            callback: function() {
-                me.genResultWindow(umwStore, data, genTagName, request);
-            }
-        });
-    },
-
-    /**
-     * @private
      * Create generation result window
      * @param umwStore Umwelt store instance
      * @param data Generated probe instances
@@ -302,7 +141,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     genResultWindow: function(umwStore, data, genTagName, request) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        var dbIdentifier = 'externeProbeId';
+        var dbIdentifier = 'extId';
         var newStore = Ext.create('Lada.store.Proben', {data: data});
         var hidebuttons = ['genericadd', 'assigntags', 'gridexport'];
         if (request.dryrun) {
@@ -396,7 +235,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     header: i18n.getMsg('extProbeId'),
-                    dataIndex: 'externeProbeId'
+                    dataIndex: 'extId'
                 }, {
                     header: i18n.getMsg('gpfm.pepstatus'),
                     dataIndex: 'found',
@@ -408,7 +247,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     header: i18n.getMsg('mstId'),
-                    dataIndex: 'mstId',
+                    dataIndex: 'measFacilId',
                     renderer: function(value) {
                         var r = '';
                         if (!value || value === '') {
@@ -417,13 +256,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var store = Ext.data.StoreManager.get('messstellen');
                         var record = store.getById(value);
                         if (record) {
-                            r = record.get('messStelle');
+                            r = record.get('name');
                         }
                         return r;
                     }
                 }, {
-                    header: i18n.getMsg('datenbasisId'),
-                    dataIndex: 'datenbasisId',
+                    header: i18n.getMsg('regulationId'),
+                    dataIndex: 'regulationId',
                     renderer: function(value) {
                         var r = '';
                         if (!value || value === '') {
@@ -432,13 +271,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var store = Ext.data.StoreManager.get('datenbasis');
                         var record = store.getById(value);
                         if (record) {
-                            r = record.get('datenbasis');
+                            r = record.get('name');
                         }
                         return r;
                     }
                 }, {
-                    header: i18n.getMsg('baId'),
-                    dataIndex: 'baId',
+                    header: i18n.getMsg('oprModeId'),
+                    dataIndex: 'oprModeId',
                     renderer: function(value) {
                         var r = '';
                         if (!value || value === '') {
@@ -454,8 +293,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         return r;
                     }
                 }, {
-                    header: i18n.getMsg('probenartId'),
-                    dataIndex: 'probenartId',
+                    header: i18n.getMsg('sampleMethId'),
+                    dataIndex: 'sampleMethId',
                     renderer: function(value) {
                         var r = '';
                         if (!value || value === '') {
@@ -464,42 +303,40 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var store = Ext.data.StoreManager.get('probenarten');
                         var record = store.getById(value);
                         if (record) {
-                            r = record.get('probenart');
+                            r = record.get('extId');
                         }
                         return r;
                     }
                 }, {
+                    xtype: 'datecolumn',
                     header: i18n.getMsg('sollVon'),
-                    dataIndex: 'solldatumBeginn',
+                    dataIndex: 'schedStartDate',
                     renderer: function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        return Lada.util.Date.formatTimestamp(
-                            value, 'd.m.Y', true
-                        );
+                        var dt = '';
+                        var format = 'd.m.Y';
+                        dt = Lada.util.Date.formatTimestamp(value, format, true);
+                        return dt;
                     }
                 }, {
+                    xtype: 'datecolumn',
                     header: i18n.getMsg('sollBis'),
-                    dataIndex: 'solldatumEnde',
+                    dataIndex: 'schedEndDate',
                     renderer: function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        return Lada.util.Date.formatTimestamp(
-                            value, 'd.m.Y', true
-                        );
+                        var dt = '';
+                        var format = 'd.m.Y';
+                        dt = Lada.util.Date.formatTimestamp(value, format, true);
+                        return dt;
                     }
                 }, {
                     header: i18n.getMsg('messprogramm.form.fieldset.title'),
-                    dataIndex: 'mprId'
+                    dataIndex: 'mpgId'
                 }, {
-                    header: i18n.getMsg('mediaDesk'),
-                    dataIndex: 'mediaDesk'
+                    header: i18n.getMsg('envDescripDisplay'),
+                    dataIndex: 'envDescripDisplay'
                 }, {
                     //TODO: load description
-                    header: i18n.getMsg('umwId'),
-                    dataIndex: 'umwId',
+                    header: i18n.getMsg('envMediumId'),
+                    dataIndex: 'envMediumId',
                     renderer: function(value) {
                         if (!value) {
                             return '';
@@ -507,7 +344,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var store = umwStore;
                         var model = store.getById(value);
                         if (model) {
-                            return value + ' - ' + model.get('umweltBereich');
+                            return value + ' - ' + model.get('name');
                         } else {
                             return value;
                         }
@@ -539,7 +376,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     header: i18n.getMsg('probenehmer'),
-                    dataIndex: 'probeNehmerId'
+                    dataIndex: 'samplerId'
                 }],
                 plugins: request.dryrun ? false : Ext.create(
                     'Lada.view.plugin.GridRowExpander', {
@@ -593,8 +430,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         }
         resultHtml += i18n.getMsg(
             'gpfm.window.result.period',
-            Lada.util.Date.formatTimestamp(request.start, 'd.m.Y H:i', true),
-            Lada.util.Date.formatTimestamp(request.end, 'd.m.Y H:i', true)
+            Lada.util.Date.formatTimestamp(request.start, 'd.m.Y', true),
+            Lada.util.Date.formatTimestamp(request.end, 'd.m.Y', true)
         );
         resultHtml += '<br>';
         if (genTagName.length !== 0) {

@@ -14,6 +14,7 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
     alias: 'widget.datensatzerzeugeredit',
 
     requires: [
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.form.DatensatzErzeuger'
     ],
 
@@ -42,10 +43,6 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
             }
         });
 
-        // InitialConfig is the config object passed to the constructor on
-        // creation of this window. We need to pass it throuh to the form as
-        // we need the "modelId" param to load the correct item.
-
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -71,9 +68,9 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
-            handler: this.handleBeforeClose
+            handler: this.close
         }];
-        this.modelClass = Lada.model.DatensatzErzeuger;
+        this.modelClass = Lada.model.DatasetCreator;
         this.callParent(arguments);
         if (this.record) {
             this.initData(this.record);
@@ -83,6 +80,10 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
     initData: function(record) {
         this.record = record;
         this.initializeUi();
+        this.down('datensatzerzeugerform').setMessages(
+            record.get('errors'),
+            record.get('warnings'),
+            record.get('notifications'));
     },
 
     initializeUi: function() {
@@ -95,68 +96,5 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
                 record: this.record
             }]
         }]);
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to set a message.
-     * @param errors These Errors shall be shown
-     * @param warnings These Warning shall be shown
-     */
-    setMessages: function(errors, warnings) {
-        this.down('datensatzerzeugerform').setMessages(errors, warnings);
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to clear their
-     * messages.
-     */
-    clearMessages: function() {
-        this.down('datensatzerzeugerform').clearMessages();
-    },
-
-    /**
-     * Called before closing the form window. Shows confirmation dialogue
-     * window to save the form if dirty*/
-    handleBeforeClose: function() {
-        var me = this;
-        var i18n = Lada.getApplication().bundle;
-        var item = me.down('form');
-        if (item && item.isDirty()) {
-            var confWin = Ext.create('Ext.window.Window', {
-                title: i18n.getMsg('form.saveonclosetitle'),
-                modal: true,
-                layout: 'vbox',
-                items: [{
-                    xtype: 'container',
-                    html: i18n.getMsg('form.saveonclosequestion'),
-                    margin: '10, 5, 5, 5'
-                }, {
-                    xtype: 'container',
-                    layout: 'hbox',
-                    items: [{
-                        xtype: 'button',
-                        text: i18n.getMsg('form.yes'),
-                        margin: '5, 0, 5, 5',
-
-                        handler: function() {
-                            me.down('form').fireEvent('save', me.down('form'));
-                            confWin.close();
-                        }
-                    }, {
-                        xtype: 'button',
-                        text: i18n.getMsg('form.no'),
-                        margin: '5, 5, 5, 5',
-
-                        handler: function() {
-                            confWin.close();
-                        }
-                    }]
-                }]
-            });
-            confWin.on('close', me.close, me);
-            confWin.show();
-        } else {
-            me.close();
-        }
     }
 });

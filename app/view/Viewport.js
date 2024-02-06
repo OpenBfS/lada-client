@@ -18,6 +18,7 @@ Ext.define('Lada.view.Viewport', {
     requires: [
         'Lada.view.panel.QueryPanel',
         'Lada.view.panel.FileUpload',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.widget.ElanScenarioButton'
     ],
     layout: 'fit',

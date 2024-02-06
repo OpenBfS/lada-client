@@ -11,5 +11,5 @@
  */
 Ext.define('Lada.store.GridColumnValue', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.GridColumnValue'
+    model: 'Lada.model.GridColConf'
 });

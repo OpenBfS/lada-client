@@ -103,7 +103,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var parent = parentWin.record;
         // parent is either probe or messprogramm.
         var parentisMp = false;
-        if (parent.data.hauptprobenNr === undefined) {
+        if (parent.data.mainSampleId === undefined) {
             parentisMp = true;
         }
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
@@ -125,7 +125,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     add: function(button) {
         var parent = button.up('window').record;
         var parentisMp = false;
-        if (parent.data.hauptprobenNr === undefined) {
+        if (parent.data.mainSampleId === undefined) {
             parentisMp = true;
         }
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
@@ -156,7 +156,12 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 if (btn === 'yes') {
                     selection.erase({
                         success: function() {
-                            grid.store.reload();
+                            button.up('window').initData();
+                            var parentGrid = Ext.ComponentQuery.query(
+                                'dynamicgrid');
+                            if (parentGrid.length === 1) {
+                                parentGrid[0].reload();
+                            }
                         },
                         failure: function(request, response) {
                             if (response.error) {
@@ -196,13 +201,14 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     createort: function(button) {
         var win = button.up('ortszuordnungwindow');
         var ort = Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort', {
-                ortTyp: 1,
-                netzbetreiberId: win.netzbetreiberId,
+            record: Ext.create('Lada.model.Site', {
+                siteClassId: 1,
+                networkId: win.netzbetreiberId,
                 plausibleReferenceCount: 0,
                 referenceCountMp: 0,
                 referenceCount: 0}),
-            parentWindow: win
+            parentWindow: win,
+            setOzOnComplete: true
         });
         win.childWindows.push(ort);
         ort.show();
@@ -213,7 +219,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     frommap: function(button) {
         var map = button.up('ortszuordnungwindow').down('map');
-        var record = Ext.create('Lada.model.Ort');
+        var record = Ext.create('Lada.model.Site');
         record.set('plausibleReferenceCount', 0);
         record.set('referenceCountMp', 0);
         record.set('referenceCount', 0);
@@ -267,7 +273,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
         verwaltungseinheiten.clearFilter(true);
         verwaltungseinheiten.filter({
-            property: 'bezeichnung',
+            property: 'name',
             anyMatch: true,
             value: filter,
             caseSensitive: false
@@ -277,7 +283,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
 
         staaten.filter({
-            property: 'staat',
+            property: 'ctry',
             anyMatch: true,
             value: filter,
             caseSensitive: false
@@ -300,14 +306,14 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     selectedVerwaltungseinheit: function(grid, record) {
         var win = grid.up('ortszuordnungwindow');
         Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort', {
-                netzbetreiberId: win.netzbetreiberId,
-                gemId: record.get('id'),
-                ortId: record.get('id'),
-                kurztext: record.get('bezeichnung'),
-                langtext: record.get('bezeichnung'),
-                berichtstext: record.get('bezeichnung'),
-                ortTyp: 4
+            record: Ext.create('Lada.model.Site', {
+                networkId: win.netzbetreiberId,
+                adminUnitId: record.get('id'),
+                extId: record.get('id'),
+                shortText: record.get('name'),
+                longText: record.get('name'),
+                reiReportText: record.get('name'),
+                siteClassId: 4
             }),
             parentWindow: win,
             setOzOnComplete: true
@@ -322,16 +328,16 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     selectedStaat: function(grid, record) {
         var win = grid.up('ortszuordnungwindow');
         Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort', {
-                netzbetreiberId: win.netzbetreiberId,
-                staatId: record.get('id'),
-                ortId: 'STAAT_' + record.get('id'),
-                kurztext: ((record.get('staatIso') === null) ?
+            record: Ext.create('Lada.model.Site', {
+                networkId: win.netzbetreiberId,
+                stateId: record.get('id'),
+                extId: 'STAAT_' + record.get('id'),
+                shortText: ((record.get('iso3166') === null) ?
                     'STAAT_' + record.get('id') :
-                    'STAAT_' + record.get('staatIso')),
-                langtext: record.get('staat'),
-                berichtstext: record.get('staat'),
-                ortTyp: 5
+                    'STAAT_' + record.get('iso3166')),
+                longText: record.get('ctry'),
+                reiReportText: record.get('ctry'),
+                siteClassId: 5
             }),
             parentWindow: win,
             setOzOnComplete: true
@@ -368,33 +374,29 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var netzfilter = null;
         var mst_store = Ext.data.StoreManager.get('messstellen');
         if (ozw.probe) {
-            netzfilter = ozw.probe.get('mstId');
+            netzfilter = ozw.probe.get('measFacilId');
 
         } else if (ozw.messprogramm) {
-            netzfilter = ozw.messprogramm.get('mstId');
+            netzfilter = ozw.messprogramm.get('measFacilId');
         }
         var extraParams = {};
         if (netzfilter !== null) {
             var item_mst = mst_store.findRecord(
                 'id', netzfilter, false, false, false, true);
-            var nid = item_mst.get('netzbetreiberId');
+            var nid = item_mst.get('networkId');
             if (nid !== null) {
-                extraParams.netzbetreiberId = nid;
+                extraParams.networkId = nid;
             }
         }
         if (filterstring) {
             extraParams.search = filterstring;
         }
         ozw.ortstore.proxy.extraParams = extraParams;
-        ozw.ortstore.load({
+        ozw.ortstore.loadPage(1, {
             scope: this,
             callback: function() {
-                var toolbar = ozw.down('tabpanel').down(
-                    'ortstammdatengrid').down('pagingtoolbar');
-                this.ortefilter = filterstring || null;
                 ortgrid.setStore(ozw.ortstore);
                 ozw.onStoreChanged();
-                toolbar.doRefresh();
             }
         });
     },

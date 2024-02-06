@@ -11,5 +11,5 @@
  */
 Ext.define('Lada.store.DatensatzErzeuger', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.DatensatzErzeuger'
+    model: 'Lada.model.DatasetCreator'
 });

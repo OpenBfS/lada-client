@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.StatusKombi', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.StatusKombi',
+    model: 'Lada.model.StatusMp',
     autoLoad: false
 });
 

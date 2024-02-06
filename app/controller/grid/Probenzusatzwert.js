@@ -10,7 +10,8 @@
  * This is a controller for a grid of Probenzusatzwert
  */
 Ext.define('Lada.controller.grid.Probenzusatzwert', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.grid.BaseGridController',
+    alias: 'controller.probenzusatzwertgrid',
 
     /**
      * Initialize the Controller with
@@ -45,34 +46,13 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
             context.record.set('id', null);
         }
         context.record.save({
+            scope: this,
             success: function() {
                 context.grid.getSelectionModel().clearSelections();
-                context.grid.store.reload();
                 context.grid.up('window').initData();
             },
             failure: function(record, response) {
-                var i18n = Lada.getApplication().bundle;
-                var json = null;
-                if (response.getResponse()) {
-                    json = response.getResponse().responseText;
-                }
-                if (json) {
-                    if (json.message) {
-                        Ext.Msg.alert(
-                            i18n.getMsg('err.msg.save.title')
-                                + ' #'
-                                + json.message,
-                            i18n.getMsg(json.message));
-                    } else {
-                        Ext.Msg.alert(
-                            i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
-                    }
-                } else {
-                    Ext.Msg.alert(
-                        i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.response.body'));
-                }
+                this.handleSaveFailure(record, response, context.record);
             }
         });
     },
@@ -91,8 +71,8 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
      * This function adds a new row to add a Probenzusatzwert
      */
     add: function(button) {
-        var record = Ext.create('Lada.model.Zusatzwert', {
-            probeId: button.up('probenzusatzwertgrid').recordId
+        var record = Ext.create('Lada.model.SampleSpecifMeasVal', {
+            sampleId: button.up('probenzusatzwertgrid').getParentRecordId()
         });
         //Remove generated id id to prevent sending invalid ids to the server
         record.set('id', null);
@@ -148,11 +128,11 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
     select: function(editor, record) {
         editor.up().down('selectabledisplayfield').setValue(record.get('id'));
         var mehid = Ext.data.StoreManager.get('messeinheiten').findRecord(
-            'id', record.get('messEinheitId'), 0, false, false, true);
+            'id', record.get('unitId'), 0, false, false, true);
         if (!mehid) {
             editor.up().getRefItems()[4].setValue('');
         } else {
-            editor.up().getRefItems()[4].setValue(mehid.get('einheit'));
+            editor.up().getRefItems()[4].setValue(mehid.get('unitSymbol'));
         }
     }
 });

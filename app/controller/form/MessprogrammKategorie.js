@@ -10,7 +10,8 @@
  * This is a controller for MessprogrammKategorie Stammdaten forms
  */
 Ext.define('Lada.controller.form.MessprogrammKategorie', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.mprkatform',
 
     init: function() {
         this.control({
@@ -21,9 +22,9 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                 click: this.discard
             },
             'mprkatform': {
-                dirtychange: this.checkCommitEnabled
+                dirtychange: this.checkCommitEnabled,
+                validitychange: this.checkCommitEnabled
             }
-
         });
     },
 
@@ -36,78 +37,47 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
         }
         record.set('netzbetreiberId',
             formPanel.down('netzbetreiber').getValue()[0]);
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
         record.save({
-            success: function(newRecord, response) {
+            scope: this,
+            success: function(newRecord) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(newRecord);
-                var json = Ext.decode(response.getResponse().responseText);
-                formPanel.clearMessages();
-                formPanel.setRecord(newRecord);
-                formPanel.setMessages(json.errors, json.warnings);
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
-            },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
+
+                var win = button.up('window');
+                if (win.closeRequested) {
+                    win.doClose();
                 } else {
-                    formPanel.getForm().reset();
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.clearMessages();
-                        formPanel.setMessages(json.errors, json.warnings);
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
+                    formPanel.loadRecord(newRecord);
+                    formPanel.clearMessages();
+                    formPanel.setMessages(
+                        newRecord.get('errors'),
+                        newRecord.get('warnings'),
+                        newRecord.get('notifications'));
                 }
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
-            }
+            },
+            failure: this.handleSaveFailure
         });
     },
 
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
-        formPanel.down('button[action=discard]').setDisabled(true);
-        formPanel.down('button[action=save]').setDisabled(true);
     },
 
-    checkCommitEnabled: function(callingEl, dirty) {
+    checkCommitEnabled: function(callingEl) {
         var form = callingEl.owner;
-        var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
-        && form.getRecord().get('readonly') === false
-        && netzbetr && dirty) {
-            if (form.isValid()) {
-                form.down('button[action=save]').enable();
-            } else {
-                form.down('button[action=save]').setDisabled(true);
-            }
+            && form.getRecord().get('readonly') === false
+        ) {
+            var isDirty = form.isDirty();
+            form.down('button[action=discard]').setDisabled(!isDirty);
+            var isValid = form.isValid();
+            form.down('button[action=save]').setDisabled(!isValid || !isDirty);
         } else {
             form.down('button[action=discard]').setDisabled(true);
             form.down('button[action=save]').setDisabled(true);

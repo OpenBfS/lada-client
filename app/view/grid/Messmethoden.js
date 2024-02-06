@@ -12,11 +12,13 @@
 Ext.define('Lada.view.grid.Messmethoden', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.messmethodengrid',
+    controller: 'messmethodengrid',
 
     requires: [
         'Lada.store.MmtMessprogramm',
         'Lada.store.Messmethoden',
         'Lada.store.Messgroessen',
+        'Lada.controller.grid.Messmethode',
         'Lada.view.widget.Messmethode'
     ],
 
@@ -27,12 +29,13 @@ Ext.define('Lada.view.grid.Messmethoden', {
     },
     margin: '0, 5, 5, 5',
 
-    recordId: null,
     allowDeselect: true,
     mmtStore: null,
     mmtUnfilteredStore: null,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.MmtMessprogramm');
+
         var mmtstore = Ext.data.StoreManager.get('messmethoden');
         if (!mmtstore) {
             Ext.create('Lada.store.Messmethoden', {storeId: 'messmethoden'});
@@ -93,93 +96,94 @@ Ext.define('Lada.view.grid.Messmethoden', {
             items: ['->', {
                 text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
-                action: 'add',
-                recordId: this.recordId
+                action: 'add'
             }, {
                 text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
                 action: 'delete'
             }]
         }];
-        this.columns = [{
-            header: i18n.getMsg('messmethode'),
-            dataIndex: 'mmtId',
-            flex: 1,
-            renderer: function(value) {
-                if (!value || value === '') {
-                    return '';
-                }
-                var store = me.mmtStore;
-                return value + ' - ' + store.findRecord(
-                    'id', value, 0, false, false, true).get('messmethode');
-            },
-            editor: {
-                xtype: 'combobox',
-                store: me.mmtStore,
-                valueField: 'id',
-                displayField: 'messmethode',
-                allowBlank: false,
-                editable: true,
-                disableKeyFilter: false,
-                forceSelection: true,
-                autoSelect: true,
-                queryMode: 'local',
-                minChars: 0,
-                typeAhead: false,
-                triggerAction: 'all',
-                tpl: Ext.create('Ext.XTemplate',
-                    '<tpl for=".">' +
-                    '<div class="x-combo-list-item  x-boundlist-item" >' +
-                    '{id} - {messmethode}</div></tpl>'),
-                displayTpl: Ext.create('Ext.XTemplate',
-                    '<tpl for=".">{id} - {messmethode}</tpl>'),
-                listeners: {
-                    change: me.setNuklide
-                }
-            }
-        }, {
-            header: i18n.getMsg('nuklide'),
-            dataIndex: 'messgroessen',
-            flex: 2,
-            renderer: function(value) {
-                if (!value || value === '') {
-                    return '';
-                }
-                var store = me.mmtUnfilteredStore;
-                var returnvalues = '';
-                for (var i = 0; i < value.length; i++) {
-                    if (i) {
-                        returnvalues = returnvalues + ', ';
+        this.columns = {
+            items: [{
+                header: i18n.getMsg('messmethode'),
+                dataIndex: 'mmtId',
+                flex: 1,
+                renderer: function(value, metaData, record) {
+                    this.validationResultRenderer(value, metaData, record);
+                    if (!value || value === '') {
+                        return '';
                     }
-                    var record = store.getById(value[i]);
-                    returnvalues = returnvalues + record.get('messgroesse');
+                    var store = me.mmtStore;
+                    return value + ' - ' + store.findRecord(
+                        'id', value, 0, false, false, true).get('name');
+                },
+                editor: {
+                    xtype: 'combobox',
+                    store: me.mmtStore,
+                    valueField: 'id',
+                    displayField: 'name',
+                    allowBlank: false,
+                    editable: true,
+                    disableKeyFilter: false,
+                    forceSelection: true,
+                    autoSelect: true,
+                    queryMode: 'local',
+                    minChars: 0,
+                    typeAhead: false,
+                    triggerAction: 'all',
+                    tpl: Ext.create('Ext.XTemplate',
+                        '<tpl for=".">' +
+                    '<div class="x-combo-list-item  x-boundlist-item" >' +
+                    '{id} - {name}</div></tpl>'),
+                    displayTpl: Ext.create('Ext.XTemplate',
+                        '<tpl for=".">{id} - {name}</tpl>'),
+                    listeners: {
+                        change: me.setNuklide
+                    }
                 }
-                return returnvalues;
-            },
-            editor: {
-                xtype: 'tagfield',
-                store: 'messgroessen',
-                displayField: 'messgroesse',
-                valueField: 'id',
-                autoSelect: false,
-                queryMode: 'local'
+            }, {
+                header: i18n.getMsg('nuklide'),
+                dataIndex: 'measds',
+                flex: 2,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    if (!value || value === '') {
+                        return '';
+                    }
+                    var store = me.mmtUnfilteredStore;
+                    var returnvalues = '';
+                    for (var i = 0; i < value.length; i++) {
+                        if (i) {
+                            returnvalues = returnvalues + ', ';
+                        }
+                        var record = store.getById(value[i]);
+                        returnvalues = returnvalues + record.get('name');
+                    }
+                    return returnvalues;
+                },
+                editor: {
+                    xtype: 'tagfield',
+                    store: 'messgroessen',
+                    displayField: 'name',
+                    valueField: 'id',
+                    autoSelect: false,
+                    queryMode: 'local'
+                }
+            }],
+            defaults: {
+                renderer: this.validationResultRenderer
             }
-        }];
-        this.initData();
+        };
+
         this.callParent(arguments);
     },
+
     initData: function() {
-        if (this.store) {
-            this.store.removeAll();
-        } else {
-            this.store = Ext.create('Lada.store.MmtMessprogramm');
-        }
-        // Only load the Store when a Record ID is Present
-        if (this.recordId) {
-            this.addLoadingFailureHandler(this.store);
+        var parentId = this.getParentRecordId();
+        if (parentId) {
             this.store.load({
                 params: {
-                    messprogrammId: this.recordId
+                    mpgId: parentId
                 }
             });
         }
@@ -189,10 +193,6 @@ Ext.define('Lada.view.grid.Messmethoden', {
      * Reload this grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

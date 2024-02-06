@@ -14,10 +14,12 @@
  * to add a handler to a store that shows an error mask if the store failed to
  * load. This mask contains a button to call
  * the reload function that must be implemented by extending classes.
+ * In case the grid store is already created during the grids initComponent,
+ * the loading failure handler is added automatically.
  */
 Ext.define('Lada.view.grid.BaseGrid', {
     extend: 'Ext.grid.Panel',
-    alias: 'basegrid',
+    alias: 'widget.basegrid',
     requires: [
         'Lada.view.window.ReloadMask'
     ],
@@ -48,6 +50,14 @@ Ext.define('Lada.view.grid.BaseGrid', {
             });
         }
         this.callParent(arguments);
+        if (this.store) {
+            this.addLoadingFailureHandler(this.store);
+        }
+    },
+
+    getParentRecordId: function() {
+        var record = this.up('window').down('form').getRecord();
+        return record ? record.get('id') : null;
     },
 
     /**
@@ -131,5 +141,46 @@ Ext.define('Lada.view.grid.BaseGrid', {
         } else {
             this.showReloadMask();
         }
+    },
+
+    /**
+     * Renderer which sets the validation results
+     * in the metadata of a grid column.
+     *
+     * Note: The value is returned unaltered
+     * @param value Column value
+     * @param metaData Rendering metaData
+     * @param record Record
+     */
+    validationResultRenderer: function(value, metaData, record) {
+        if (!metaData.column) {
+            return value;
+        }
+        var dataIndex = metaData.column.dataIndex;
+        var validationResult = [];
+        var validationResultCls = null;
+        ['notification', 'warning', 'error'].forEach(function(msgCat) {
+            var messages = record.get(msgCat + 's');
+            if (!messages) {
+                return;
+            }
+            Object.keys(messages)
+                .filter(
+                    key => key === dataIndex)
+                .forEach(key => {
+                    // If key not found, assume message translated by server
+                    validationResult.push(
+                        Lada.util.I18n.getMsgIfDefined(messages[key])
+                    );
+                    validationResultCls =
+                        'x-lada-' + msgCat + '-grid-field';
+                });
+        });
+        if (validationResultCls) {
+            metaData.tdCls = validationResultCls;
+            metaData.tdAttr =
+                'data-qtip="' + validationResult.join('<br>') + '"';
+        }
+        return value;
     }
 });

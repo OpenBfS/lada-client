@@ -25,8 +25,6 @@ Ext.define('Lada.view.grid.Messung', {
     },
     margin: '0, 5, 15, 5',
 
-    recordId: null,
-
     warnings: null,
     errors: null,
     readOnly: true,
@@ -40,6 +38,8 @@ Ext.define('Lada.view.grid.Messung', {
     messwerteLoading: false,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.Messungen');
+
         var i18n = Lada.getApplication().bundle;
         var me = this;
         this.emptyText = i18n.getMsg('emptytext.messungen');
@@ -98,15 +98,15 @@ Ext.define('Lada.view.grid.Messung', {
                 }
             }
         }, {
-            header: i18n.getMsg('extMessungsId'),
-            dataIndex: 'externeMessungsId',
+            header: i18n.getMsg('measm.ext_id'),
+            dataIndex: 'extId',
             flex: 0.7,
             editor: {
                 allowBlank: false
             }
         }, {
-            header: i18n.getMsg('nebenprobenNr'),
-            dataIndex: 'nebenprobenNr',
+            header: i18n.getMsg('minSampleId'),
+            dataIndex: 'minSampleId',
             flex: 0.8,
             editor: {
                 allowBlank: false
@@ -119,8 +119,8 @@ Ext.define('Lada.view.grid.Messung', {
                 allowBlank: false
             }
         }, {
-            header: i18n.getMsg('messzeitpunkt'),
-            dataIndex: 'messzeitpunkt',
+            header: i18n.getMsg('measm_start_date'),
+            dataIndex: 'measmStartDate',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             flex: 2,
@@ -130,6 +130,17 @@ Ext.define('Lada.view.grid.Messung', {
                 format: 'd.m.Y H:i',
                 maxValue: Lada.util.Date.formatTimestamp(
                     new Date(), 'd.m.Y H:i', true)
+            },
+            renderer: function(value) {
+                if (!value || value === '') {
+                    return '';
+                }
+                var format = 'd.m.Y H:i';
+                var dt = '';
+                if (!isNaN(value)) {
+                    dt = Lada.util.Date.formatTimestamp(value, format, true);
+                }
+                return dt;
             }
         }, {
             header: i18n.getMsg('header.statuskombi'),
@@ -148,13 +159,13 @@ Ext.define('Lada.view.grid.Messung', {
                 }
                 var kombis = Ext.data.StoreManager.get('statuskombi');
                 var kombi = kombis.getById(value);
-                var st = kombi.get('statusStufe').stufe + ' - '
-                            + kombi.get('statusWert').wert;
+                var st = kombi.get('statusLev').lev + ' - '
+                            + kombi.get('statusVal').val;
                 return st;
             }
         }, {
-            header: i18n.getMsg('header.fertig'),
-            dataIndex: 'fertig',
+            header: i18n.getMsg('isCompleted'),
+            dataIndex: 'isCompleted',
             flex: 0.8,
             renderer: function(value) {
                 if (value) {
@@ -197,7 +208,6 @@ Ext.define('Lada.view.grid.Messung', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         if (!this.bottomBar) {
             this.down('toolbar[dock=bottom]').hide();
@@ -205,18 +215,29 @@ Ext.define('Lada.view.grid.Messung', {
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
-    initData: function() {
+    initData: function(parentId) {
         this.setLoading(true);
-        this.store = Ext.create('Lada.store.Messungen');
-        this.addLoadingFailureHandler(this.store);
-        this.store.load({
-            params: {
-                probeId: this.recordId
-            },
-            callback: function() {
-                this.setLoading(false);
-            },
-            scope: this
+        parentId = parentId ? parentId : this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    sampleId: parentId
+                },
+                callback: function() {
+                    this.setLoading(false);
+                },
+                scope: this
+            });
+        }
+        Ext.on('timezonetoggled', function() {
+            var grid = Ext.ComponentQuery.query('messunggrid');
+            for (var i = 0; i < grid.length; i++) {
+                grid[i].reload(function() {
+                    Ext.ComponentQuery.query(
+                        'timezonebutton[action=toggletimezone]')[0]
+                        .requestFinished();
+                });
+            }
         });
     },
 
@@ -224,10 +245,6 @@ Ext.define('Lada.view.grid.Messung', {
      * Reload this grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },
@@ -247,7 +264,7 @@ Ext.define('Lada.view.grid.Messung', {
         });
         statusStore.load({
             params: {
-                messungsId: value
+                measmId: value
             }
         });
     },
@@ -262,7 +279,7 @@ Ext.define('Lada.view.grid.Messung', {
             {record: record, type: 'messwerteCount'});*/
         messwerte.load({
             params: {
-                messungsId: id
+                measmId: id
             },
             callback: function(records, operation, success) {
                 me.updateColumn(
@@ -304,7 +321,7 @@ Ext.define('Lada.view.grid.Messung', {
         } else {
             var rec = sstore.getById(opts.statusId);
             if (rec) {
-                value = rec.get('statusKombi');
+                value = rec.get('statusMpId');
                 //add the determined statuswert to the record.
                 // this is necessary to let the controller determine
                 // which actions are allowed.

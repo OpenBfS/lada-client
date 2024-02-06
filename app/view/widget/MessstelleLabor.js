@@ -15,8 +15,8 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
     alias: 'widget.messstellelabor',
     requires: [
         'Lada.store.MessstellenKombi',
-        'Lada.view.widget.Netzbetreiber',
-        'Lada.view.widget.base.ComboBox'
+        'Lada.view.widget.base.ComboBox',
+        'Lada.view.widget.base.SelectableDisplayField'
     ],
 
     layout: {
@@ -51,7 +51,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
             }),
             allowBlank: false,
             isFormField: false,
-            fieldLabel: i18n.getMsg('labor_mst_id'),
+            fieldLabel: i18n.getMsg('appr_lab_id'),
             labelWidth: 100,
 
             // Enable filtering of combobox
@@ -89,25 +89,25 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
                         var container = combo.up('fieldcontainer');
 
                         // Set hidden form fields
-                        ['mstId', 'laborMstId'].forEach(function(id) {
+                        ['measFacilId', 'apprLabId'].forEach(function(id) {
                             var field = container.down(
                                 'textfield[name=' + id + ']');
                             field.setValue(newValue.get(id));
                         });
 
                         // Set Netzbetreiber
-                        me.setNetzbetreiber(newValue.get('mstId'));
+                        me.setNetzbetreiber(newValue.get('measFacilId'));
 
                         // Set related fields, if existent
                         var fieldset = combo.up('fieldset');
                         if (fieldset) {
                             var mplId = fieldset.down(
-                                'messprogrammland[name=mplId]');
+                                'messprogrammland[name=stateMpgId]');
                             if (mplId) {
                                 mplId.setValue();
                             }
                             var erzeugerId = fieldset.down(
-                                'datensatzerzeuger[name=erzeugerId]');
+                                'datensatzerzeuger[name=datasetCreatorId]');
                             if (erzeugerId) {
                                 erzeugerId.setValue();
                             }
@@ -116,9 +116,8 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
                 }
             }
         }, {
-            xtype: 'netzbetreiber',
+            xtype: 'selectabledisplayfield',
             name: 'netzbetreiber',
-            readOnly: true,
             isFormField: false,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 80
@@ -128,12 +127,12 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
             items: [{
                 // Hidden form field for Messstelle
                 xtype: 'textfield',
-                name: 'mstId',
+                name: 'measFacilId',
                 allowBlank: false
             }, {
                 // Hidden form field for Labor
                 xtype: 'textfield',
-                name: 'laborMstId',
+                name: 'apprLabId',
                 allowBlank: false
             }],
             listeners: {
@@ -157,6 +156,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
                                 });
                             }
                         }
+                        me.down('combobox').validate();
                     }
                 }
             }
@@ -165,23 +165,43 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
         this.callParent(arguments);
     },
 
+    getNetworkId: function() {
+        var mstId = this.down('textfield[name=measFacilId]').getValue();
+        var mst = Ext.data.StoreManager.get('messstellen').getById(mstId);
+        return mst.get('networkId');
+    },
+
     setNetzbetreiber: function(mstId) {
         var mst = Ext.data.StoreManager.get('messstellen').getById(mstId);
-        var nb = mst ? mst.get('netzbetreiberId') : '';
-        this.down('netzbetreiber').setValue(nb);
+        var fieldValue = '';
+        if (mst) {
+            var nbId = mst.get('networkId');
+
+            var nbStore = Ext.data.StoreManager.get('netzbetreiber');
+            if (!nbStore) {
+                nbStore = Ext.create('Lada.store.Netzbetreiber', {
+                    storeId: 'netzbetreiber'
+                });
+            }
+            var nb = nbStore.getById(nbId);
+            if (nb) {
+                fieldValue = nbId + ' - ' + nb.get('name');
+            }
+        }
+        this.down('field[name=netzbetreiber]').setValue(fieldValue);
     },
 
     setMessstelleLabor: function() {
-        var mstId = this.down('textfield[name=mstId]').getValue();
-        var laborMstId = this.down('textfield[name=laborMstId]').getValue();
+        var mstId = this.down('textfield[name=measFacilId]').getValue();
+        var laborMstId = this.down('textfield[name=apprLabId]').getValue();
 
         this.setNetzbetreiber(mstId);
 
         var cbox = this.down('combobox[name=' + this.name + ']');
         var selection = cbox.getStore().queryBy(
             function(rec) {
-                return rec.get('mstId') === mstId
-                    && rec.get('laborMstId') === laborMstId;
+                return rec.get('measFacilId') === mstId
+                    && rec.get('apprLabId') === laborMstId;
             }).getAt(0);
         cbox.setValue(selection);
     }

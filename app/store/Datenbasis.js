@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.Datenbasis', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Datenbasis',
+    model: 'Lada.model.Regulation',
     sorters: [
         {
             property: 'id',

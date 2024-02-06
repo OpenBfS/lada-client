@@ -144,8 +144,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         if (this.parentGrid) {
             var qp = Ext.ComponentQuery.query('querypanel')[0];
             var qp_button = Ext.ComponentQuery.query('button', qp)[0];
-            var queryController = Lada.app.getController(
-                'Lada.controller.Query');
+            var queryController = qp.getController();
             queryController.search(qp_button);
         }
     },
@@ -184,52 +183,51 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         var i18n = Lada.getApplication().bundle;
         me.maxSteps = me.selection.length;
         me.down('progressbar').show();
-        var url = '';
+        var url = Lada.model.LadaBase.schema.getUrlPrefix();
         var datatype = '';
 
         switch (me.parentGrid.rowtarget.dataType) {
             case 'probeId':
-                url = 'lada-server/rest/probe/';
+                url += Lada.model.Sample.entityName.toLowerCase();
                 datatype = 'Probe ';
                 break;
             case 'messungId':
-                url = 'lada-server/rest/messung/';
+                url += Lada.model.Measm.entityName.toLowerCase();
                 datatype = 'Messung ';
                 break;
             case 'mpId':
-                url = 'lada-server/rest/messprogramm/';
+                url += Lada.model.Mpg.entityName.toLowerCase();
                 datatype = i18n.getMsg('messprogramm');
                 break;
             case 'probenehmer':
-                url = 'lada-server/rest/probenehmer/';
+                url += Lada.model.Sampler.entityName.toLowerCase();
                 datatype = i18n.getMsg('probenehmer');
                 break;
             case 'dsatzerz':
-                url = 'lada-server/rest/datensatzerzeuger/';
+                url += Lada.model.DatasetCreator.entityName.toLowerCase();
                 datatype = i18n.getMsg('datensatzerzeuger');
                 break;
             case 'mprkat':
-                url = 'lada-server/rest/messprogrammkategorie/';
+                url += Lada.model.MpgCateg.entityName.toLowerCase();
                 datatype = i18n.getMsg('messprogrammkategorie');
                 break;
             case 'ortId':
-                url = 'lada-server/rest/ort/';
+                url += Lada.model.Site.entityName.toLowerCase();
                 datatype = 'Ort';
                 break;
             case 'tagId':
-                url = 'lada-server/rest/tag/';
+                url += Lada.model.Tag.entityName.toLowerCase();
                 datatype = 'Tag';
                 break;
         }
         for (var i = 0; i < me.selection.length; i++) {
             var id = me.selection[i].get(me.parentGrid.rowtarget.dataIndex);
             Ext.Ajax.request({
-                url: url + id,
+                url: url + '/' + id,
                 method: 'DELETE',
                 success: function(resp) {
                     var json = Ext.JSON.decode(resp.responseText);
-                    var urlArr = resp.request.url.split('/');
-                    var delId = urlArr[urlArr.length - 1];
+                    var delId = resp.request.url.split('/').pop();
                     var html = me.down('panel').html;
                     if (json.success && json.message === '200') {
                         /* Remove successfully deleted items from store
@@ -264,8 +262,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     }
                 },
                 failure: function(resp) {
-                    var urlArr = resp.request.url.split('/');
-                    var delId = urlArr[urlArr.length - 1];
+                    var delId = resp.request.url.split('/').pop();
                     var html = me.down('panel').html;
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(

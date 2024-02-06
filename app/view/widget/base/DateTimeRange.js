@@ -84,15 +84,6 @@ Ext.define('Lada.view.widget.base.DateTimeRange', {
         }, this);
         this.callParent(arguments);
     },
-    showWarnings: function() {
-        //legacy - still called?
-        this.clearWarningOrError();
-    },
-
-    showErrors: function() {
-        this.clearWarningOrError();
-        //legacy - still called?
-    },
 
     getValue: function() {
         var val0 = this.down('[name=' + this.name + 'From]').getValue();
@@ -135,11 +126,6 @@ Ext.define('Lada.view.widget.base.DateTimeRange', {
     clearValue: function() {
         this.down('[name=' + this.name + 'From]').setValue(null);
         this.down('[name=' + this.name + 'To]').setValue(null);
-    },
-
-    clearWarningOrError: function() {
-        // legacy - still called?
-        this.down('datetimefield').clearInvalid();
     },
 
     getName: function() {

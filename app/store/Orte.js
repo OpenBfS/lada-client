@@ -11,9 +11,9 @@
  */
 Ext.define('Lada.store.Orte', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Ort',
+    model: 'Lada.model.Site',
     sorters: [{
-        property: 'ortId',
+        property: 'extId',
         direction: 'ASC'
     }],
     remoteFilter: true,

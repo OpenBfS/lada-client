@@ -10,14 +10,15 @@
 * This is a controller for Tag management, create and edit form
 */
 Ext.define('Lada.controller.form.Tag', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.tagform',
 
     init: function() {
         this.control({
-            'tagmanagementwindow button[action=save]': {
+            'tagform button[action=save]': {
                 click: this.saveTag
             },
-            'tagmanagementwindow button[action=delete]': {
+            'tagform button[action=delete]': {
                 click: this.deleteTag
             },
             'tagform': {
@@ -42,12 +43,13 @@ Ext.define('Lada.controller.form.Tag', {
         record.set(win.down('tagform').getForm().getFieldValues());
         var me = this;
         record.save({
+            scope: this,
             success: function(rec) {
                 me.reloadParentGrid();
                 Ext.getStore('tags').add(rec);
                 win.close();
             },
-            failure: this.handleTagFailure
+            failure: this.handleSaveFailure
         });
     },
 
@@ -60,7 +62,7 @@ Ext.define('Lada.controller.form.Tag', {
                 Ext.getStore('tags').remove(rec);
                 win.close();
             },
-            failure: this.handleTagFailure
+            failure: this.handleServiceFailure
         });
     },
 
@@ -74,29 +76,6 @@ Ext.define('Lada.controller.form.Tag', {
     },
 
     /**
-     * Failure callback for Model's save() and erase().
-     */
-    handleTagFailure: function(record, operation) {
-        var i18n = Lada.getApplication().bundle;
-        var err = operation.getError();
-        var msg = i18n.getMsg('err.msg.generic.body');
-        if (err) {
-            if (err instanceof String) {
-                msg = err;
-            } else {
-                msg = err.response.responseText;
-                if (!msg && err.response.timedout) {
-                    msg = i18n.getMsg('err.msg.timeout');
-                }
-            }
-        } else {
-            msg = i18n.getMsg(
-                Ext.decode(operation.getResponse().responseText).message);
-        }
-        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'), msg);
-    },
-
-    /**
      * Enable/disable save button in TagManagement window.
      */
     checkTagCommitEnabled: function(callingEl) {
@@ -106,7 +85,7 @@ Ext.define('Lada.controller.form.Tag', {
         } else { //called by the form
             form = callingEl.owner;
         }
-        form.up('tagmanagementwindow').down('button[action=save]')
+        form.down('button[action=save]')
             .setDisabled(
                 !form.isDirty()
                     || !form.isValid()

@@ -15,6 +15,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     requires: [
         'Lada.view.form.Messprogramm',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.grid.Messmethoden'
     ],
 
@@ -64,14 +65,14 @@ Ext.define('Lada.view.window.Messprogramm', {
         {
             text: i18n.getMsg('reload'),
             name: 'reload',
-            handler: this.reload,
+            handler: this.reloadWindow,
             scope: this,
             qtip: i18n.getMsg('reload.qtip') + i18n.getMsg('messprogramm'),
             icon: 'resources/img/view-refresh.png'
         }, '->', {
             text: i18n.getMsg('close'),
             scope: this,
-            handler: this.handleBeforeClose
+            handler: this.close
         }];
 
         this.on({
@@ -82,16 +83,12 @@ Ext.define('Lada.view.window.Messprogramm', {
                 this.getEl().addCls('window-inactive');
             },
             afterRender: function() {
-                this.customizeToolbar();
                 this.toggleGenProben();
 
             }
         });
 
         this.height = Ext.getBody().getViewSize().height - 30;
-        // InitialConfig is the config object passed to the constructor on
-        // creation of this window. We need to pass it throuh to the form as
-        // we need the "Id" param to load the correct item.
 
         this.tools = [{
             type: 'help',
@@ -116,7 +113,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 }
             }
         }];
-        this.modelClass = Lada.model.Messprogramm;
+        this.modelClass = Lada.model.Mpg;
         this.callParent(arguments);
     },
 
@@ -141,19 +138,13 @@ Ext.define('Lada.view.window.Messprogramm', {
         if (this.record) {
             // If a record was passed to this window, load it for editing
             this.setLoading(true);
-            var loadCallback = function(record, response) {
+            var loadCallback = function(record) {
                 me.down('messprogrammform').setRecord(record);
                 me.record = record;
-                var json = response ?
-                    Ext.decode(response.getResponse().responseText) :
-                    null;
-                if (json) {
-                    this.setMessages(json.errors, json.warnings);
-                    /*
-                    if (!json.warnings.mediaDesk) {
-                    }
-                    */
-                }
+                me.down('messprogrammform').setMessages(
+                    record.get('errors'),
+                    record.get('warnings'),
+                    record.get('notifications'));
                 me.down('button[action=generateproben]').setDisabled(false);
                 me.down('button[name=reload]').setDisabled(false);
                 // If Messprogramm is ReadOnly, disable Inputfields and grids
@@ -171,7 +162,11 @@ Ext.define('Lada.view.window.Messprogramm', {
                     }
                 }
 
-                me.down('messprogrammform').setMediaDesk(record);
+                // Initialize grids
+                me.query('basegrid').forEach(function(grid) {
+                    grid.initData();
+                });
+
                 me.setLoading(false);
                 if (me.record === null) {
                     me.setTitle(
@@ -186,7 +181,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 }
             };
             if (!loadedRecord) {
-                Ext.ClassManager.get('Lada.model.Messprogramm').load(
+                Ext.ClassManager.get('Lada.model.Mpg').load(
                     this.record.get('id'), {
                         failure: function() {
                             me.setLoading(false);
@@ -199,18 +194,17 @@ Ext.define('Lada.view.window.Messprogramm', {
             }
         } else {
             // Create a new record
-            var record = Ext.create('Lada.model.Messprogramm', {
-                gueltigVon: 1,
-                gueltigBis: 365,
+            var record = Ext.create('Lada.model.Mpg', {
+                validStartDate: 1,
+                validEndDate: 365,
                 owner: true,
-                mstId: Lada.mst[0],
-                laborMstId: Lada.mst[0]
+                measFacilId: Lada.mst[0],
+                appLabId: Lada.mst[0]
             });
             record.set('id', null);
             this.record = record;
 
             this.down('messprogrammform').setRecord(record);
-            this.down('messprogrammform').setMediaDesk(record);
 
             this.disableChildren();
             this.down('button[name=reload]').setDisabled(true);
@@ -220,23 +214,20 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     initializeUi: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.removeAll();
         this.add([{
             border: false,
             autoScroll: true,
             items: [{
-                xtype: 'messprogrammform',
-                recordId: this.record ? this.record.get('id') : null
+                xtype: 'messprogrammform'
             }, {
                 xtype: 'fset',
-                name: 'orte',
+                name: 'geolocatMpgs',
                 title: i18n.getMsg('title.ortsangabe'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{
                     xtype: 'ortszuordnunggrid',
-                    recordId: me.record ? me.record.get('id') : null,
                     isMessprogramm: true
                 }]
             }, {
@@ -250,123 +241,24 @@ Ext.define('Lada.view.window.Messprogramm', {
                 },
                 items: [{
                     xtype: 'messmethodengrid',
-                    recordId: this.record ? this.record.get('id') : null,
                     flex: 1
                 }]
             }]
         }]);
     },
 
-    /**
-     * Adds new event handler to the toolbar close button to add a save
-     * confirmation dialogue if a dirty form is closed
-     */
-    customizeToolbar: function() {
-        var tools = this.tools;
-        for (var i = 0; i < tools.length; i++) {
-            if (tools[i].type === 'close') {
-                var closeButton = tools[i];
-                closeButton.handler = null;
-                closeButton.callback = this.handleBeforeClose;
-            }
-        }
-    },
-
-    /**
-     * Called before closing the form window. Shows confirmation dialogue
-     * window to save the form if dirty*/
-    handleBeforeClose: function() {
-        var me = this;
-        var i18n = Lada.getApplication().bundle;
-        var item = me.down('messprogrammform');
-        if (item && !item.getRecord().get('readonly') && item.isDirty()) {
-            var confWin = Ext.create('Ext.window.Window', {
-                title: i18n.getMsg('form.saveonclosetitle'),
-                modal: true,
-                layout: 'vbox',
-                items: [{
-                    xtype: 'container',
-                    html: i18n.getMsg('form.saveonclosequestion'),
-                    margin: '10, 5, 5, 5'
-                }, {
-                    xtype: 'container',
-                    layout: 'hbox',
-                    items: [{
-                        xtype: 'button',
-                        text: i18n.getMsg('form.yes'),
-                        margin: '5, 0, 5, 5',
-
-                        handler: function() {
-                            me.down('messprogrammform').fireEvent(
-                                'save', me.down('messprogrammform'));
-                            confWin.close();
-                        }
-                    }, {
-                        xtype: 'button',
-                        text: i18n.getMsg('form.no'),
-                        margin: '5, 5, 5, 5',
-
-                        handler: function() {
-                            confWin.close();
-                        }
-                    }]
-                }]
-            });
-            confWin.on('close', me.close, me);
-            confWin.show();
-        } else {
-            me.close();
-        }
-    },
-
-    /**
-     * Reload MessprogrammEdit Window
-     */
-    reload: function() {
-        var form = this.down('messprogrammform');
-        // TODO: visual feedback on form and button
-        var callback = function() {
-            form.up('window').initData();
-        };
-        if (form.isDirty()) {
-            var i18n = Lada.getApplication().bundle;
-            Ext.MessageBox.alert(
-                i18n.getMsg('reloadRecord', i18n.getMsg('messprogramm')),
-                i18n.getMsg('confirmation.discardchanges'),
-                callback(form));
-        } else {
-            callback(form);
-        }
-    },
-
     disableChildren: function() {
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+        this.down('fset[name=geolocatMpgs]').down('ortszuordnunggrid').setReadOnly(
             true);
         this.down('messmethodengrid').setReadOnly(true);
     },
 
     enableChildren: function() {
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+        this.down('fset[name=geolocatMpgs]').down('ortszuordnunggrid').setReadOnly(
             false);
         this.down('messmethodengrid').setReadOnly(false);
     },
 
-    /**
-     * Instructs the fields / forms listed in this method to set a message.
-     * @param errors These Errors shall be shown
-     * @param warnings These Warning shall be shown
-     */
-    setMessages: function(errors, warnings) {
-        this.down('messprogrammform').setMessages(errors, warnings);
-    },
-
-    /**
-     * Instructs the fields / forms listed in this method to clear their
-     * messages.
-     */
-    clearMessages: function() {
-        this.down('messprogrammform').clearMessages();
-    },
     toggleGenProben: function() {
         var button = this.down('button[action=generateproben]');
         if (this.record === null || this.record.phantom) {

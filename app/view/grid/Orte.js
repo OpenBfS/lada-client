@@ -18,7 +18,6 @@ Ext.define('Lada.view.grid.Orte', {
         'Lada.store.KoordinatenArt',
         'Lada.store.OrtTyp',
         'Lada.view.widget.KoordinatenArt',
-        'Lada.view.widget.Kta',
         'Lada.view.widget.OrtsZusatz',
         'Lada.view.widget.OrtTyp',
         'Lada.view.window.Ort',
@@ -36,11 +35,8 @@ Ext.define('Lada.view.grid.Orte', {
         name: 'ortpagingtoolbar'
     },
 
-    recordId: null,
-
     warnings: null,
     errors: null,
-    readOnly: true,
     allowDeselect: true,
     plugins: 'gridfilters',
 
@@ -84,7 +80,7 @@ Ext.define('Lada.view.grid.Orte', {
             handler: function(grid, rowIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 if (rec.get('readonly') === false) {
-                    Lada.model.Ort.load(rec.get('id'), {
+                    Lada.model.Site.load(rec.get('id'), {
                         success: function(record) {
                             Ext.create('Lada.view.window.Ort', {
                                 record: record,
@@ -104,18 +100,18 @@ Ext.define('Lada.view.grid.Orte', {
                 var store = Ext.data.StoreManager.get('netzbetreiber');
                 var record = store.getById(value);
                 if (record) {
-                    r = record.get('netzbetreiber');
+                    r = record.get('name');
                 }
                 return r;
             },
-            dataIndex: 'netzbetreiberId'
+            dataIndex: 'networkId'
         }, {
             header: i18n.getMsg('orte.ortId'),
             width: 60,
             filter: {
                 type: 'string'
             },
-            dataIndex: 'ortId'
+            dataIndex: 'extId'
         }, {
             header: i18n.getMsg('orte.ortTyp'),
             width: 40,
@@ -134,25 +130,25 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('code');
+                return record.get('extId');
             },
-            dataIndex: 'ortTyp'
+            dataIndex: 'siteClassId'
         }, {
             header: i18n.getMsg('orte.kurztext'),
             filter: {
                 type: 'string'
             },
-            dataIndex: 'kurztext'
+            dataIndex: 'shortText'
         }, {
             header: i18n.getMsg('orte.langtext'),
             width: 200,
             filter: {
                 type: 'string'
             },
-            dataIndex: 'langtext'
+            dataIndex: 'longText'
         }, {
             header: i18n.getMsg('orte.verwaltungseinheit'),
-            dataIndex: 'gemId',
+            dataIndex: 'adminUnitId',
             width: 200,
             filter: {
                 type: 'string',
@@ -176,11 +172,11 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('bezeichnung');
+                return record.get('name');
             }
         }, {
             header: i18n.getMsg('orte.staatId'),
-            dataIndex: 'staatId',
+            dataIndex: 'stateId',
             width: 80,
             filter: {
                 type: 'string',
@@ -203,14 +199,8 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('staat');
+                return record.get('ctry');
             }
-        }, {
-            header: i18n.getMsg('orte.nutsCode'),
-            filter: {
-                type: 'string'
-            },
-            dataIndex: 'nutsCode'
         }, {
             header: i18n.getMsg('orte.ozIdS'),
             filter: {
@@ -228,9 +218,9 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('ozsId');
+                return record.get('name');
             },
-            dataIndex: 'ozId'
+            dataIndex: 'poiId'
         }, {
             header: i18n.getMsg('orte.anlageId'),
             renderer: function(value) {
@@ -245,39 +235,39 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('ktaGruppe');
+                return record.get('name');
             },
-            dataIndex: 'ktaGruppeId'
+            dataIndex: 'nuclFacilGrId'
         }, {
             header: i18n.getMsg('orte.mpArt'),
             filter: {
                 type: 'string'
             },
-            dataIndex: 'mpArt'
+            dataIndex: 'reiOprMode'
         }, {
             header: i18n.getMsg('orte.zone'),
             filter: {
                 type: 'string'
             },
-            dataIndex: 'zone'
+            dataIndex: 'reiZone'
         }, {
             header: i18n.getMsg('orte.sektor'),
             filter: {
                 type: 'string'
             },
-            dataIndex: 'sektor'
+            dataIndex: 'reiSector'
         }, {
             header: i18n.getMsg('orte.zustaendigkeit'),
             filter: {
                 type: 'string'
             },
-            dataIndex: 'zustaendigkeit'
+            dataIndex: 'reiCompetence'
         }, {
             header: i18n.getMsg('orte.berichtstext'),
             filter: {
                 type: 'string'
             },
-            dataIndex: 'berichtstext'
+            dataIndex: 'reiReportText'
         }, {
             header: i18n.getMsg('orte.unscharf'),
             filter: {
@@ -290,7 +280,7 @@ Ext.define('Lada.view.grid.Orte', {
                     return 'nein';
                 }
             },
-            dataIndex: 'unscharf'
+            dataIndex: 'isFuzzy'
         }, {
             header: i18n.getMsg('orte.kdaId'),
             filter: {
@@ -308,21 +298,21 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('koordinatenart');
+                return record.get('name');
             },
-            dataIndex: 'kdaId'
+            dataIndex: 'spatRefSysId'
         }, {
-            header: i18n.getMsg('orte.koordXExtern'),
+            header: i18n.getMsg('coordXExt'),
             filter: {
                 type: 'string'
             },
-            dataIndex: 'koordXExtern'
+            dataIndex: 'coordXExt'
         }, {
-            header: i18n.getMsg('orte.koordYExtern'),
+            header: i18n.getMsg('coordYExt'),
             filter: {
                 type: 'string'
             },
-            dataIndex: 'koordYExtern'
+            dataIndex: 'coordYExt'
         }, {
             header: i18n.getMsg('orte.longitude'),
             filter: {
@@ -340,13 +330,13 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'numeric'
             },
-            dataIndex: 'hoeheLand'
+            dataIndex: 'alt'
         }, {
             header: i18n.getMsg('orte.hoeheUeberNn'),
             filter: {
                 type: 'numeric'
             },
-            dataIndex: 'hoeheUeberNn'
+            dataIndex: 'heightAsl'
         }, {
             header: i18n.getMsg('letzteAenderung'),
             filter: {
@@ -354,31 +344,32 @@ Ext.define('Lada.view.grid.Orte', {
             },
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
-            dataIndex: 'letzteAenderung'
+            dataIndex: 'lastMod'
         }];
+
+        this.setTitle(i18n.getMsg('title.orte'));
+
         this.callParent(arguments);
-        var cbox = Ext.create('Lada.view.widget.PagingSize');
+
         this.down('pagingtoolbar').add('-');
-        this.down('pagingtoolbar').add(cbox);
-        if (this.up('tabpanel')) {
-            this.setTitle('Orte(0)');
-        }
+        this.down('pagingtoolbar').add(
+            Ext.create('Lada.view.widget.PagingSize'));
     },
 
     /**
      * This sets the Store of this Grid.
      */
     setStore: function(store) {
-        var me = this;
         if (store) {
             this.reconfigure(store);
             this.store = store;
             this.addLoadingFailureHandler(store);
             this.store.on('load', function() {
-                if (me.up('tabpanel')) {
-                    me.setTitle('Orte(' + me.store.getCount() + ')');
-                }
-            });
+                var i18n = Lada.getApplication().bundle;
+                this.setTitle(
+                    i18n.getMsg('title.orte')
+                        + ' (' + this.store.getTotalCount() + ')');
+            }, this);
         }
     },
 
@@ -411,6 +402,7 @@ Ext.define('Lada.view.grid.Orte', {
                 var win = this.up('ortszuordnungwindow');
                 if (win) {
                     win.down('ortszuordnungform').setOrt(null, record);
+                    this.up('window').down('map').zoomToSelectedFeatures();
                 }
             }
         }

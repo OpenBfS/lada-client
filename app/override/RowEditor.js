@@ -9,6 +9,10 @@
 Ext.define('Lada.override.RowEditor', {
     override: 'Ext.grid.RowEditor',
 
+    requires: [
+        'Lada.view.widget.base.SelectableDisplayField'
+    ],
+
     initComponent: function() {
         this.callParent(arguments);
         var button = this.down('button[ui=default-toolbar]');

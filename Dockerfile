@@ -4,7 +4,7 @@
 # Build with e.g. `docker build --force-rm=true -t bfs/lada_client .'
 # Run from the repository root-dir with e.g.
 # `docker run --name lada_client
-#             --link lada_wildfly:lada-server
+#             --link lada_wildfly:server
 #             -p 8180-8184:80-84 -d bfs/lada_client'
 #
 # The linked container may be created from the Dockerfile in the lada-server
@@ -13,7 +13,7 @@
 # The LADA-application will be available under http://yourdockerhost:8182
 #
 
-FROM httpd:2.4
+FROM httpd:bullseye
 MAINTAINER mlechner@bfs.de
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -24,7 +24,7 @@ ENV OPENSSL_CONF /etc/ssl/
 #
 
 RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
-    curl unzip default-jre-headless git && \
+    curl unzip default-jre-headless git libapache2-mod-shib && \
     apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 80 81 82 83 84

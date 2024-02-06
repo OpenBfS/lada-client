@@ -11,9 +11,9 @@
  */
 Ext.define('Lada.store.Staaten', {
     extend: 'Lada.store.LocalPagingStore',
-    model: 'Lada.model.Staat',
+    model: 'Lada.model.State',
     sorters: [{
-        property: 'staat',
+        property: 'ctry',
         direction: 'ASC'
     }],
     autoLoad: true

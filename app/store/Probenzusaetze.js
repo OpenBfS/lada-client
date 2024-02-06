@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.Probenzusaetze', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.ProbenZusatz',
+    model: 'Lada.model.SampleSpecif',
     sorters: [{
         property: 'id',
         direction: 'ASC',

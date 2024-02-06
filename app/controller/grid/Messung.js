@@ -13,7 +13,7 @@ Ext.define('Lada.controller.grid.Messung', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        'Lada.view.window.MessungEdit'
+        'Lada.view.window.Messung'
     ],
 
     /**
@@ -35,7 +35,7 @@ Ext.define('Lada.controller.grid.Messung', {
     },
 
     /**
-     * This function opens a new {@link Lada.view.window.MessungEdit}
+     * This function opens a new {@link Lada.view.window.Messung}
      * Window.
      */
     editItem: function(grid, record) {
@@ -48,7 +48,7 @@ Ext.define('Lada.controller.grid.Messung', {
             probeRecord,
             messungRecord
         ) {
-            var win = Ext.create('Lada.view.window.MessungEdit', {
+            var win = Ext.create('Lada.view.window.Messung', {
                 parentWindow: probeWindow,
                 probe: probeRecord,
                 record: messungRecord
@@ -68,9 +68,9 @@ Ext.define('Lada.controller.grid.Messung', {
                 grid.up('probenedit').record,
                 record);
         } else {
-            Lada.model.Probe.load(record.get('probeId'), {
+            Lada.model.Sample.load(record.get('sampleId'), {
                 success: function(precord) {
-                    var probeWin = Ext.create('Lada.view.window.ProbeEdit', {
+                    var probeWin = Ext.create('Lada.view.window.Probe', {
                         record: precord,
                         style: 'z-index: -1;'
                     });
@@ -87,11 +87,10 @@ Ext.define('Lada.controller.grid.Messung', {
      * This function opens a window add a Messung
      */
     add: function(button) {
-        var probe = button.up('window').record;
-        var win = Ext.create('Lada.view.window.MessungCreate', {
-            record: probe,
-            grid: button.up('messunggrid'),
-            parentWindow: button.up('window')
+        var probeWin = button.up('window');
+        var win = Ext.create('Lada.view.window.Messung', {
+            parentWindow: probeWin,
+            probe: probeWin.record
         });
         win.initData();
         win.show();

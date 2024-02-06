@@ -14,7 +14,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     alias: 'widget.netzbetreiber',
     store: 'netzbetreiber',
     requires: ['Lada.store.Netzbetreiber'],
-    displayField: 'netzbetreiber',
+    displayField: 'name',
     valueField: 'id',
     filteredStore: false,
     readOnly: this.readOnly,
@@ -28,11 +28,11 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     forceSelection: this.forceSelection || false,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-        '{id} - {netzbetreiber}</div></tpl>'),
+        '{id} - {name}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -75,7 +75,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
             // eslint-disable-next-line no-loop-func
             var found = this.store.queryBy(function(rec) {
                 if (rec.get('id') === item ||
-                    rec.get('netzbetreiber') === item) {
+                    rec.get('name') === item) {
                     return true;
                 }
             });

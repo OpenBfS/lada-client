@@ -14,7 +14,7 @@ Ext.define('Lada.view.widget.Messmethode', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.messmethode',
     store: 'messmethoden',
-    displayField: 'messmethode',
+    displayField: 'name',
     valueField: 'id',
     // Enable filtering of comboboxes
     queryMode: 'local',

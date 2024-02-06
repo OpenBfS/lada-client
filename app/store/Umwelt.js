@@ -11,12 +11,12 @@
  */
 Ext.define('Lada.store.Umwelt', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Umwelt',
+    model: 'Lada.model.EnvMedium',
     sorters: [{
         property: 'id',
         direction: 'ASC'
     }, {
-        property: 'umweltBereich',
+        property: 'name',
         direction: 'ASC',
         transform: function(val) {
             if (val) {
@@ -28,14 +28,6 @@ Ext.define('Lada.store.Umwelt', {
     sortOnLoad: true,
     remoteSort: false,
     autoLoad: true,
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/umwelt',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    },
 
 
     setExtraParams: function(params, oldVal, umweltcombo, reicombo) {

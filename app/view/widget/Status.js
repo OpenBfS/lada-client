@@ -13,7 +13,7 @@ Ext.define('Lada.view.widget.Status', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.statuswert',
     store: Ext.data.StoreManager.get('statuswerte'),
-    displayField: 'wert',
+    displayField: 'val',
     valueField: 'id',
     // Enable filtering of comboboxes
     autoSelect: false,

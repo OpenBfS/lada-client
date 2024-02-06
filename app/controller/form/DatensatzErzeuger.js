@@ -10,7 +10,8 @@
  * This is a controller for a Datensatzerzeuger Stammdaten forms
  */
 Ext.define('Lada.controller.form.DatensatzErzeuger', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.datensatzerzeugerform',
 
     init: function() {
         this.control({
@@ -23,17 +24,9 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             'datensatzerzeugerform button[action=copy]': {
                 click: this.copyDatensatzerzeuger
             },
-            'datensatzerzeugerform [name="datensatzErzeugerId"]': {
-                change: this.checkCommitEnabled
-            },
-            'datensatzerzeugerform [name="bezeichnung"]': {
-                change: this.checkCommitEnabled
-            },
-            'datensatzerzeugerform [name="mstId"]': {
-                change: this.checkCommitEnabled
-            },
-            'datensatzerzeugerform [name="netzbetreiberId"]': {
-                change: this.checkCommitEnabled
+            'datensatzerzeugerform': {
+                dirtychange: this.checkCommitEnabled,
+                validitychange: this.checkCommitEnabled
             }
         });
     },
@@ -45,75 +38,40 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         for (var key in data) {
             record.set(key, data[key]);
         }
-        record.set('netzbetreiberId',
+        record.set('networkId',
             formPanel.down('netzbetreiber').getValue()[0]);
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
         record.save({
-            success: function(newRecord, response) {
+            scope: this,
+            success: function(newRecord) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(newRecord);
-                var json = Ext.decode(response.getResponse().responseText);
-                formPanel.clearMessages();
-                formPanel.setRecord(newRecord);
-                formPanel.setMessages(json.errors, json.warnings);
-                button.setDisabled(true);
-                button.up('datensatzerzeugeredit')
-                    .down('button[action=discard]')
-                    .setDisabled(true);
-                button.up('datensatzerzeugeredit')
-                    .down('button[action=copy]')
-                    .setDisabled(false);
                 Ext.data.StoreManager.get('datensatzerzeuger').reload();
-            },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
+                var win = button.up('datensatzerzeugeredit');
+                if (win.closeRequested) {
+                    win.doClose();
                 } else {
-                    formPanel.down(
-                        'tfield[name=datensatzErzeugerId]').setValue();
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.clearMessages();
-                        formPanel.setMessages(json.errors, json.warnings);
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                    button.up('datensatzerzeugeredit').down(
-                        'button[action=discard]').setDisabled(true);
-                    formPanel.isValid();
+                    formPanel.setRecord(newRecord);
+                    formPanel.setMessages(
+                        newRecord.get('errors'),
+                        newRecord.get('warnings'),
+                        newRecord.get('notifications'));
                 }
-            }
+            },
+            failure: this.handleSaveFailure
         });
     },
 
     copyDatensatzerzeuger: function(button) {
         var record = button.up('datensatzerzeugerform').getForm().getRecord();
         var copy = record.copy(null);
-        copy.set('datensatzErzeugerId', null);
+        copy.set('extId', null);
         var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
             record: copy,
-            mode: 'copy',
             original: record
         });
         var pos = button.up('datensatzerzeugerform').up().getPosition();
@@ -127,12 +85,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
         formPanel.getForm().isValid();
-        formPanel.up('datensatzerzeugeredit').down(
-            'button[action=discard]').setDisabled(true);
-        formPanel.up('datensatzerzeugeredit').down(
-            'button[action=save]').setDisabled(true);
-        formPanel.up('datensatzerzeugeredit').down(
-            'button[action=copy]').setDisabled(true);
     },
 
     checkCommitEnabled: function(callingEl) {
@@ -150,7 +102,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         }
         if (
             panel.isValid() &&
-            panel.down('netzbetreiber[name=netzbetreiberId]')
+            panel.down('netzbetreiber[name=networkId]')
                 .getValue().length !== 0
         ) {
             if (panel.isDirty()) {

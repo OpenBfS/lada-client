@@ -13,8 +13,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.dynamicgrid',
     requires: [
-        'Lada.view.window.Map',
         'Ext.grid.column.Widget',
+        'Lada.controller.grid.DynamicGrid',
         'Lada.view.grid.Messung',
         'Lada.view.grid.Messwert',
         'Lada.view.window.Probenehmer',
@@ -22,6 +22,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         'Lada.view.window.MessprogrammKategorie',
         'Lada.view.panel.Map'
     ],
+    controller: 'dynamicgridcontroller',
 
     store: null,
 
@@ -58,6 +59,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     isDynamic: true,
 
+    showMap: false,
+
     viewConfig: {
         deferEmptyText: false
     },
@@ -72,7 +75,20 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.emptyText = this.i18n.getMsg(this.emptyText);
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             checkOnly: true,
-            injectCheckbox: 1
+            injectCheckbox: 1,
+            // Handle header checkbox clicks to only send one select event
+            onHeaderClick: function() {
+                var selectionCount = this.getCount();
+                var grid = this.view.grid;
+                var recordCount = grid.getStore().getCount();
+                if (recordCount === selectionCount) {
+                    this.deselectAll();
+                } else {
+                    this.selectAll(true);
+                    var records = this.getSelection();
+                    grid.fireEvent('selectall', grid, records);
+                }
+            }
         });
         this.callParent(arguments);
     },
@@ -146,7 +162,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         if (this.down('map') !== null) {
             this.removeDocked(this.down('map'));
         }
-        if (this.rowtarget.dataType === 'ortId') {
+        if (this.showMap) {
             this.i18n = Lada.getApplication().bundle;
             var map = Ext.create('Lada.view.panel.Map', {
                 collapsible: true,
@@ -201,7 +217,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     this.rowtarget.dataIndex, id, false, false, false, true));
             }
         }
-        this.getSelectionModel().select(records);
+        this.getSelectionModel().select(records, map.multiSelect);
     },
 
     addOrt: function(event) {
@@ -214,11 +230,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             clone.getGeometry().getCoordinates()[1] * 100000)
             / 100000;
         Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort', {
-                koordXExtern: koord_x.toString(),
-                koordYExtern: koord_y.toString(),
-                kdaId: 4,
-                ortTyp: 1,
+            record: Ext.create('Lada.model.Site', {
+                coordXExt: koord_x.toString(),
+                coordYExt: koord_y.toString(),
+                spatRefSysId: 4,
+                siteClassId: 1,
                 plausibleReferenceCount: 0,
                 referenceCountMp: 0,
                 referenceCount: 0
@@ -251,17 +267,18 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      *   of fields
      **/
     generateColumnsAndFields: function(current_columns, fixedColumnStore) {
-        this.currentParams = {
-            sorting: [],
-            filters: []
-        };
-        this.toolbarbuttons = [];
-        var resultColumns = [];
-        var fields = [];
         this.i18n = Lada.getApplication().bundle;
+
+        this.showMap = false;
+
+        // Initialize first field
+        var fields = [];
         fields.push(new Ext.data.Field({
             name: 'readonly'
         }));
+
+        // Initialize column for first field as 'actioncolumn'
+        var resultColumns = [];
         resultColumns.push({
             xtype: 'actioncolumn',
             text: 'RW',
@@ -294,30 +311,36 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         });
 
-        current_columns.sort('columnIndex', 'ASC');
-        var cc = current_columns.getData().items;
+        this.currentParams = {
+            sorting: [],
+            filters: []
+        };
+        this.toolbarbuttons = [];
 
         var filterMap = this.getFilterValues();
 
+        current_columns.sort('colIndex', 'ASC');
+        var cc = current_columns.getData().items;
         for (var i = 0; i < cc.length; i++) {
             var orig_column = fixedColumnStore.findRecord(
-                'id', cc[i].get('gridColumnId'), false, false, false, true);
+                'id', cc[i].get('gridColMpId'), false, false, false, true);
             var dataIndex = orig_column.get('dataIndex');
-            if (cc[i].get('visible') === true) {
-                var col = {};
-                col.dataIndex = dataIndex;
-                col.dataType = orig_column.get('dataType');
-                col.text = orig_column.get('name');
-                col.width = cc[i].get('width');
-                col.sortable = false;
+            if (cc[i].get('isVisible') === true) {
+                var col = {
+                    dataIndex: dataIndex,
+                    dataType: orig_column.get('disp'),
+                    text: orig_column.get('gridCol'),
+                    width: cc[i].get('width'),
+                    sortable: false
+                };
                 //Check column type and set to string if unknown
-                var datatype = orig_column.get('dataType');
+                var datatype = orig_column.get('disp');
                 if (!datatype) {
                     datatype = {name: 'text'};
                 }
                 var curField = {
                     dataIndex: dataIndex,
-                    name: orig_column.get('name')
+                    name: orig_column.get('gridCol')
                 };
                 switch (datatype.name) {
                     case 'probeId':
@@ -336,7 +359,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         this.generateGeomColumns(col);
                         break;
                     case 'date':
-                        this.generateDateColumns(curField, orig_column, col);
+                        this.generateDateColumns(orig_column, col);
                         break;
                     case 'number':
                         this.generateNumberColumns(orig_column, col);
@@ -376,42 +399,54 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     case 'mprkat':
                         this.generateStammColumn(col, datatype);
                         break;
-                    default:
+                    case 'textLineBr':
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
-                            if (value === 0 || value == null)  {
-                                return value;
+                            if (value === 0 || value === null) {
+                                return null;
                             }
                             return '<div style="white-space: normal !important;">' +
                                 value + '</div>' || '';
                         };
+                        break;
+                    default:
+                        col.xtype = 'gridcolumn';
+                        col.renderer = function(value) {
+                            if (value === 0 || value === null) {
+                                return value;
+                            }
+                            return value || '';
+                        };
                 }
+
                 fields.push(curField);
+
                 if (cc[i].sort) {
                     this.currentParams.sorting.push({
                         name: dataIndex,
                         sort: cc[i].get('sort')
                     });
                 }
+
                 col.hideable = false;
                 col.draggable = false;
                 resultColumns.push(col);
             }
-            if (cc[i].get('filterActive')) {
+            if (cc[i].get('isFilterActive')) {
                 this.currentParams.filters.push({
                     //dataindex
                     name: dataIndex,
                     //Readable name
-                    displayName: cc[i].get('name'),
+                    displayName: cc[i].get('gridCol'),
                     //Filter value
-                    filter: cc[i].get('filterValue'),
+                    filterVal: cc[i].get('filterVal'),
                     //Readable filter value
                     filterDisplay: filterMap.get(dataIndex) ?
                         filterMap.get(dataIndex) :
-                        cc[i].get('filterValue'),
-                    filterRegex: cc[i].get('filterRegex'),
-                    filterNegate: cc[i].get('filterNegate'),
-                    filterIsNull: cc[i].get('filterIsNull')
+                        cc[i].get('filterVal'),
+                    isFilterRegex: cc[i].get('isFilterRegex'),
+                    isFilterNegate: cc[i].get('isFilterNegate'),
+                    isFilterNull: cc[i].get('isFilterNull')
                 });
             }
         }
@@ -435,7 +470,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 click: function(button) {
                     var id = Number(button.text);
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    var win = Ext.create('Lada.view.window.ProbeEdit', {
+                    var win = Ext.create('Lada.view.window.Probe', {
                         style: 'z-index: -1;',
                         recordId: id
                     });
@@ -476,7 +511,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     var id = Number(button.text);
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
                     var win = Ext.create(
-                        'Lada.view.window.MessungEdit', {
+                        'Lada.view.window.Messung', {
                             style: 'z-index: -1;',
                             recordId: id
                         });
@@ -487,10 +522,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 if (success) {
                                     var messungRecord = record;
                                     var probeWin = Ext.create(
-                                        'Lada.view.window.ProbeEdit', {
+                                        'Lada.view.window.Probe', {
                                             style: 'z-index: -1;',
                                             recordId: messungRecord.get(
-                                                'probeId')
+                                                'sampleId')
                                         });
                                     if (!probeWin.show()) {
                                         //If there is already a probe window,
@@ -498,7 +533,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                         probeWin.destroy();
                                         probeWin = Ext.ComponentQuery.query(
                                             'probenedit[recordId=' +
-                                            messungRecord.get('probeId') +
+                                            messungRecord.get('sampleId') +
                                             ']')[0];
                                     }
                                     probeWin.addChild(win);
@@ -506,7 +541,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     probeWin.setPosition(30);
                                     win.setPosition(35 + probeWin.width);
                                     probeWin.loadRecord(
-                                        messungRecord.get('probeId'),
+                                        messungRecord.get('sampleId'),
                                         this,
                                         function(precord) {
                                             probeWin.setRecord(precord);
@@ -612,59 +647,28 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateGeomColumns: function(col) {
-        col.xtype = 'widgetcolumn';
-        col.widget = {
-            xtype: 'button',
-            icon: Ext.getResourcePath(this.openIconPath, null, null),
-            width: '16px',
-            height: '16px',
-            userCls: 'widget-column-button',
-            tooltip: this.i18n.getMsg('typedgrid.tooltip.geometry'),
-            hidden: true,
-            listeners: {
-                click: function(button) {
-                    button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    var geom = button.geom;
-                    var mapWin = Ext.create('Lada.view.window.Map', {
-                        geom: geom
-                    });
-                    mapWin.show();
-                },
-                textchange: function(button, oldval, newval) {
-                    button.geom = newval;
-                    button.text = '';
-                    button.tooltip = newval;
-                    if (!newval || newval === '') {
-                        button.hide();
-                    } else {
-                        button.show();
-                    }
-                }
+        this.showMap = true;
+        col.xtype = 'gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
             }
+            return value;
         };
     },
 
-    generateDateColumns: function(curField, orig_column, col) {
-        curField.depends = orig_column.dataIndex;
-
+    generateDateColumns: function(orig_column, col) {
         col.xtype = 'datecolumn';
-        col.format = orig_column.get('dataType').format;
+        col.format = orig_column.get('disp').format;
         col.renderer = function(value) {
-            if (!value || value === '') {
-                return '';
-            }
-            var format = col.format;
-            var dt = '';
-            if (!isNaN(value)) {
-                dt = Lada.util.Date.formatTimestamp(value, format, true);
-            }
-            return dt;
+            var date = Ext.Date.parse(value, Ext.data.field.Date.DATE_FORMAT);
+            return Lada.util.Date.formatTimestamp(date, col.format, true);
         };
     },
 
     generateNumberColumns: function(orig_column, col) {
         col.xtype = 'numbercolumn';
-        col.format = orig_column.get('dataType').format;
+        col.format = orig_column.get('disp').format;
         col.renderer = function(value) {
             if (value === null) {
                 return '';
@@ -774,11 +778,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!rec) {
                 return value;
             }
-            if (rec.get('statusStufe') !== undefined
-                && rec.get('statusWert') !== undefined
+            if (rec.get('statusLev') !== undefined
+                && rec.get('statusVal') !== undefined
             ) {
-                return rec.get('statusStufe').stufe + ' - '
-                    + rec.get('statusWert').wert;
+                return rec.get('statusLev').lev + ' - '
+                    + rec.get('statusVal').val;
             }
             return '';
         };
@@ -1033,7 +1037,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     addOrtButtons: function() {
         if (Ext.Array.contains(Lada.funktionen, 4) && !this.tbuttonExists(
-            'addMap')
+            'addMap') && this.showMap
         ) {
             this.toolbarbuttons.push({
                 text: this.i18n.getMsg('orte.frommap'),
@@ -1136,7 +1140,33 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         options.scope = this;
         options.callback = function() {
             this.setStore(store);
-            this.select(selection);
+            //If map is not already rendered:
+            //Wait for render, then fire reload event
+            var map = this.down('map');
+            if (map) {
+                if (map.rendered) {
+                    this.fireEvent('gridreload');
+                    this.select(selection);
+                } else {
+                    map.onAfter(
+                        'afterrender',
+                        function() {
+                            var querypanel = Ext.getCmp('querypanelid');
+                            querypanel.fireEvent('gridreload');
+                            this.select(selection);
+                        },
+                        this,
+                        {
+                            single: true,
+                            //Set to minimum priority to ensure the handler is
+                            //called after map panel afterrender handler
+                            priority: -999
+                        }
+                    );
+                }
+            } else {
+                this.select(selection);
+            }
             if (callback) {
                 callback();
             }

@@ -10,87 +10,111 @@
  * Form to create a new Messpunkt
  */
 Ext.define('Lada.view.form.Ort', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.ortform',
     requires: [
+        'Lada.controller.form.Ort',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat',
         'Lada.view.widget.KoordinatenArt'
     ],
+    controller: 'ortform',
     model: null,
 
     margin: 5,
+    border: true,
+    bodyPadding: 5,
 
     scrollable: true,
 
-    mode: null,
-
-    border: false,
-
     record: null,
-
-    original: null,
 
     trackResetOnLoad: true,
 
-    readOnly: true,
-
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.items = [{
             xtype: 'netzbetreiber',
-            name: 'netzbetreiberId',
-            submitValue: true,
+            name: 'networkId',
             border: false,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
             filteredStore: true,
-            editable: true,
-            allowBlank: false,
-            value: this.record.get('netzbetreiberId')
+            allowBlank: false
         }, {
             xtype: 'tfield',
-            name: 'ortId',
+            name: 'extId',
             maxLength: 20,
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.ortId')
         }, {
             xtype: 'ortszusatz',
             labelWidth: 125,
-            editable: true,
-            name: 'ozId',
+            name: 'poiId',
             fieldLabel: i18n.getMsg('orte.ozIdS')
         }, {
             xtype: 'orttyp',
             labelWidth: 125,
             maxLength: 100,
             editable: true,
-            name: 'ortTyp',
+            name: 'siteClassId',
             fieldLabel: i18n.getMsg('orte.ortTyp')
         }, {
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 15,
-            name: 'kurztext',
+            maxLength: 20,
+            name: 'shortText',
             fieldLabel: i18n.getMsg('orte.kurztext')
         }, {
             xtype: 'tfield',
             labelWidth: 125,
             maxLength: 100,
             fieldLabel: i18n.getMsg('orte.langtext'),
-            name: 'langtext'
+            name: 'longText'
         }, {
             xtype: 'staat',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('staat'),
-            name: 'staatId',
+            name: 'stateId',
+            validator: function(val) {
+                var hasMinFields = Boolean(
+                    me.down('field[name=spatRefSysId]').getValue()
+                        || me.down('field[name=adminUnitId]').getValue()
+                        || val);
+                return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+            },
             forceSelection: true
         }, {
             xtype: 'verwaltungseinheit',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
+            validator: function(val) {
+                var hasMinFields = Boolean(
+                    me.down('field[name=spatRefSysId]').getValue()
+                        || val
+                        || me.down('field[name=stateId]').getValue());
+                return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+            },
             forceSelection: true,
-            name: 'gemId'
+            name: 'adminUnitId'
+        }, {
+            xtype: 'chkbox',
+            labelWidth: 125,
+            name: 'isReiActive',
+            fieldLabel: i18n.getMsg('orte.aktiv')
+        }, {
+            xtype: 'tarea',
+            labelWidth: 125,
+            maxLength: 1024,
+            name: 'route',
+            fieldLabel: i18n.getMsg('orte.route')
+        }, {
+            xtype: 'datetimefield',
+            labelWidth: 125,
+            readOnly: true,
+            name: 'lastMod',
+            fieldLabel: i18n.getMsg('letzteAenderung')
         }, {
             xtype: 'fset',
             collapsible: true,
@@ -102,71 +126,83 @@ Ext.define('Lada.view.form.Ort', {
                 labelWidth: 125,
                 maxLength: 70,
                 fieldLabel: i18n.getMsg('orte.berichtstext'),
-                name: 'berichtstext'
+                name: 'reiReportText'
             }, {
                 xtype: 'reiprogpunktgruppe',
                 labelWidth: 125,
                 maxLength: 100,
-                name: 'reiProgpunktGrpId',
+                name: 'reiAgGrId',
                 editable: true,
-                fieldLabel: i18n.getMsg('reiProgpunktGrpId')
+                fieldLabel: i18n.getMsg('reiAgGrId')
             }, {
                 xtype: 'ktagruppe',
                 labelWidth: 125,
                 maxLength: 100,
-                name: 'ktaGruppeId',
+                name: 'nuclFacilGrId',
                 fieldLabel: i18n.getMsg('orte.anlageId')
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
                 maxLength: 1,
-                name: 'zone',
+                name: 'reiZone',
                 fieldLabel: i18n.getMsg('orte.zone')
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
                 maxLength: 2,
-                name: 'sektor',
+                name: 'reiSector',
                 fieldLabel: i18n.getMsg('orte.sektor')
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
                 maxLength: 10,
-                name: 'zustaendigkeit',
+                name: 'reiCompetence',
                 fieldLabel: i18n.getMsg('orte.zustaendigkeit')
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
                 maxLength: 10,
-                name: 'mpArt',
+                name: 'reiOprMode',
                 fieldLabel: i18n.getMsg('orte.mpArt')
-            }, {
-                xtype: 'chkbox',
-                labelWidth: 125,
-                name: 'aktiv',
-                fieldLabel: i18n.getMsg('orte.aktiv')
             }]
         }, {
             xtype: 'fset',
             collapsible: true,
-            name: 'koordinaten',
+            name: 'coordinates',
             items: [{
                 xtype: 'koordinatenart',
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.kda'),
-                name: 'kdaId'
+                validator: function(val) {
+                    var hasMinFields = Boolean(
+                        val
+                            || me.down('field[name=adminUnitId]').getValue()
+                            || me.down('field[name=stateId]').getValue());
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
+                name: 'spatRefSysId'
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
-                fieldLabel: i18n.getMsg('orte.koordx'),
+                fieldLabel: i18n.getMsg('coordXExt'),
+                validator: function(val) {
+                    var kda = me.down('field[name=spatRefSysId]').getValue();
+                    var hasMinFields = Boolean(!kda || kda && val);
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 regex: /^[noeswNOESW\d\.,-]+$/,
-                name: 'koordXExtern',
+                name: 'coordXExt',
                 maxLength: 22
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
-                fieldLabel: i18n.getMsg('orte.koordy'),
-                name: 'koordYExtern',
+                fieldLabel: i18n.getMsg('coordYExt'),
+                name: 'coordYExt',
+                validator: function(val) {
+                    var kda = me.down('field[name=spatRefSysId]').getValue();
+                    var hasMinFields = Boolean(!kda || kda && val);
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 regex: /^[noeswNOESW\d\.,-]+$/,
                 maxLength: 22
             }]
@@ -181,38 +217,27 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'chkbox',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.unscharf'),
-            name: 'unscharf'
+            name: 'isFuzzy'
         }, {
             xtype: 'numfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.hoeheLand'),
-            name: 'hoeheLand',
+            name: 'alt',
             maxLength: 10,
             allowDecimals: true
         }, {
             xtype: 'numfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.hoeheUeberNn'),
-            name: 'hoeheUeberNn',
+            name: 'heightAsl',
             maxLength: 10,
             allowDecimals: true
         }, {
-            xtype: 'tfield',
-            labelWidth: 125,
-            maxLength: 10,
-            name: 'nutsCode',
-            fieldLabel: i18n.getMsg('orte.nutsCode')
-        }, {
             xtype: 'label',
+            name: 'referenceCounter',
             style: 'font-style: italic',
             border: 10,
-            text: i18n.getMsg('orte.references') + ': ' +
-                this.record.get('referenceCount') +
-                ' /' +
-                this.record.get('plausibleReferenceCount') +
-                ' /' +
-                this.record.get('referenceCountMp') + ' ' +
-                i18n.getMsg('orte.references.text')
+            text: null
         }];
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -228,9 +253,7 @@ Ext.define('Lada.view.form.Ort', {
                 action: 'copy',
                 qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
                 icon: 'resources/img/dialog-ok-apply.png',
-                disabled: !this.record.phantom && !this.record.get('readonly') ?
-                    false :
-                    true
+                disabled: true
             },
             '->',
             {
@@ -250,106 +273,42 @@ Ext.define('Lada.view.form.Ort', {
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
 
-        if (this.mode === 'show') {
-            this.setReadOnly(true);
-        } else {
-            this.setReadOnly(false);
-        }
+        // Initialize disabled state of coordinate recalculation button
+        this.getController().enableChangeKDA();
 
         //If plausible probe instances reference this ort, disable coordinate
-        // fields, verwaltungseinheit, staat, koordiantenart, button change kda
+        // fields, verwaltungseinheit, staat, koordinatenart.
         if (this.record.get('plausibleReferenceCount') > 0 ||
                 this.record.get('referenceCountMp') > 0) {
-            this.down('tfield[name=koordXExtern]').setReadOnly(true);
-            this.down('tfield[name=koordYExtern]').setReadOnly(true);
+            this.down('tfield[name=coordXExt]').setReadOnly(true);
+            this.down('tfield[name=coordYExt]').setReadOnly(true);
             this.down('verwaltungseinheit').setReadOnly(true);
             this.down('staat').setReadOnly(true);
             this.down('koordinatenart').setReadOnly(true);
         }
 
-        if (this.record.get('ortTyp') === 3) {
+        if (this.record.get('siteClassId') === 3) {
             this.down('fieldset').expand();
             this.down('ortszusatz').setHidden(false);
         }
-        if (this.record.get('netzbetreiberId') &&
-            this.record.get('netzbetreiberId') !== '') {
+        if (this.record.get('networkId') &&
+            this.record.get('networkId') !== '') {
             this.down('netzbetreiber').down('combobox').setEditable(false);
             this.down('netzbetreiber').down('combobox').setReadOnly(true);
         }
+        this.updateReferences();
     },
 
-    setMessages: function(errors, warnings) {
-        var key;
-        var element;
-        var content;
+    updateReferences: function() {
         var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var j = 0; j < content.length; j++) {
-                    errorText += i18n.getMsg(content[j].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
-    clearMessages: function() {
-        // TODO: this is a stub
-        this.down('tfield[name=koordXExtern]').clearWarningOrError();
-        this.down('tfield[name=koordYExtern]').clearWarningOrError();
-        this.down('verwaltungseinheit[name=gemId]').clearWarningOrError();
-        this.down('orttyp[name=ortTyp]').clearWarningOrError();
-        this.down('staat[name=staatId]').clearWarningOrError();
-        this.down('koordinatenart[name=kdaId]').clearWarningOrError();
-        this.down('fset[name=koordinaten]').clearMessages();
-        this.down('fset[name=reiProperties]').clearMessages();
-        this.down('tfield[name=ortId]').clearWarningOrError();
-        this.down('ktagruppe[name=ktaGruppeId]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('netzbetreiber').setReadOnly(value);
-        this.down('tfield[name=ortId]').setReadOnly(value);
-        this.down('ortszusatz[name=ozId]').setReadOnly(value);
-        this.down('orttyp[name=ortTyp]').setReadOnly(value);
-        this.down('tfield[name=kurztext]').setReadOnly(value);
-        this.down('tfield[name=langtext]').setReadOnly(value);
-        this.down('staat[name=staatId]').setReadOnly(value);
-        this.down('verwaltungseinheit[name=gemId]').setReadOnly(value);
-        this.down('koordinatenart[name=kdaId]').setReadOnly(value);
-        this.down('tfield[name=koordXExtern]').setReadOnly(value);
-        this.down('tfield[name=koordYExtern]').setReadOnly(value);
-        this.down('tfield[name=berichtstext]').setReadOnly(value);
-        this.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setReadOnly(value);
-        this.down('ktagruppe[name=ktaGruppeId]').setReadOnly(value);
-        this.down('tfield[name=zone]').setReadOnly(value);
-        this.down('tfield[name=sektor]').setReadOnly(value);
-        this.down('tfield[name=zustaendigkeit]').setReadOnly(value);
-        this.down('tfield[name=mpArt]').setReadOnly(value);
-        this.down('chkbox[name=unscharf]').setReadOnly(value);
-        this.down('chkbox[name=aktiv]').setReadOnly(value);
-        this.down('numfield[name=hoeheLand]').setReadOnly(value);
-        this.down('numfield[name=hoeheUeberNn]').setReadOnly(value);
-        this.down('tfield[name=nutsCode]').setReadOnly(value);
+        var labelText =
+            i18n.getMsg('orte.references') + ': ' +
+            this.record.get('referenceCount') +
+            ' /' +
+            this.record.get('plausibleReferenceCount') +
+            ' /' +
+            this.record.get('referenceCountMp') + ' ' +
+            i18n.getMsg('orte.references.text');
+        this.down('label[name=referenceCounter]').setText(labelText);
     }
 });

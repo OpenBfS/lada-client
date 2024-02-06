@@ -12,10 +12,10 @@
 Ext.define('Lada.view.widget.Deskriptor', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.deskriptor',
-    displayField: 'beschreibung',
+    displayField: 'name',
     valueField: 'id',
     requires: ['Lada.store.Deskriptoren'],
-    searchValueField: 'sn',
+    searchValueField: 'levVal',
     // Enable filtering of comboboxes
     triggerAction: 'all',
     typeAhead: false,
@@ -26,11 +26,11 @@ Ext.define('Lada.view.widget.Deskriptor', {
     forceSelection: true,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-        '<tpl if="sn &gt; 9">{sn} - {beschreibung}</tpl>',
-        '<tpl if="sn &lt; 10">0{sn} - {beschreibung}</tpl></div></tpl>'),
+        '<tpl if="levVal &gt; 9">{levVal} - {name}</tpl>',
+        '<tpl if="levVal &lt; 10">0{levVal} - {name}</tpl></div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for="."><tpl if="sn &gt; 9">{sn} - {beschreibung}</tpl>',
-        '<tpl if="sn &gt; 0 &amp;&amp;sn &lt; 10">0{sn} - {beschreibung}</tpl>',
+        '<tpl for="."><tpl if="levVal &gt; 9">{levVal} - {name}</tpl>',
+        '<tpl if="levVal &gt; 0 &amp;&amp;levVal &lt; 10">0{levVal} - {name}</tpl>',
         '</tpl>'),
 
     initComponent: function() {
@@ -39,7 +39,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
         this.setStore(Ext.create('Lada.store.Deskriptoren'));
         this.store.on('load', function() {
             // Entry to be selected by clear handler
-            this.insert(0, {sn: 0, beschreibung: 'leer'});
+            this.insert(0, {levVal: 0, name: 'leer'});
         }, this.store);
 
         var combobox = this.down('combobox');
@@ -69,8 +69,8 @@ Ext.define('Lada.view.widget.Deskriptor', {
     focusfn: function(field) {
         var deskriptor = field.up('deskriptor');
         deskriptor.store.proxy.extraParams = {
-            layer: deskriptor.layer,
-            parents: deskriptor.getParents(field)
+            lev: deskriptor.layer,
+            predId: deskriptor.getParents(field)
         };
         deskriptor.store.load();
     }

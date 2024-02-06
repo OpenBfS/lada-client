@@ -13,9 +13,9 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.messprogrammland',
     store: 'messprogrammkategorie',
-    displayField: 'bezeichnung',
+    displayField: 'name',
     valueField: 'id',
-    searchValueField: 'code',
+    searchValueField: 'extId',
 
     //additional actions to be taken after initComponent
     extraParams: this.extraParams || null,
@@ -27,11 +27,12 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    listConfig: {maxWidth: 800},
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{code} - {bezeichnung}</div></tpl>'),
+            '{extId} - {name}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{bezeichnung}</tpl>'),
+        '<tpl for=".">{name}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -39,7 +40,7 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
         this.store = Ext.create('Lada.store.MessprogrammKategorie');
         this.store.clearFilter();
 
-        this.store.sort('bezeichnung', 'ASC');
+        this.store.sort('name', 'ASC');
         this.callParent(arguments);
         if (this.extraParams) {
             this.extraParams();

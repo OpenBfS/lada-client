@@ -11,6 +11,6 @@
  */
 Ext.define('Lada.store.Messprogramm', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Messprogramm'
+    model: 'Lada.model.Mpg'
 });
 

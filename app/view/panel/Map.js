@@ -40,12 +40,31 @@ Ext.define('Lada.view.panel.Map', {
 
     /**
      * @private
+     * Task to update the map size after its container has been resized.
+     * This is needed to prevent the map canvas from exceeding the parent
+     * container. See https://github.com/openlayers/openlayers/issues/1963 for
+     * further details.
+     */
+    mapResizeTask: new Ext.util.DelayedTask(function() {
+        this.map.setTarget(this.mapTarget);
+        this.map.updateSize();
+    }),
+
+    /**
+     * @private
      * Initialize the map panel.
      */
     initComponent: function() {
         this.on({
             selectfeature: {
                 fn: this.selectFeature,
+                scope: this,
+                options: {
+                    args: [true]
+                }
+            },
+            selectmultiplefeatures: {
+                fn: this.selectMultipleFeatures,
                 scope: this,
                 options: {
                     args: [true]
@@ -60,10 +79,24 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Select a feature by record (a Lada.model.Ort)
-     * @param record Record
+     * Select multiple features by records
+     * @param {*} records Records
      */
-    selectFeature: function(model, record) {
+    selectMultipleFeatures: function(records) {
+        var me = this;
+        Ext.Array.each(records, function(record) {
+            me.selectFeature(null, record, false);
+        });
+        this.zoomToSelectedFeatures();
+    },
+
+    /**
+     * Select a feature by record (Lada.model.Ort | Lada.model.GenericResults)
+     * @param record Record
+     * @param zoom If true, the map will be zoomed to show all selected
+     *             features
+     */
+    selectFeature: function(model, record, zoom) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -83,6 +116,15 @@ Ext.define('Lada.view.panel.Map', {
         this.selectedFeatureLayer.getSource().addFeature(feature);
         currentFeatures.push(feature);
         this.fireEvent('featureselected', this, currentFeatures);
+        if (zoom === true) {
+            this.zoomToSelectedFeatures();
+        }
+    },
+
+    /**
+     * Zoom to all selected features on the map.
+     */
+    zoomToSelectedFeatures: function() {
         var zoomFeats = this.selectedFeatureLayer.getSource().getFeatures();
         if (zoomFeats.length > 1) {
             var zf_geoms = [];
@@ -102,7 +144,6 @@ Ext.define('Lada.view.panel.Map', {
                 { zoom: 10,
                     duration: 1000});
         }
-        //TODO: hideable main layer/make all except selected invisible
     },
 
     /**
@@ -120,6 +161,10 @@ Ext.define('Lada.view.panel.Map', {
         }
         this.selectedFeatureLayer.getSource().removeFeature(feature);
         this.featureLayer.getSource().addFeature(feature);
+        //Clear selection interaction feature list
+        if (this.selectControl.getFeatures()) {
+            this.selectControl.getFeatures().clear();
+        }
     },
 
     activateDraw: function() {
@@ -150,14 +195,14 @@ Ext.define('Lada.view.panel.Map', {
         event.feature.set('bez', 'neuer Ort');
         var clone = event.feature.clone();
         clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
-        var parent = me.up('ortszuordnungwindow'); //TODO changed queryui
+        var parent = me.up('ortszuordnungwindow');
 
         //Use probe or messprogramm to get the mstId
         if (parent && (parent.probe || parent.messprogramm)) {
             var parentRecord = parent.probe ?
                 parent.probe :
                 parent.messprogramm;
-            var mstId = parentRecord.get('mstId');
+            var mstId = parentRecord.get('measFacilId');
             var mst = Ext.data.StoreManager.get('messstellen');
             var ndx = mst.findExact('id', mstId);
             var nId = mst.getAt(ndx).get('netzbetreiberId');
@@ -168,12 +213,12 @@ Ext.define('Lada.view.panel.Map', {
                 clone.getGeometry().getCoordinates()[1] * 100000)
                 / 100000;
             var ortWin = Ext.create('Lada.view.window.Ort', {
-                record: Ext.create('Lada.model.Ort', {
-                    netzbetreiberId: nId,
-                    koordXExtern: koord_x.toString(),
-                    koordYExtern: koord_y.toString(),
-                    kdaId: 4,
-                    ortTyp: 1,
+                record: Ext.create('Lada.model.Site', {
+                    networkId: nId,
+                    coordXExt: koord_x.toString(),
+                    coordYExt: koord_y.toString(),
+                    spatRefSysId: 4,
+                    siteClassId: 1,
                     plausibleReferenceCount: 0,
                     referenceCountMp: 0,
                     referenceCount: 0
@@ -211,33 +256,32 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Draws the content of a given GeoJSON Object
+     * Draws the content of a given GeoJSON Object.
      */
     drawGeoJson: function(json) {
         if (!json) {
             return;
         }
-        var style = new ol.style.Style({
-            image: new ol.style.Icon({
-                src: 'resources/img/marker-blue.png'
-            })
-        });
+        if (!this.featureLayer) {
+            this.initFeatureLayer();
+        }
         var format = new ol.format.GeoJSON({
             dataProjection: 'EPSG:4326',
             featureProjection: 'EPSG:3857'
         });
         var features = format.readFeatures(json);
+        //Set feature id from properties
+        Ext.Array.each(features, function(feat) {
+            feat.setId(feat.get('id'));
+        });
         var vectorSource = new ol.source.Vector({
             features: features
         });
         var extent = vectorSource.getExtent();
-
-        var vectorLayer = new ol.layer.Vector({
-            source: vectorSource,
-            style: style,
-            visible: true
-        });
-        this.map.addLayer(vectorLayer);
+        //Clear the map of selected features
+        this.selectedFeatureLayer.getSource().clear();
+        this.selectControl.getFeatures().clear();
+        this.featureLayer.setSource(vectorSource);
         this.map.getView().fit(extent, {maxZoom: 12});
     },
 
@@ -269,6 +313,7 @@ Ext.define('Lada.view.panel.Map', {
         } else {
             this.mapOptions.target = target.dom;
         }
+        this.mapTarget = this.mapOptions.target;
         this.mapOptions.view = new ol.View({
             center: [1160000, 6694000],
             zoom: 6,
@@ -355,18 +400,14 @@ Ext.define('Lada.view.panel.Map', {
         }
     },
 
-    beforeDestroy: function() {
-        //         delete this.map;
-        //         this.callParent(arguments);
-    },
-
     /**
      * @private
      * Override to resize the map and reposition the logo.
      */
     onResize: function() {
         this.superclass.onResize.apply(this, arguments);
-        this.map.updateSize();
+        this.map.setTarget('');
+        this.mapResizeTask.delay(100, null, this);
     },
 
     addPreviousOrt: function(record) {

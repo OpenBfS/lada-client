@@ -10,7 +10,8 @@
  * This is a controller for a Messung form
  */
 Ext.define('Lada.controller.form.Messung', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.messungform',
     requires: ['Lada.view.window.SetStatus'],
 
     /**
@@ -29,8 +30,7 @@ Ext.define('Lada.controller.form.Messung', {
                 click: this.showAuditTrail
             },
             'messungform': {
-                dirtychange: this.dirtyForm,
-                save: this.saveHeadless,
+                dirtychange: this.checkCommitEnabled,
                 validitychange: this.checkCommitEnabled
             },
             'messungform numfield [name=messdauer]': {
@@ -52,161 +52,59 @@ Ext.define('Lada.controller.form.Messung', {
      */
     save: function(button) {
         var formPanel = button.up('form');
-        var oldWin = button.up('window');
-        var parentWin = oldWin.parentWindow;
-        var probe = oldWin.record;
         formPanel.setLoading(true);
         var record = formPanel.getForm().getRecord();
-        var data = formPanel.getForm().getFieldValues();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
+        // Update record with values changed in the form
+        record.set(formPanel.getForm().getFieldValues(false));
         if (record.phantom) {
             record.set('id', null);
         }
 
-        formPanel.getForm().getRecord().save({
-            success: function(newRecord, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
-                    formPanel.clearMessages();
+        record.save({
+            scope: this,
+            success: function(newRecord) {
+                var win = button.up('window');
+                var parentWin = win.parentWindow;
+                if (parentWin) {
+                    parentWin.initData();
+                    var messunggrid = parentWin.down('messunggrid');
+                    if (messunggrid) {
+                        messunggrid.getStore().reload();
+                    }
+                }
+
+                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
+                }
+
+                // Close existing window or update form
+                if (win.closeRequested) {
+                    win.doClose();
+                } else {
+                    win.setRecord(newRecord);
+                    win.setTitle(win.createTitle());
                     formPanel.setRecord(newRecord);
-                    formPanel.setMessages(json.errors, json.warnings,
-                        json.notifications);
-                    //formPanel.up('window').initData(newRecord);
-
-                    if (parentWin) {
-                        parentWin.initData();
-                        var messunggrid = parentWin.down('messunggrid');
-
-                        if (messunggrid) {
-                            messunggrid.getStore().reload();
-                        }
+                    win.down('button[action=tagedit]').setDisabled(false);
+                    win.down('button[name=reload]').setDisabled(false);
+                    win.disableChildren(
+                        newRecord.get('readonly') || !newRecord.get('owner'));
+                    win.setMessages(
+                        newRecord.get('errors'),
+                        newRecord.get('warnings'),
+                        newRecord.get('notifications'));
+                    var messwertStore = win.down('messwertgrid').getStore();
+                    if (messwertStore.isLoaded()) {
+                        messwertStore.reload();
                     }
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                    if (response.action === 'create' && json.success) {
-                        oldWin.close();
-                        var win = Ext.create('Lada.view.window.MessungEdit', {
-                            probe: probe,
-                            parentWindow: parentWin,
-                            grid: oldWin.grid,
-                            record: record
-                        });
-                        win.initData(record);
-                        win.show();
-                        win.setMessages(json.errors, json.warnings,
-                            json.notifications);
-                        win.setPosition(35 + parentWin.width);
-                    } else {
-                        oldWin.down('messwertgrid').getStore().reload();
-                    }
-                }
-                formPanel.setLoading(false);
-            },
-            failure: function(newRrecord, response) {
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
-                formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.clearMessages();
-                        formPanel.setRecord(record);
-                        formPanel.setMessages(json.errors, json.warnings,
-                            json.notifications);
-                        formPanel.up('window').initData();
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
+                    //Reload measd store in case mmt changed
+                    win.mStore.load({
+                        params: {mmtId: newRecord.get('mmtId')}
+                    });
                     formPanel.setLoading(false);
                 }
-            }
-        });
-    },
-
-    enableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(false);
-        form.owner.down('button[action=discard]').setDisabled(false);
-        form.owner.up('window').disableChildren();
-    },
-
-    disableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(true);
-        form.owner.down('button[action=discard]').setDisabled(true);
-        // todo next line might not be true in all cases (Jan 2020)
-        form.owner.up('window').enableChildren();
-    },
-
-
-    /**
-     * Saves the current form without manipulating the gui
-     */
-    saveHeadless: function(panel) {
-        var formPanel = panel;
-        var record = formPanel.getForm().getRecord();
-        var data = formPanel.getForm().getFieldValues();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        if (record.phantom) {
-            record.set('id', null);
-        }
-
-        formPanel.getForm().getRecord().save({
-            success: function(newRecord, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                }
             },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                    formPanel.setLoading(false);
-                }
-            }
+            failure: this.handleSaveFailure
         });
     },
 
@@ -265,41 +163,13 @@ Ext.define('Lada.controller.form.Messung', {
         }
     },
 
-
-
-    /**
-      * The dirtyForm function enables or disables the save and discard
-      * button which are present in the toolbar of the form.
-      * The Buttons are only active if the content of the form was altered
-      * (the form is dirty).
-      * In Additon it calls the disableChildren() function of the window
-      * embedding the form. Only when the record does not carry the readonly
-      * flag, the function calls the embedding windows enableChilren() function
-      */
-    dirtyForm: function(form, dirty) {
-        if (dirty) {
-            if (form.isValid()) {
-                form.owner.down('button[action=save]').setDisabled(false);
-            }
-            form.owner.down('button[action=discard]').setDisabled(false);
-            form.owner.up('window').disableChildren();
-        } else {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=discard]').setDisabled(true);
-            //Only enable children if the form was not readOnly
-            if (!form.getRecord().get('readonly')) {
-                form.owner.up('window').enableChildren();
-            }
-        }
-    },
-
     showAuditTrail: function(button) {
         var titleText = button.up('window').getTitle().split(' - ');
         var trail = Ext.create('Lada.view.window.AuditTrail', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'messung',
-            objectId: button.up('form').recordId,
+            objectId: button.up('form').getRecord().get('id'),
             titleText: titleText[0]
         });
         button.up('window').addChild(trail);
@@ -309,8 +179,9 @@ Ext.define('Lada.controller.form.Messung', {
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.SetStatus', {
             title: i18n.getMsg('statusSetzen.win.title'),
-            selection: [button.up('window')
-                .down('messungform').getForm().getRecord()],
+            selection: [button.up('messungform').getForm().getRecord()],
+            sampleRecord: button.up('messungedit').parentWindow.
+                down('probeform').getRecord(),
             modal: true
         });
         var view = button.up('messungform');
@@ -348,7 +219,10 @@ Ext.define('Lada.controller.form.Messung', {
                     }
                 }
             });
-            messwertGrid.getStore().reload();
+            var measValStore = messwertGrid.getStore();
+            if (measValStore.isLoaded()) {
+                measValStore.reload();
+            }
         });
         win.show();
     }

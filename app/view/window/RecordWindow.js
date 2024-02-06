@@ -77,6 +77,47 @@ Ext.define('Lada.view.window.RecordWindow', {
             //loaded
             this.items = [this.placeholder];
         }
+
+        /**
+         * If form is dirty, show confirmation dialogue that allows the
+         * user to save changes.
+         * It's up to the handler of saving to actually close the
+         * window if saving is requested. Therefore, the property
+         * 'closeRequested' is set to true.
+         */
+        this.onBefore('beforeclose', function() {
+            var form = this.down('form');
+            if (form && !form.getRecord().get('readonly') && form.isDirty()) {
+                var i18n = Lada.getApplication().bundle;
+                var me = this;
+                Ext.Msg.show({
+                    title: i18n.getMsg('form.saveonclosetitle'),
+                    message: i18n.getMsg('form.saveonclosequestion'),
+                    modal: true,
+                    buttons: Ext.Msg.YESNOCANCEL,
+                    fn: function(btn) {
+                        switch (btn) {
+                            case 'no':
+                                // Continue closing the window
+                                me.doClose();
+                                break;
+                            case 'yes':
+                                // Leave closing up to the save-handler
+                                me.closeRequested = true;
+                                me.down('form').down('button[action=save]')
+                                    .click();
+                            default:
+                                // Cancel
+                        }
+                    }
+                });
+                // Intercept closing the window
+                return false;
+            }
+            // Just process closing the window without interception
+            return true;
+        });
+
         this.callParent(arguments);
     },
 
@@ -142,6 +183,22 @@ Ext.define('Lada.view.window.RecordWindow', {
     },
 
     /**
+     * Reload the window.
+     */
+    reloadWindow: function() {
+        this.setLoading(true);
+        if (this.down('form').isDirty()) {
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.alert(
+                i18n.getMsg('reloadRecord', i18n.getMsg(this.recordType)),
+                i18n.getMsg('confirmation.discardchanges'),
+                this.reloadRecord());
+        } else {
+            this.reloadRecord();
+        }
+    },
+
+    /**
      * Mask this component using the reload mask
      */
     showReloadMask: function() {
@@ -189,9 +246,9 @@ Ext.define('Lada.view.window.RecordWindow', {
     },
 
     /**
-     * If a request is still pending, abort and close this window
+     * If a request is still pending, abort and close this window.
      */
-    close: function() {
+    doClose: function() {
         if (this.childWindows) {
             for (var key in this.childWindows) {
                 if (this.childWindows[key] && this.childWindows[key].close) {
@@ -220,5 +277,87 @@ Ext.define('Lada.view.window.RecordWindow', {
             this.childWindows.splice(trailIdx, 1);
         }
         this.childWindows.push(childItem);
+    },
+
+    /**
+     * Clear validation messages of child components.
+     *
+     * Note that this function only clears messages of components extending:
+     * - Lada.view.form.LadaForm
+     * - Lada.view.widget.base.FieldSet
+     */
+    clearMessages: function() {
+        var fsets = this.query('fset');
+        var forms = this.query('ladaform');
+        var components = fsets.concat(forms);
+        components.forEach((comp => comp.clearMessages()));
+    },
+
+    /**
+     * Set validation messages for this window.
+     *
+     * Messages will be passed down to the forms and fieldsets.
+     * @param {*} errors Errors
+     * @param {*} warnings Warnings
+     * @param {*} notifications Notifications
+     */
+    setMessages: function(errors, warnings, notifications) {
+        var i18n = Lada.getApplication().bundle;
+        var forms = this.query('ladaform');
+        forms.forEach(
+            (form) => form.setMessages(errors, warnings, notifications));
+
+        var fieldsets = this.query('fset');
+        var fieldsetMap = {};
+        fieldsets.forEach((fset) => {
+            if (fset.name) {
+                fieldsetMap[fset.name] = {
+                    fieldset: fset,
+                    errors: '',
+                    warnings: '',
+                    notifications: ''
+                };
+            }
+        });
+        var getMessages = function(key, map) {
+            var result = '';
+            map[key].forEach(validationMessage =>
+                result +=
+                    i18n.getMsg(key) + ': '
+                    + i18n.getMsg(validationMessage.toString())
+                    + '<br>');
+            return result;
+        };
+        const allMessages = {
+            errors: errors,
+            warnings: warnings,
+            notifications: notifications
+        };
+        //Parse message map by categories
+        for (const [category, messages] of Object.entries(allMessages)) {
+            //Get messages by fieldset
+            for (var field in messages) {
+                if (fieldsetMap[field]) {
+                    fieldsetMap[field][category]
+                        += getMessages(field, messages);
+                }
+            }
+        }
+        //Set messages in components
+        for (var fieldsetName in fieldsetMap) {
+            var fieldset = fieldsetMap[fieldsetName];
+            var component = this.down('fset[name=' + fieldsetName + ']');
+            var hasWarnings = fieldset.warnings !== '';
+            var hasErrors = fieldset.errors !== '';
+            var hasNotifications = fieldset.notifications !== '';
+            component.showWarningOrError(
+                hasWarnings,
+                hasWarnings ? fieldset.warnings : null,
+                hasErrors,
+                hasErrors ? fieldset.errors : null,
+                hasNotifications,
+                hasNotifications ? fieldset.notifications : null
+            );
+        }
     }
 });

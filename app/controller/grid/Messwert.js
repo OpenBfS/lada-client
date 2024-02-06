@@ -10,7 +10,8 @@
  * This is a Controller for a Messwert Grid
  */
 Ext.define('Lada.controller.grid.Messwert', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.grid.BaseGridController',
+    alias: 'controller.messwertgrid',
 
     /**
      * Inhitialize the controller
@@ -31,7 +32,7 @@ Ext.define('Lada.controller.grid.Messwert', {
             'messwertgrid checkbox': {
                 change: this.handleItem
             },
-            'messwertgrid expnumberfield[dataIndex=messwert]': {
+            'messwertgrid expnumberfield[dataIndex=measVal]': {
                 change: this.changeValue
             },
             'messwertgrid combobox[name=messeinheit]': {
@@ -43,35 +44,35 @@ Ext.define('Lada.controller.grid.Messwert', {
     handleItem: function(editor, context) {
         var e = editor.up();
         if (context === true) {
-            e.down('expnumberfield[dataIndex=messwert]').setValue(null);
-            e.down('expnumberfield[dataIndex=messwert]').allowBlank = true;
-            e.down('expnumberfield[dataIndex=messwert]').setReadOnly(true);
+            e.down('expnumberfield[dataIndex=measVal]').setValue(null);
+            e.down('expnumberfield[dataIndex=measVal]').allowBlank = true;
+            e.down('expnumberfield[dataIndex=measVal]').setReadOnly(true);
             e.down('formatnumberfield').setValue(null);
             e.down('formatnumberfield').allowBlank = true;
             e.down('formatnumberfield').setReadOnly(true);
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]')
+            e.down('expnumberfield[dataIndex=detectLim]')
                 .allowBlank = false;
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(
+            e.down('expnumberfield[dataIndex=detectLim]').setReadOnly(
                 false);
             e.form.isValid();
         } else {
-            e.down('expnumberfield[dataIndex=messwert]').allowBlank = false;
-            e.down('expnumberfield[dataIndex=messwert]').setReadOnly(false);
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = true;
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(
+            e.down('expnumberfield[dataIndex=measVal]').allowBlank = false;
+            e.down('expnumberfield[dataIndex=measVal]').setReadOnly(false);
+            e.down('expnumberfield[dataIndex=detectLim]').allowBlank = true;
+            e.down('expnumberfield[dataIndex=detectLim]').setReadOnly(
                 false);
             e.down('formatnumberfield').allowBlank = false;
             e.down('formatnumberfield').setReadOnly(false);
             e.down('formatnumberfield').validateValue(
                 e.down('formatnumberfield').getValue());
-            e.down('expnumberfield[dataIndex=messwert]').validateValue(
-                e.down('expnumberfield[dataIndex=messwert]').getValue());
+            e.down('expnumberfield[dataIndex=measVal]').validateValue(
+                e.down('expnumberfield[dataIndex=measVal]').getValue());
             e.form.isValid();
         }
     },
 
     changeValue: function(editor) {
-        var e = editor.up().down('expnumberfield[dataIndex=nwgZuMesswert]');
+        var e = editor.up().down('expnumberfield[dataIndex=detectLim]');
         e.allowBlank = true;
         e.setReadOnly(false);
         e.validateValue(e.getValue());
@@ -90,6 +91,7 @@ Ext.define('Lada.controller.grid.Messwert', {
             context.record.set('id', null);
         }
         context.record.save({
+            scope: this,
             success: function() {
                 if (Ext.data.StoreManager.get('messeinheiten')) {
                     Ext.data.StoreManager.get('messeinheiten').clearFilter();
@@ -102,31 +104,10 @@ Ext.define('Lada.controller.grid.Messwert', {
                 // If you don't do the resets above, the grid will only contain
                 // one row in cases in when autocompletion was used!
                 context.grid.getSelectionModel().clearSelections();
-                context.grid.store.reload();
                 context.grid.up('window').initData();
             },
-            failure: function(request, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
+            failure: function(record, response) {
+                this.handleSaveFailure(record, response, context.record);
             }
         });
     },
@@ -145,13 +126,10 @@ Ext.define('Lada.controller.grid.Messwert', {
      * This function adds a new row to add a Messwert
      */
     add: function(button) {
-        var record = Ext.create('Lada.model.Messwert', {
-            messungsId: button.up('messwertgrid').recordId
+        var record = Ext.create('Lada.model.MeasVal', {
+            measmId: button.up('messwertgrid').getParentRecordId()
         });
         record.set('id', null);
-        if (!record.get('letzteAenderung')) {
-            record.data.letzteAenderung = new Date();
-        }
         button.up('messwertgrid').store.insert(0, record);
         button.up('messwertgrid').rowEditing.startEdit(0, 1);
     },
@@ -233,5 +211,30 @@ Ext.define('Lada.controller.grid.Messwert', {
             Ext.tip.QuickTipManager.unregister(cbox.getId());
             //attributes.removeNamedItem('data-qtip');
         }
+    },
+
+    normalize: function(button) {
+        Ext.Ajax.request({
+            url: 'lada-server/rest/measval/normalize',
+            params: {
+                measmId: button.up('messungedit').record.get('id')
+            },
+            method: 'PUT',
+            scope: this,
+            jsonData: {},
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                if (json.success === true) {
+                    button.up('messungedit').down('messwertgrid')
+                        .store.reload();
+                } else {
+                    var i18n = Lada.getApplication().bundle;
+                    Ext.Msg.alert('', i18n.getMsg('err.normalize'));
+                }
+            },
+            failure: function(response, opts) {
+                this.handleRequestFailure(response, opts, 'err.normalize');
+            }
+        });
     }
 });

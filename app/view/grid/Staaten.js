@@ -37,20 +37,31 @@ Ext.define('Lada.view.grid.Staaten', {
                 }
                 return value;
             },
-            dataIndex: 'staatIso'
+            dataIndex: 'iso3166'
         }, {
             header: i18n.getMsg('name'),
-            dataIndex: 'staat',
+            dataIndex: 'ctry',
             flex: 1,
             align: 'start'
         }];
+
         this.store = Ext.create('Lada.store.Staaten');
         this.store.loadPage(1);
-        this.setTitle('Staaten(' + this.store.getCount() + ')');
-        var cbox = Ext.create('Lada.view.widget.PagingSize');
+        this.setTitle(i18n.getMsg('title.staaten'));
+        this.store.on('load', this.setTitleFromStore, this);
+
         this.callParent(arguments);
+
         this.down('pagingtoolbar').add('-');
-        this.down('pagingtoolbar').add(cbox);
+        this.down('pagingtoolbar').add(
+            Ext.create('Lada.view.widget.PagingSize'));
+    },
+
+    setTitleFromStore: function(store) {
+        var i18n = Lada.getApplication().bundle;
+        this.setTitle(
+            i18n.getMsg('title.staaten')
+                + ' (' + store.getCount() + ')');
     },
 
     /**
@@ -61,7 +72,7 @@ Ext.define('Lada.view.grid.Staaten', {
             this.store = store;
             this.addLoadingFailureHandler(this.store);
             this.reconfigure(store);
-            this.setTitle('Staaten(' + store.getCount() + ')');
+            this.setTitleFromStore(store);
         }
     },
 

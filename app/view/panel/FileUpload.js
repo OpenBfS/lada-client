@@ -135,7 +135,7 @@ Ext.define('Lada.view.panel.FileUpload', {
                 store: Ext.data.StoreManager.get('messstellenFiltered'),
                 name: 'mst',
                 margin: '3, 3, 3, 3',
-                displayField: 'messStelle',
+                displayField: 'name',
                 valueField: 'id',
                 fieldLabel: i18n.getMsg('vorbelegung'),
                 labelAlign: 'top',

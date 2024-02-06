@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.OrtszuordnungTyp', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.OrtszuordnungTyp',
+    model: 'Lada.model.TypeRegulation',
     sorters: [
         {
             property: 'id',

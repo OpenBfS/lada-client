@@ -10,18 +10,18 @@
  * Formular to edit a DatensatzErzeuger
  */
 Ext.define('Lada.view.form.DatensatzErzeuger', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.datensatzerzeugerform',
     requires: [
+        'Lada.controller.form.DatensatzErzeuger',
         'Lada.view.widget.Netzbetreiber',
-        'Lada.model.DatensatzErzeuger'
+        'Lada.model.DatasetCreator'
     ],
 
-    model: 'Lada.model.DatensatzErzeuger',
+    model: 'Lada.model.DatasetCreator',
+    controller: 'datensatzerzeugerform',
     margin: 0,
     border: false,
-
-    recordId: null,
 
     trackResetOnLoad: true,
 
@@ -79,32 +79,32 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 },
                 items: [{
                     xtype: 'netzbetreiber',
-                    name: 'netzbetreiberId',
+                    name: 'networkId',
                     readOnly: true,
                     allowBlank: false,
                     filteredStore: true,
                     fieldLabel: i18n.getMsg('netzbetreiberId'),
-                    value: this.record.get('netzbetreiberId')
+                    value: this.record.get('networkId')
                 }, {
-                    xtype: 'combobox',
-                    displayField: 'messStelle',
+                    xtype: 'cbox',
+                    displayField: 'name',
                     readOnly: true,
                     valueField: 'id',
                     allowBlank: false,
                     queryMode: 'local',
-                    name: 'mstId',
+                    name: 'measFacilId',
                     matchFieldWidth: false,
-                    fieldLabel: i18n.getMsg('mst_id')
+                    fieldLabel: i18n.getMsg('meas_facil_id')
                 }, {
                     xtype: 'tfield',
-                    name: 'datensatzErzeugerId',
+                    name: 'extId',
                     readOnly: true,
                     allowBlank: false,
                     fieldLabel: i18n.getMsg('daErzeugerId'),
                     maxLength: 2
                 }, {
                     xtype: 'tarea',
-                    name: 'bezeichnung',
+                    name: 'descr',
                     allowBlank: false,
                     readOnly: true,
                     fieldLabel: i18n.getMsg('bezeichnung'),
@@ -119,15 +119,15 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         var netzstore = this.down('netzbetreiber').store;
         this.mstTypStore = Ext.data.StoreManager.get('messstellen');
         this.mstTypStore.filter({
-            property: 'mstTyp',
+            property: 'measFacilType',
             value: 'M',
             exactMatch: true});
-        this.down('combobox[name=mstId]').setStore(this.mstTypStore);
+        this.down('combobox[name=measFacilId]').setStore(this.mstTypStore);
         if (
             (!this.record.phantom) ||
-            (this.record.phantom && this.record.get('netzbetreiberId'))
+            (this.record.phantom && this.record.get('networkId'))
         ) {
-            var current = netzstore.getById(this.record.get('netzbetreiberId'));
+            var current = netzstore.getById(this.record.get('networkId'));
             if (current) {
                 this.down('netzbetreiber').setValue(current);
             }
@@ -140,64 +140,5 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     setRecord: function(datensatzerzeugerRecord) {
         this.clearMessages();
         this.getForm().loadRecord(datensatzerzeugerRecord);
-    },
-
-    setMessages: function(errors, warnings) {
-        var key;
-        var element;
-        var content;
-        var i18n = Lada.getApplication().bundle;
-        var tmp;
-        if (warnings) {
-            for (key in warnings) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var j = 0; j < content.length; j++) {
-                    errorText += i18n.getMsg(content[j].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
-    clearMessages: function() {
-        this.down('netzbetreiber').clearWarningOrError();
-        this.down('tarea[name=bezeichnung]').clearWarningOrError();
-        this.down('tfield[name=datensatzErzeugerId]').clearWarningOrError();
-        //TODO: is not a function
-        //this.down('combobox[name=mstId]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('netzbetreiber').setReadOnly(value);
-        this.down('tarea[name=bezeichnung]').setReadOnly(value);
-        this.down('tfield[name=datensatzErzeugerId]').setReadOnly(value);
-        this.down('combobox[name=mstId]').setReadOnly(value);
     }
 });

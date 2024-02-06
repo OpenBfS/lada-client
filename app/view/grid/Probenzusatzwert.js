@@ -12,10 +12,12 @@
 Ext.define('Lada.view.grid.Probenzusatzwert', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.probenzusatzwertgrid',
+    controller: 'probenzusatzwertgrid',
     requires: [
         'Lada.view.form.ExpNumberField',
         'Lada.view.form.FormatNumberField',
         'Lada.store.Zusatzwerte',
+        'Lada.controller.grid.Probenzusatzwert',
         'Lada.view.widget.Probenzusatzwert'
     ],
 
@@ -28,12 +30,14 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
 
     warnings: null,
     errors: null,
-    recordId: null,
+
     readOnly: true,
     allowDeselect: true,
     pzStore: null,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.Zusatzwerte');
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.zusatzwerte');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -76,101 +80,112 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 action: 'delete'
             }]
         }];
-        this.columns = [{
-            header: i18n.getMsg('pzs_id'),
-            dataIndex: 'pzsId',
-            flex: 1
-        }, {
-            header: i18n.getMsg('pzw'),
-            dataIndex: 'pzsId',
-            flex: 3,
-            renderer: function(value) {
-                if (!value || value === '') {
-                    return '';
-                }
-                var store = Ext.data.StoreManager.get('probenzusaetze');
-                var record = store.getById(value);
-                return record.get('beschreibung');
-            },
-            editor: {
-                xtype: 'combobox',
-                store: this.pzStore,
-                displayField: 'beschreibung',
-                name: 'beschreibung',
-                valueField: 'id',
-                allowBlank: false,
-                editable: true,
-                queryMode: 'local',
-                minChars: 0,
-                disableKeyFilter: false
-            }
-        }, {
-            header: i18n.getMsg('pzwKleinerALs'),
-            width: 50,
-            dataIndex: 'kleinerAls',
-            editor: {
-                xtype: 'checkbox',
-                uncheckedValue: false,
-                inputValue: '<'
-            }
-        }, {
-            header: i18n.getMsg('messwert'),
-            dataIndex: 'messwertPzs',
-            flex: 1,
-            editor: {
-                xtype: 'expnumberfield'
-            },
-            renderer: function(value) {
-                if (!value || value === '') {
+        this.columns = {
+            items: [{
+                header: i18n.getMsg('pzs_id'),
+                dataIndex: 'sampleSpecifId',
+                flex: 1,
+                renderer: function(value) {
                     return value;
                 }
-                var strValue = Lada.getApplication().toExponentialString(
-                    value, 2)
-                    .replace('.', Ext.util.Format.decimalSeparator);
-                var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1], 10);
-                return splitted[0] + 'e'
+            }, {
+                header: i18n.getMsg('pzw'),
+                dataIndex: 'sampleSpecifId',
+                flex: 3,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    if (!value || value === '') {
+                        return '';
+                    }
+                    var store = Ext.data.StoreManager.get('probenzusaetze');
+                    var record = store.getById(value);
+                    return record.get('name');
+                },
+                editor: {
+                    xtype: 'combobox',
+                    store: this.pzStore,
+                    displayField: 'name',
+                    name: 'name',
+                    valueField: 'id',
+                    allowBlank: false,
+                    editable: true,
+                    queryMode: 'local',
+                    minChars: 0,
+                    disableKeyFilter: false,
+                    matchFieldWidth: false
+                }
+            }, {
+                header: i18n.getMsg('pzwKleinerALs'),
+                width: 50,
+                dataIndex: 'smallerThan',
+                editor: {
+                    xtype: 'checkbox',
+                    uncheckedValue: false,
+                    inputValue: '<'
+                }
+            }, {
+                header: i18n.getMsg('measVal'),
+                dataIndex: 'measVal',
+                flex: 1,
+                editor: {
+                    xtype: 'expnumberfield'
+                },
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    if (!value || value === '') {
+                        return value;
+                    }
+                    var strValue = Lada.getApplication().toExponentialString(
+                        value, 2)
+                        .replace('.', Ext.util.Format.decimalSeparator);
+                    var splitted = strValue.split('e');
+                    var exponent = parseInt(splitted[1], 10);
+                    return splitted[0] + 'e'
                     + ((exponent < 0) ? '-' : '+')
                     + ((Math.abs(exponent) < 10) ? '0' : '')
                     + Math.abs(exponent).toString();
-            }
-        }, {
-            header: i18n.getMsg('mehId'),
-            dataIndex: 'pzsId',
-            flex: 1,
-            renderer: function(value) {
-                if (!value || value === '') {
-                    return '';
                 }
-                var zStore = Ext.data.StoreManager.get('probenzusaetze');
-                var mstore = Ext.data.StoreManager.get('messeinheiten');
-                var mehId = zStore.getById(value).get('messEinheitId');
-                var record = mstore.findRecord(
-                    'id', mehId, 0, false, false, true);
-                if (!record) {
-                    return '';
+            }, {
+                header: i18n.getMsg('measUnitId'),
+                dataIndex: 'sampleSpecifId',
+                flex: 1,
+                renderer: function(value) {
+                    if (!value || value === '') {
+                        return '';
+                    }
+                    var zStore = Ext.data.StoreManager.get('probenzusaetze');
+                    var mstore = Ext.data.StoreManager.get('messeinheiten');
+                    var mehId = zStore.getById(value).get('unitId');
+                    var record = mstore.findRecord(
+                        'id', mehId, 0, false, false, true);
+                    if (!record) {
+                        return '';
+                    }
+                    return record.get('unitSymbol');
                 }
-                return record.get('einheit');
+            }, {
+                header: i18n.getMsg('relmessfehler'),
+                dataIndex: 'error',
+                xtype: 'numbercolumn',
+                format: '0000.0',
+                flex: 1,
+                editor: {
+                    xtype: 'formatnumberfield',
+                    allowBlank: true,
+                    maxLength: 8,
+                    minValue: 0,
+                    maxValue: 1000,
+                    decimalPrecision: 1,
+                    allowDecimals: true,
+                    allowExponential: false,
+                    enforceMaxLength: true,
+                    hideTrigger: true
+                }
+            }],
+            defaults: {
+                renderer: this.validationResultRenderer
             }
-        }, {
-            header: i18n.getMsg('relmessfehler'),
-            dataIndex: 'messfehler',
-            xtype: 'numbercolumn',
-            format: '0000.0',
-            flex: 1,
-            editor: {
-                xtype: 'formatnumberfield',
-                allowBlank: true,
-                maxLength: 8,
-                minValue: 0,
-                maxValue: 1000,
-                decimalPrecision: 1,
-                allowDecimals: true,
-                allowExponential: false,
-                enforceMaxLength: true,
-                hideTrigger: true
-            }
-        }];
+        };
         this.listeners = {
             select: {
                 fn: this.activateRemoveButton,
@@ -181,29 +196,25 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
-        this.store = Ext.create('Lada.store.Zusatzwerte');
-        this.addLoadingFailureHandler(this.store);
-        this.store.load({
-            params: {
-                probeId: this.recordId
-            }
-        });
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    sampleId: parentId
+                }
+            });
+        }
     },
 
     /**
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

@@ -13,9 +13,9 @@ Ext.define('Lada.view.widget.DatensatzErzeuger', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.datensatzerzeuger',
     store: 'datensatzerzeuger',
-    displayField: 'datensatzErzeugerId',
+    displayField: 'extId',
     valueField: 'id',
-    searchValueField: 'bezeichnung',
+    searchValueField: 'descr',
 
     extraParams: this.extraParams || null,
     editable: this.editable || false,
@@ -28,9 +28,9 @@ Ext.define('Lada.view.widget.DatensatzErzeuger', {
     minChars: 0,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{datensatzErzeugerId} - {bezeichnung}</div></tpl>'),
+            '{extId} - {descr}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{datensatzErzeugerId} - {bezeichnung}</tpl>'),
+        '<tpl for=".">{extId} - {descr}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

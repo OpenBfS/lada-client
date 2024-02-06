@@ -12,11 +12,15 @@
 Ext.define('Lada.view.form.OrtInfo', {
     extend: 'Ext.form.Panel',
     alias: 'widget.ortinfo',
-    model: 'Lada.model.Ort',
+
+    requires: [
+        'Lada.view.widget.base.SelectableDisplayField'
+    ],
+
     border: false,
     flex: 1,
     margin: '0, 10, 0, 0',
-    record: null,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
@@ -30,15 +34,15 @@ Ext.define('Lada.view.form.OrtInfo', {
             },
             items: [{
                 fieldLabel: i18n.getMsg('orte.ortId'),
-                name: 'ortId'
+                name: 'extId'
             }, {
                 fieldLabel: i18n.getMsg('orte.kurztext'),
-                name: 'kurztext'
+                name: 'shortText'
             }, {
                 fieldLabel: i18n.getMsg('orte.langtext'),
                 xtype: 'displayfield',
                 labelWidth: 120,
-                name: 'langtext',
+                name: 'longText',
                 maxWidth: 300,
                 cls: 'text-wrapper'
             }, {
@@ -49,7 +53,7 @@ Ext.define('Lada.view.form.OrtInfo', {
             }, {
                 xtype: 'ortinforow',
                 label: i18n.getMsg('orte.verwaltungseinheit'),
-                firstitem: 'gemId',
+                firstitem: 'adminUnitId',
                 seconditem: 'gemeinde'
             }]
         }];
