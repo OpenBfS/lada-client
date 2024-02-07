@@ -12,6 +12,8 @@
 Ext.define('Lada.controller.BaseController', {
     extend: 'Ext.app.ViewController',
 
+    alias: 'controller.basecontroller',
+
     /**
      * Handle failures of requests that are not model operations
      * @param {*} response Response object
