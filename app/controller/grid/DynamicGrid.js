@@ -337,16 +337,69 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     deleteData: function(button) {
         var grid = button.up('dynamicgrid');
         if (grid.rowtarget.hasOwnProperty('dataType')) {
-            var selection = grid.getView().getSelectionModel().getSelection();
-            var ids = [];
-            for (var i = 0; i < selection.length; i++) {
-                ids.push(selection[i].get(grid.rowtarget.dataIndex));
+            var i18n = Lada.getApplication().bundle;
+
+            var title = '';
+            var dialog1 = '';
+            var dialog2 = i18n.getMsg('delete.multiple.warning');
+
+            switch (grid.rowtarget.dataType) {
+                case 'probeId':
+                    title = i18n.getMsg('delete.multiple_probe.window.title');
+                    dialog1 = i18n.getMsg('delete.multiple_probe');
+                    break;
+                case 'mpId':
+                    title = i18n.getMsg('delete.multiple_mpr.window.title');
+                    dialog1 = i18n.getMsg('delete.multiple_mpr');
+                    break;
+                case 'probenehmer':
+                    title = i18n.getMsg(
+                        'delete.multiple_probenehmer.window.title');
+                    dialog1 = i18n.getMsg('delete.multiple_probenehmer');
+                    break;
+                case 'dsatzerz':
+                    title = i18n.getMsg(
+                        'delete.multiple_datensatzerzeuger.window.title');
+                    dialog1 = i18n.getMsg('delete.multiple_datensatzerzeuger');
+                    break;
+                case 'mprkat':
+                    title = i18n.getMsg('delete.multiple_mpr_kat.window.title');
+                    dialog1 = i18n.getMsg('delete.multiple_mpr_kat');
+                    break;
+                case 'ortId':
+                    title = i18n.getMsg('delete.multiple_ort.window.title');
+                    dialog1 = i18n.getMsg('delete.multiple_ort');
+                    break;
+                case 'messungId':
+                    title = i18n.getMsg('delete.multiple_messung.window.title');
+                    dialog1 = i18n.getMsg('delete.multiple_messung');
+                    break;
+                case 'tagId':
+                    title = i18n.getMsg('delete.multiple_tag.window.title');
+                    dialog1 = i18n.getMsg('delete.multiple_tag');
+                    break;
             }
-            var win = Ext.create('Lada.view.window.DeleteMultipleItems', {
-                selection: selection,
-                parentGrid: grid
+
+            Ext.Msg.show({
+                title: title,
+                message: '<p>' + dialog1 + '<br/>' + '<br/>' + dialog2 + '</p>',
+                buttons: Ext.Msg.OKCANCEL,
+                scope: this,
+                fn: function(btn) {
+                    if (btn === 'ok') {
+                        var selection = grid.getView().getSelectionModel()
+                            .getSelection();
+                        var ids = [];
+                        for (var i = 0; i < selection.length; i++) {
+                            ids.push(selection[i].get(grid.rowtarget.dataIndex));
+                        }
+                        Ext.create('Lada.view.window.DeleteMultipleItems', {
+                            selection: selection,
+                            parentGrid: grid
+                        }).show();
+                    }
+                }
             });
-            win.show();
         }
     },
 
