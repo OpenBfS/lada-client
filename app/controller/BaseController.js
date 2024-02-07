@@ -87,10 +87,12 @@ Ext.define('Lada.controller.BaseController', {
 
     getHttpError: function(response) {
         var i18n = Lada.getApplication().bundle;
-        var msg = i18n.getMsg('err.msg.generic.body');
+        var msg;
         if (response.timedout) {
             // Handle timeout
             msg = i18n.getMsg('err.msg.timeout');
+        } else if (Lada.util.I18n.isMsgDefined(response.status)) {
+            msg = i18n.getMsg(response.status);
         } else {
             // Handle general HTTP errors
             msg = response.responseText
