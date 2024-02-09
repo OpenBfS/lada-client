@@ -22,6 +22,12 @@
 Ext.define('Lada.view.window.RecordWindow', {
     extend: 'Lada.view.window.TrackedWindow',
 
+    requires: [
+        'Lada.controller.BaseController'
+    ],
+
+    controller: 'basecontroller',
+
     /**
      * Model class to use, e.g. Lada.model.Probe
      */
@@ -163,6 +169,7 @@ Ext.define('Lada.view.window.RecordWindow', {
                 }
                 me.setLoading(false);
                 if (!success) {
+                    me.getController().handleServiceFailure(record, operation);
                     me.showReloadMask();
                 } else {
                     me.hideReloadMask();

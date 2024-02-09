@@ -12,12 +12,16 @@
 Ext.define('Lada.controller.BaseController', {
     extend: 'Ext.app.ViewController',
 
+    alias: 'controller.basecontroller',
+
     /**
      * Handle failures of requests that are not model operations
      * @param {*} response Response object
      * @param {*} titleMsg Title message, optional
+     *
+     * Returns (possibly localized) error message.
      */
-    handleRequestFailure: function(response, opts, titleMsg) {
+    handleRequestFailure: function(response, opts, titleMsg, skipAlert) {
         var i18n = Lada.getApplication().bundle;
         var msg = '';
         //Check for bean validation messages
@@ -34,8 +38,11 @@ Ext.define('Lada.controller.BaseController', {
             //Handle other Http error codes
             msg = this.getHttpError(response);
         }
-        Ext.Msg.alert(
-            i18n.getMsg(titleMsg ? titleMsg : 'err.msg.generic.title'), msg);
+        if (!skipAlert) {
+            Ext.Msg.alert(i18n.getMsg(
+                titleMsg ? titleMsg : 'err.msg.generic.title'), msg);
+        }
+        return msg;
     },
 
     /**
@@ -80,10 +87,12 @@ Ext.define('Lada.controller.BaseController', {
 
     getHttpError: function(response) {
         var i18n = Lada.getApplication().bundle;
-        var msg = i18n.getMsg('err.msg.generic.body');
+        var msg;
         if (response.timedout) {
             // Handle timeout
             msg = i18n.getMsg('err.msg.timeout');
+        } else if (Lada.util.I18n.isMsgDefined(response.status)) {
+            msg = i18n.getMsg(response.status);
         } else {
             // Handle general HTTP errors
             msg = response.responseText

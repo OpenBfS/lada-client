@@ -15,6 +15,16 @@ Ext.define('Lada.util.I18n', {
         msgNotFound: /\.undefined$/,
 
         /**
+         * Test if the i18n String is defined.
+         * @param {String} key i18n Key
+         * @return true or false
+         */
+        isMsgDefined: function(key) {
+            var i18n = Lada.getApplication().bundle;
+            return i18n.getMsg(key).search(this.msgNotFound) === -1;
+        },
+
+        /**
          * Returns the i18n String if defined or else the given key
          * @param {String} key i18n Key
          * @return i18n String or key
