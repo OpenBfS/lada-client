@@ -286,25 +286,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
 
         record.save({
-            success: function(rec, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                    formPanel.clearMessages();
-                    formPanel.setRecord(rec);
-                    formPanel.setMediaDesk(rec);
-                    formPanel.setMessages(json.errors, json.warnings);
-                    var win = button.up('window');
-                    win.record = rec;
-                    win.enableChildren();
-                    button.up('toolbar').down('button[action=audit]')
-                        .setDisabled(false);
+            scope: this,
+            success: function(rec) {
+                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
                 }
 
                 var win = button.up('window');
@@ -603,5 +589,4 @@ Ext.define('Lada.controller.form.Messprogramm', {
         });
         button.up('window').addChild(trail);
     }
-
 });
