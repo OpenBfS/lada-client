@@ -13,6 +13,17 @@ Ext.define('Lada.controller.DeleteMultipleItems', {
     extend: 'Lada.controller.BaseController',
     alias: 'controller.deletemultipleitems',
 
+    requires: [
+        'Lada.model.Sample',
+        'Lada.model.Measm',
+        'Lada.model.Mpg',
+        'Lada.model.Sampler',
+        'Lada.model.DatasetCreator',
+        'Lada.model.MpgCateg',
+        'Lada.model.Site',
+        'Lada.model.Tag'
+    ],
+
     /**
      * Initiates deletion of all selected items
      */
