@@ -151,7 +151,7 @@ Ext.define('Lada.controller.Query', {
         var cbox = qp.down('combobox[name=selectedQuery]');
         if (!cbox.getSelection()) {
             Ext.Msg.alert(
-                i18n.getMsg('query.error.search.title'),
+                i18n.getMsg('query.error.save.title'),
                 i18n.getMsg(
                     'err.msg.clonequery.noquery')
             );
@@ -391,116 +391,84 @@ Ext.define('Lada.controller.Query', {
         var gcs = qp.gridColumnValueStore;
         var rowtarget = this.setrowtarget();
         var jsonData = this.getQueryPayload(gcs, rowtarget);
-        if (!jsonData) {
-            //TODO warning: no data requested
-            return;
-        }
         var loadingMask = Ext.create('Ext.LoadMask', {
             target: qp
         });
         loadingMask.show();
-        if (!jsonData.columns.length) {
-            //TODO warning: no data requested
-        } else {
-            this.resultStore.getProxy().setPayload(jsonData);
-            this.resultStore.setPageSize(Lada.pagingSize);
+        this.resultStore.getProxy().setPayload(jsonData);
+        this.resultStore.setPageSize(Lada.pagingSize);
 
-            var plugin = null;
-            if (rowtarget.dataType === 'probeId') {
-                plugin = Ext.create('Lada.view.plugin.GridRowExpander', {
-                    gridType: 'Lada.view.grid.Messung',
-                    idRow: rowtarget.dataIndex,
-                    expandOnDblClick: false,
-                    gridConfig: {
-                        bottomBar: false
-                    }
-                });
-            } else if (rowtarget.dataType === 'messungId') {
-                plugin = Ext.create('Lada.view.plugin.GridRowExpander', {
-                    gridType: 'Lada.view.grid.Messwert',
-                    idRow: rowtarget.dataIndex,
-                    expandOnDblClick: false,
-                    gridConfig: {
-                        bottomBar: false
-                    }
-                });
-            }
-            //If grid still exists suspend paging toolbar events to prevent
-            //eventhandler from accessing a grid that may already have been
-            //cleared and will be destroyed after loading
-            var resultGrid = Ext.getCmp('dynamicgridid');
-            if (resultGrid) {
-                resultGrid.down('pagingtoolbar').suspendEvent('change');
-            }
-            this.resultStore.loadPage(1, {
-                scope: this,
-                callback: function(responseData, operation, success) {
-                    loadingMask.hide();
-                    if (success && responseData) {
-                        var contentPanel = button.up('panel[name=main]').down(
-                            'panel[name=contentpanel]');
-                        contentPanel.removeAll();
-                        if (resultGrid) {
-                            resultGrid.destroy();
-                        }
-                        resultGrid = Ext.create(
-                            'Lada.view.widget.DynamicGrid', {
-                                id: 'dynamicgridid',
-                                emptyText: 'query.nodata',
-                                basequery: qp.getForm().getRecord()
-                                    .get('baseQueryId'),
-                                selModel: Ext.create(
-                                    'Ext.selection.CheckboxModel', {
-                                        checkOnly: true,
-                                        injectCheckbox: 1
-                                    }),
-                                plugins: plugin || null,
-                                rowtarget: rowtarget
-                            });
-                        resultGrid.setup(gcs, Ext.getStore('columnstore'));
-                        resultGrid.setStore(this.resultStore);
-                        contentPanel.add(resultGrid);
-                        contentPanel.show();
-                        this.drawGeometryColumns();
-                        //Update print window instance
-                        Lada.view.window.PrintGrid.getInstance()
-                            .updateGrid(resultGrid);
-                    } else {
-                        //If loading failed, resume paging events
-                        if (resultGrid) {
-                            resultGrid.down('pagingtoolbar')
-                                .resumeEvent('change');
-                        }
-                        var i18n = Lada.getApplication().bundle;
-                        if (operation.error.response
-                                && operation.error.response.timedout) {
-                            Ext.Msg.alert(
-                                i18n.getMsg('query.error.search.title'),
-                                i18n.getMsg(
-                                    'query.error.search.querytimeout.message')
-                            );
-                        } else if (operation.error.status !== 0) {
-                            /* Server response has HTTP error code.
-                                If it's 0, we probably got a 302 from SSO,
-                                which is handled elsewhere.
-                                If the response contains a error message:
-                                show to user
-                                */
-                            var responseText
-                                = operation.error.response.responseText;
-                            var errorMessage = responseText ?
-                                i18n.getMsg(
-                                    'query.error.search.message-reason',
-                                    responseText)
-                                : i18n.getMsg('query.error.search.message');
-                            Ext.Msg.alert(
-                                i18n.getMsg('query.error.search.title'),
-                                errorMessage);
-                        }
-                    }
+        var plugin = null;
+        if (rowtarget.dataType === 'probeId') {
+            plugin = Ext.create('Lada.view.plugin.GridRowExpander', {
+                gridType: 'Lada.view.grid.Messung',
+                idRow: rowtarget.dataIndex,
+                expandOnDblClick: false,
+                gridConfig: {
+                    bottomBar: false
+                }
+            });
+        } else if (rowtarget.dataType === 'messungId') {
+            plugin = Ext.create('Lada.view.plugin.GridRowExpander', {
+                gridType: 'Lada.view.grid.Messwert',
+                idRow: rowtarget.dataIndex,
+                expandOnDblClick: false,
+                gridConfig: {
+                    bottomBar: false
                 }
             });
         }
+        //If grid still exists suspend paging toolbar events to prevent
+        //eventhandler from accessing a grid that may already have been
+        //cleared and will be destroyed after loading
+        var resultGrid = Ext.getCmp('dynamicgridid');
+        if (resultGrid) {
+            resultGrid.down('pagingtoolbar').suspendEvent('change');
+        }
+        this.resultStore.loadPage(1, {
+            scope: this,
+            callback: function(responseData, operation, success) {
+                loadingMask.hide();
+                if (success && responseData) {
+                    var contentPanel = button.up('panel[name=main]').down(
+                        'panel[name=contentpanel]');
+                    contentPanel.removeAll();
+                    if (resultGrid) {
+                        resultGrid.destroy();
+                    }
+                    resultGrid = Ext.create(
+                        'Lada.view.widget.DynamicGrid', {
+                            id: 'dynamicgridid',
+                            emptyText: 'query.nodata',
+                            basequery: qp.getForm().getRecord()
+                                .get('baseQueryId'),
+                            selModel: Ext.create(
+                                'Ext.selection.CheckboxModel', {
+                                    checkOnly: true,
+                                    injectCheckbox: 1
+                                }),
+                            plugins: plugin || null,
+                            rowtarget: rowtarget
+                        });
+                    resultGrid.setup(gcs, Ext.getStore('columnstore'));
+                    resultGrid.setStore(this.resultStore);
+                    contentPanel.add(resultGrid);
+                    contentPanel.show();
+                    this.drawGeometryColumns();
+                    //Update print window instance
+                    Lada.view.window.PrintGrid.getInstance()
+                        .updateGrid(resultGrid);
+                } else {
+                    //If loading failed, resume paging events
+                    if (resultGrid) {
+                        resultGrid.down('pagingtoolbar')
+                            .resumeEvent('change');
+                    }
+                    this.handleServiceFailure(
+                        responseData, operation, 'query.error.search.title');
+                }
+            }
+        });
     },
 
     showsql: function(button) {
@@ -508,14 +476,11 @@ Ext.define('Lada.controller.Query', {
         var rowtarget = this.setrowtarget();
         var gcs = qp.gridColumnValueStore;
         var jsonData = this.getQueryPayload(gcs, rowtarget);
-        if (!jsonData) {
-            //TODO warning: no data requested
-            return;
-        }
         Ext.Ajax.request({
             url: 'lada-server/rest/sql',
             method: 'POST',
             jsonData: jsonData,
+            scope: this,
             success: function(response) {
                 var json = Ext.decode(response.responseText);
                 if (json.success && json.data) {
@@ -524,19 +489,9 @@ Ext.define('Lada.controller.Query', {
                     }).show();
                 }
             },
-            failure: function(response) {
-                Ext.log({msg: 'Unable to get sql query', lvl: 'warn'});
-                var i18n = Lada.getApplication().bundle;
-                var responseText
-                    = response.responseText;
-                var errorMessage = responseText ?
-                    i18n.getMsg(
-                        'query.error.sql.message-reason',
-                        responseText)
-                    : i18n.getMsg('query.error.sql.message');
-                Ext.Msg.alert(
-                    i18n.getMsg('query.error.sql.title'),
-                    errorMessage);
+            failure: function(response, opts) {
+                this.handleRequestFailure(
+                    response, opts, 'query.error.sql.title');
             }
         });
     },
@@ -553,7 +508,7 @@ Ext.define('Lada.controller.Query', {
         if (!csdata.length) {
             return null;
         }
-        var jsonData = {columns: []};
+        var columns = [];
         for (var i = 0; i < csdata.length; i++ ) {
             var columnObj = {
                 gridColMpId: csdata[i].get('gridColMpId'),
@@ -568,15 +523,15 @@ Ext.define('Lada.controller.Query', {
                 sort: csdata[i].get('sort')
             };
             if (csdata[i].get('dataIndex') === rowtarget.dataIndex) {
-                jsonData.columns.push(columnObj);
+                columns.push(columnObj);
                 continue;
             }
             if (csdata[i].get('isVisible') === true ||
                 csdata[i].get('isFilterActive') === true ) {
-                jsonData.columns.push(columnObj);
+                columns.push(columnObj);
             }
         }
-        return jsonData;
+        return columns;
     },
 
     /**
