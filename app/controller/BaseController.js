@@ -121,16 +121,15 @@ Ext.define('Lada.controller.BaseController', {
                 ? record.entityName.match(/([A-Z][a-z]*)/g)
                     .join('_').toLowerCase()
                 : key;
+
             //Check for field names that may need translation
             //Currently these are contained in [...]
             var message = violation.message;
-            const regex = '\[[a-zA-Z0-9]+(, [a-zA-Z0-9]+)*\]';
-            var matchResult = message.match(regex);
+            var matchResult = message.match(/\[(\w+(?:, \w+)*)\]/);
             if (matchResult) {
-                let match = matchResult[0];
+                let match = matchResult[1];
                 let translatedFields = [];
-                match.substring(1, match.length - 1)
-                    .split(', ')
+                match.split(', ')
                     .forEach(part => translatedFields.push(
                         Lada.util.I18n.getMsgIfDefined(part)));
                 message = message.replace(match, translatedFields.join(', '));
