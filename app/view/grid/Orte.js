@@ -282,7 +282,7 @@ Ext.define('Lada.view.grid.Orte', {
             },
             dataIndex: 'isFuzzy'
         }, {
-            header: i18n.getMsg('orte.kdaId'),
+            header: i18n.getMsg('spatRefSysId'),
             filter: {
                 type: 'string'
             },

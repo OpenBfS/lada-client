@@ -172,7 +172,7 @@ Ext.define('Lada.view.form.Ort', {
             items: [{
                 xtype: 'koordinatenart',
                 labelWidth: 125,
-                fieldLabel: i18n.getMsg('orte.kda'),
+                fieldLabel: i18n.getMsg('spatRefSysId'),
                 validator: function(val) {
                     var hasMinFields = Boolean(
                         val
