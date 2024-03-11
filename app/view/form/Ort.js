@@ -57,7 +57,7 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'orttyp',
             labelWidth: 125,
             maxLength: 100,
-            editable: true,
+            allowBlank: false,
             name: 'siteClassId',
             fieldLabel: i18n.getMsg('orte.ortTyp')
         }, {
