@@ -18,11 +18,12 @@ MAINTAINER mlechner@bfs.de
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV OPENSSL_CONF=/etc/ssl/
+
 #
 # Install required packages
 #
 RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
-    curl unzip openjdk-11-jre-headless  git && \
+    curl unzip openjdk-11-jre-headless git && \
     apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
 
