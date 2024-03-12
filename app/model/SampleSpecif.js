@@ -22,7 +22,7 @@ Ext.define('Lada.model.SampleSpecif', {
     }, {
         name: 'name'
     }, {
-        name: 'unitId',
+        name: 'measUnitId',
         type: 'int',
         allowNull: true
     }, {
