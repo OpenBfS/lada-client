@@ -13,25 +13,16 @@
 # The LADA-application will be available under http://yourdockerhost:8182
 #
 
-FROM httpd:2.4 AS build
+FROM debian:11-slim AS build
 MAINTAINER mlechner@bfs.de
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV OPENSSL_CONF /etc/ssl/
-
+ENV OPENSSL_CONF=/etc/ssl/
 #
 # Install required packages
 #
-RUN apt-get -qq update && apt install -y wget apt-transport-https gpg
-RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
-RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
-
-
-
-
-
 RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
-    curl unzip temurin-11-jre  git && \
+    curl unzip openjdk-11-jre-headless  git && \
     apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -68,7 +59,7 @@ RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.j
 RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
 
 
-FROM httpd:2.4
+FROM httpd:2.4 AS deploy
 MAINTAINER mlechner@bfs.de
 
 ENV DEBIAN_FRONTEND noninteractive
