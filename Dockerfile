@@ -13,34 +13,23 @@
 # The LADA-application will be available under http://yourdockerhost:8182
 #
 
-FROM httpd:2.4
+FROM debian:11-slim AS build
 MAINTAINER mlechner@bfs.de
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV OPENSSL_CONF /etc/ssl/
+ENV OPENSSL_CONF=/etc/ssl/
 
 #
 # Install required packages
 #
-
 RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
-    curl unzip default-jre-headless git libapache2-mod-shib && \
+    curl unzip openjdk-11-jre-headless git && \
     apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 80 81 82 83 84
 
-CMD ["httpd-foreground"]
-#
-# httpd setup
-#
-RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#LoadModule deflate_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
 
 RUN mkdir /usr/local/lada
-RUN rm -rf /usr/local/apache2/htdocs && ln -s /usr/local/lada/ /usr/local/apache2/htdocs
 WORKDIR /usr/local/lada
-
-ADD custom-vhosts.conf ./
-RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
 
 ADD *.sh /usr/local/lada/
 
@@ -69,3 +58,38 @@ RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.j
 #
 
 RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
+
+
+FROM httpd:2.4 AS deploy
+MAINTAINER mlechner@bfs.de
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV OPENSSL_CONF /etc/ssl/
+
+#
+# Install required packages
+#
+
+RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
+    libapache2-mod-shib && \
+    apt-get -qq clean && rm -rf /var/lib/apt/lists/*
+
+EXPOSE 80 81 82 83 84
+
+CMD ["httpd-foreground"]
+#
+# httpd setup
+#
+RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#LoadModule deflate_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
+
+COPY --from=build /usr/local/lada /usr/local/lada
+RUN rm -rf /usr/local/apache2/htdocs && ln -s /usr/local/lada/ /usr/local/apache2/htdocs
+WORKDIR /usr/local/lada
+
+ADD custom-vhosts.conf ./
+RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
+
+
+
+
+
