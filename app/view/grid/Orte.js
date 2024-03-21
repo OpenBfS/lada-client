@@ -113,7 +113,7 @@ Ext.define('Lada.view.grid.Orte', {
             },
             dataIndex: 'extId'
         }, {
-            header: i18n.getMsg('orte.ortTyp'),
+            header: i18n.getMsg('siteClassId'),
             width: 40,
             filter: {
                 type: 'list'

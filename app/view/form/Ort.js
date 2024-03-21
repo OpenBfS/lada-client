@@ -59,7 +59,7 @@ Ext.define('Lada.view.form.Ort', {
             maxLength: 100,
             allowBlank: false,
             name: 'siteClassId',
-            fieldLabel: i18n.getMsg('orte.ortTyp')
+            fieldLabel: i18n.getMsg('siteClassId')
         }, {
             xtype: 'tfield',
             labelWidth: 125,
