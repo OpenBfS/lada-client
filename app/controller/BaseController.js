@@ -122,11 +122,10 @@ Ext.define('Lada.controller.BaseController', {
                     .join('_').toLowerCase()
                 : key;
 
-            //Check for field names that may need translation
+            //Check for keys that may need translation
             //Currently these are contained in [...]
             var message = violation.message;
-            var matchResult = message.match(/\[(\w+(?:, \w+)*)\]/);
-            if (matchResult) {
+            for (var matchResult of message.matchAll(/\[(\w+(?:, \w+)*)\]/g)) {
                 let match = matchResult[1];
                 let translatedFields = [];
                 match.split(', ')
@@ -134,6 +133,9 @@ Ext.define('Lada.controller.BaseController', {
                         Lada.util.I18n.getMsgIfDefined(part)));
                 message = message.replace(match, translatedFields.join(', '));
             }
+
+            // Prepare newlines for HTML
+            message = message.replace(/\n/g, '<br>');
 
             if (errors[key]) {
                 errors[key].push(message);
