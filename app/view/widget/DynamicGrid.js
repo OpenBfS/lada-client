@@ -1095,12 +1095,13 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         }
     },
+
     addPrintButton: function() {
         if (this.printable && !this.tbuttonExists('print')) {
             this.toolbarbuttons.push({
                 text: this.i18n.getMsg('button.print'),
                 icon: 'resources/img/printer.png',
-                action: 'print',
+                handler: 'openPrintDialog',
                 needsSelection: true,
                 disabled: true
             });

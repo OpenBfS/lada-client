@@ -32,6 +32,7 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.TagFilter',
         'Lada.view.plugin.GridRowExpander',
         'Lada.view.widget.DynamicGrid',
+        'Lada.view.window.PrintGrid',
         'Lada.view.window.SqlDisplay'
     ],
 

@@ -16,8 +16,11 @@ Ext.define('Lada.view.window.PrintGrid', {
     extend: 'Ext.window.Window',
     requires: [
         'Koala.view.form.IrixFieldSet',
+        'Lada.controller.Print',
         'Lada.view.grid.DownloadQueue'
     ],
+
+    controller: 'print',
 
     id: 'printgridwindow',
 
@@ -292,6 +295,7 @@ Ext.define('Lada.view.window.PrintGrid', {
      * Reset window and show if its hidden, else focus on window
      */
     show: function() {
+        this.controller.getAvailableTemplates(this);
         if (this.isHidden()) {
             this.callParent(arguments);
 

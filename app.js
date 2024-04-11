@@ -520,7 +520,6 @@ Ext.application({
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.GridExport',
         'Lada.controller.Global',
-        'Lada.controller.Print',
         'Lada.controller.ElanScenario',
         'Lada.controller.grid.Downloads'
     ]

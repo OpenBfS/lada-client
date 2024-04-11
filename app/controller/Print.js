@@ -28,11 +28,9 @@
  *
  */
 Ext.define('Lada.controller.Print', {
-    extend: 'Ext.app.Controller',
-    requires: [
-        'Lada.view.widget.DynamicGrid',
-        'Lada.view.window.PrintGrid'
-    ],
+    extend: 'Lada.controller.BaseController',
+
+    alias: 'controller.print',
 
     // may be overwritten by any appContext settings
     printUrlPrefix: 'lada-printer/print/',
@@ -45,9 +43,6 @@ Ext.define('Lada.controller.Print', {
 
     init: function() {
         this.control({
-            'button[action=print]': { // generic print button
-                click: this.openPrintDialog
-            },
             'printgrid button[action=doPrint]': { // print dialog 'print' button
                 click: this.doPrint
             },
@@ -65,38 +60,6 @@ Ext.define('Lada.controller.Print', {
             }
         });
     },
-
-    /**
-     * Triggers a 'print' dialog from a grid, where further choices about
-     * templates can be made
-     * @param {Ext.button.Button} button Button that triggered the event
-     */
-    openPrintDialog: function(button) {
-        var win = Lada.view.window.PrintGrid.getInstance();
-        var grid = button.up('dynamicgrid');
-        win.setParentGrid(grid);
-        if (Lada.appContext) {
-            if (Lada.appContext.merge.tools.indexOf('irixPrintBtn') >= 0) {
-                this.dokPoolEnabled = true;
-            }
-            if (Lada.appContext.merge.urls['irix-servlet']) {
-                this.irixServletURL = Lada.appContext.merge.urls[
-                    'irix-servlet'];
-            }
-            if (Lada.appContext.merge.urls['print-servlet']) {
-                this.printUrlPrefix = Lada.appContext.merge.urls[
-                    'print-servlet'];
-            }
-        }
-
-        if (this.dokPoolEnabled) {
-            win.addIrixCheckbox();
-            win.addIrixFieldset();
-        }
-        this.getAvailableTemplates(win);
-        win.show();
-    },
-
 
     /**
      * Retrieves the capabilities object of a template
@@ -842,9 +805,11 @@ Ext.define('Lada.controller.Print', {
             binary: false,
             scope: cbscope,
             success: printFunctionCallback,
-            failure: function(response) {
+            failure: function(response, opts) {
                 var i18n = Lada.getApplication().bundle;
-                me.handleError(response, 'err.msg.print.failed');
+                me.handleRequestFailure(response, opts, 'err.msg.print.failed');
+                Lada.view.window.PrintGrid.getInstance().setDisabled(false);
+                Lada.view.window.PrintGrid.getInstance().setLoading(false);
                 qitem.set('status', 'error');
                 qitem.set('message', i18n.getMsg('err.msg.print.failed'));
                 qitem.set('done', true);

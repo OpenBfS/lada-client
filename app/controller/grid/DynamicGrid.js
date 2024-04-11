@@ -617,5 +617,35 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         } else {
             this.buttonToggle(false, grid);
         }
+    },
+
+    /**
+     * Triggers a 'print' dialog from a grid, where further choices about
+     * templates can be made
+     * @param {Ext.button.Button} button Button that triggered the event
+     */
+    openPrintDialog: function(button) {
+        var win = Lada.view.window.PrintGrid.getInstance();
+        var grid = button.up('dynamicgrid');
+        win.setParentGrid(grid);
+        if (Lada.appContext) {
+            if (Lada.appContext.merge.tools.indexOf('irixPrintBtn') >= 0) {
+                this.dokPoolEnabled = true;
+            }
+            if (Lada.appContext.merge.urls['irix-servlet']) {
+                this.irixServletURL = Lada.appContext.merge.urls[
+                    'irix-servlet'];
+            }
+            if (Lada.appContext.merge.urls['print-servlet']) {
+                this.printUrlPrefix = Lada.appContext.merge.urls[
+                    'print-servlet'];
+            }
+        }
+
+        if (this.dokPoolEnabled) {
+            win.addIrixCheckbox();
+            win.addIrixFieldset();
+        }
+        win.show();
     }
 });
