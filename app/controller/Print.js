@@ -823,28 +823,22 @@ Ext.define('Lada.controller.Print', {
         var selection = grid.getView().getSelectionModel().getSelection();
         var ids = [];
         for (var item in selection) {
-            if (selection[item].get(grid.rowtarget.probeIdentifier)) {
-                var Id = selection[item].get(grid.rowtarget.probeIdentifier);
-            } else {
-                var Id = selection[item].get(grid.rowtarget.messungIdentifier);
-            }
+            var id = selection[item].get(grid.rowtarget.probeIdentifier)
+                ?? selection[item].get(grid.rowtarget.messungIdentifier);
 
             // avoids printing more than one sheet per probe
-            if (ids.indexOf(Id < 0)) {
-                ids.push(Id);
+            if (ids.indexOf(id < 0)) {
+                ids.push(id);
             }
         }
         //basically, thats the same as the downloadFile
         // code does.
-        if (selection[item].get(grid.rowtarget.probeIdentifier)) {
-            var data = '{ "proben": [' + ids.toString() + '] }';
-        } else {
-            var data = '{ "messungen": [' + ids.toString() + '] }';
-        }
+        var path = selection[item].get(grid.rowtarget.probeIdentifier)
+            ? 'samples' : 'measms';
         var me = this;
         Ext.Ajax.request({
-            url: 'lada-server/data/export/json',
-            jsonData: data,
+            url: 'lada-server/data/export/json/' + path,
+            jsonData: ids,
             binary: false,
             scope: cbscope,
             success: printFunctionCallback,
