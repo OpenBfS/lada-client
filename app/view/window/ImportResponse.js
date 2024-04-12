@@ -216,45 +216,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push(i18n.getMsg('importResponse.failure.errorlist'));
                 out.push('<br/>');
                 out.push('<ol>');
-                var msgs, parts, str, keySplit;
-                for (var key in errors) {
-                    msgs = errors[key];
-                    if (key !== 'parser') {
-                        out.push(i18n.getMsg(
-                            'importResponse.list.probe', key));
-                    }
-                    out.push('<ol>');
-                    var validation = [];
-                    validation.push(
-                        i18n.getMsg('importResponse.failure.validations'));
-                    for (var i = msgs.length - 1; i >= 0; i--) {
-                        keySplit = msgs[i].key.split('#');
-                        if (keySplit[0] === 'validation') {
-                            validation.push('<ol>');
-                            parts = msgs[i].value.split('#');
-                            str = i18n.getMsg(parts[0]) +
-                                (parts[1] === undefined ? '' : ' ' + parts[1]);
-                            validation.push(str + ' ('
-                                + Lada.util.I18n.getMsgIfDefined(
-                                    msgs[i].code.toString()) + ')');
-                            validation.push('</ol>');
-                        } else {
-                            out.push('<li>' + msgs[i].key + ' ('
-                                     + Lada.util.I18n.getMsgIfDefined(
-                                         msgs[i].code.toString())
-                                     + '): ' + msgs[i].value + '</li>');
-                        }
-                    }
-                    if (validation.length > 1) {
-                        out.push('<li>');
-                        out.push(validation.join(''));
-                        out.push('</li>');
-                    }
-                    out.push('</ol>');
-                    if (key !== 'parser') {
-                        out.push('</li>');
-                    }
-                }
+                this.printMessages(
+                    errors, out, 'importResponse.failure.validations');
                 out.push('</ol>');
                 out.push('<br/>');
             } else {
@@ -268,7 +231,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                 if (warnings.Parser) {
                     out.push(i18n.getMsg('importResponse.parser'));
                     out.push('<ol>');
-                    msgs = warnings.Parser;
+                    var msgs = warnings.Parser;
                     for (var i2 = msgs.length - 1; i2 >= 0; i2--) {
                         out.push('<li>' + msgs[i2].key + ' ('
                                  + i18n.getMsg(msgs[i2].code.toString())
@@ -276,50 +239,14 @@ Ext.define('Lada.view.window.ImportResponse', {
                     }
                     out.push('</ol>');
                 }
-                for (key in warnings) {
-                    if (key !== 'Parser') {
-                        out.push(i18n.getMsg('importResponse.list.probe', key));
-                    } else {
-                        continue;
-                    }
-                    msgs = warnings[key];
-                    out.push('<ol>');
-                    validation = [];
-                    validation.push(i18n.getMsg(
-                        'importResponse.warnings.validations'));
-                    for (var i3 = msgs.length - 1; i3 >= 0; i3--) {
-                        keySplit = msgs[i3].key.split('#');
-                        if (keySplit[0] === 'validation') {
-                            validation.push('<ol>');
-                            parts = msgs[i3].value.split('#');
-                            str = i18n.getMsg(parts[0]) +
-                                (parts[1] === undefined ? '' : ' ' + parts[1]);
-                            validation.push(str + ' ('
-                                + i18n.getMsg(msgs[i3].code.toString()) + ')');
-                            validation.push('</ol>');
-                        } else {
-                            out.push('<li>' + msgs[i3].key + ' ('
-                                     + i18n.getMsg(msgs[i3].code.toString())
-                                     + '): ' + msgs[i3].value + '</li>');
-                        }
-                    }
-                    if (validation.length > 1) {
-                        out.push('<li>');
-                        out.push(validation.join(''));
-                        out.push('</li>');
-                    }
-                    out.push('</ol>');
-                    if (key !== 'Parser') {
-                        out.push('</li>');
-                    }
-                }
+                this.printMessages(
+                    warnings, out, 'importResponse.warnings.validations');
                 out.push('</ol>');
             } else {
                 out.push('<br>Beim Import traten keine Warnungen auf.</br>');
             }
 
             if (numNotifications > 0) {
-                out.push('<br/>');
                 out.push(
                     i18n.getMsg(
                         'importResponse.notifications.notificationlist'));
@@ -336,43 +263,10 @@ Ext.define('Lada.view.window.ImportResponse', {
                     }
                     out.push('</ol>');
                 }
-                for (key in notifications) {
-                    if (key !== 'Parser') {
-                        out.push(i18n.getMsg('importResponse.list.probe', key));
-                    } else {
-                        continue;
-                    }
-                    msgs = notifications[key];
-                    out.push('<ol>');
-                    validation = [];
-                    validation.push(i18n.getMsg(
-                        'importResponse.notifications.validations'));
-                    for (var i5 = msgs.length - 1; i5 >= 0; i5--) {
-                        keySplit = msgs[i5].key.split('#');
-                        if (keySplit[0] === 'validation') {
-                            validation.push('<ol>');
-                            parts = msgs[i5].value.split('#');
-                            str = i18n.getMsg(parts[0]) +
-                                (parts[1] === undefined ? '' : ' ' + parts[1]);
-                            validation.push(str + ' ('
-                                + i18n.getMsg(msgs[i5].code.toString()) + ')');
-                            validation.push('</ol>');
-                        } else {
-                            out.push('<li>' + msgs[i5].key + ' ('
-                                     + i18n.getMsg(msgs[i5].code.toString())
-                                     + '): ' + msgs[i5].value + '</li>');
-                        }
-                    }
-                    if (validation.length > 1) {
-                        out.push('<li>');
-                        out.push(validation.join(''));
-                        out.push('</li>');
-                    }
-                    out.push('</ol>');
-                    if (key !== 'Parser') {
-                        out.push('</li>');
-                    }
-                }
+                this.printMessages(
+                    notifications,
+                    out,
+                    'importResponse.notifications.validations');
                 out.push('</ol>');
             } else {
                 out.push(
@@ -386,5 +280,45 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
         }
         return out.join('');
+    },
+
+    printMessages: function(msgs, out, msg) {
+        var i18n = Lada.getApplication().bundle;
+        for (var key in msgs) {
+            msgs = msgs[key];
+            if (key !== 'parser') {
+                out.push(i18n.getMsg('importResponse.list.probe', key));
+            }
+            out.push('<ol>');
+            var validation = [];
+            validation.push(i18n.getMsg(msg));
+            for (var i = msgs.length - 1; i >= 0; i--) {
+                var keySplit = msgs[i].key.split('#');
+                if (keySplit[0] === 'validation') {
+                    validation.push('<ol>');
+                    var parts = msgs[i].value.split('#');
+                    var str = i18n.getMsg(parts[0]) +
+                        (parts[1] === undefined ? '' : ' ' + parts[1]);
+                    validation.push(str + ' ('
+                                    + Lada.util.I18n.getMsgIfDefined(
+                                        msgs[i].code.toString()) + ')');
+                    validation.push('</ol>');
+                } else {
+                    out.push('<li>' + msgs[i].key + ' ('
+                             + Lada.util.I18n.getMsgIfDefined(
+                                 msgs[i].code.toString())
+                             + '): ' + msgs[i].value + '</li>');
+                }
+            }
+            if (validation.length > 1) {
+                out.push('<li>');
+                out.push(validation.join(''));
+                out.push('</li>');
+            }
+            out.push('</ol>');
+            if (key !== 'parser') {
+                out.push('</li>');
+            }
+        }
     }
 });
