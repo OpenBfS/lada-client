@@ -1110,7 +1110,7 @@ Ext.define('Lada.view.window.GridExport', {
         var expcolumns = win.down('tagfield[name=exportcolumns]').getValue();
         var columnstore = Ext.data.StoreManager.get('columnstore');
         var genericResults = Ext.StoreManager.get('genericresults');
-        var cols = genericResults.getProxy().payload.columns;
+        var cols = genericResults.getProxy().payload;
         if (!cols || !cols.length) {
             return [];
         }
