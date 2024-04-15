@@ -12,7 +12,12 @@
 Ext.define('Lada.view.window.GridExport', {
     extend: 'Ext.window.Window',
     alias: 'widget.exportdata',
-    requires: ['Lada.view.grid.DownloadQueue'],
+    requires: [
+        'Lada.controller.Print',
+        'Lada.view.grid.DownloadQueue'
+    ],
+
+    controller: 'print',
 
     defaults: {
         margin: '5, 5, 5, 5',
@@ -676,9 +681,7 @@ Ext.define('Lada.view.window.GridExport', {
      * @param {*} scope optional scope ('this')
      */
     requestExport: function(type, url, data, scope) {
-
-        var printController = Lada.app.getController('Lada.controller.Print');
-        var queueItem = printController.addQueueItem(data.filename, 'export');
+        var queueItem = this.controller.addQueueItem(data.filename, 'export');
         var me = scope || this;
         Ext.Ajax.request({
             url: url,
