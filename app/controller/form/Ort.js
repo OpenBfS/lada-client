@@ -259,7 +259,6 @@ Ext.define('Lada.controller.form.Ort', {
      */
     onKDARecalculation: function(button) {
         var win = button.up('window');
-        var i18n = Lada.getApplication().bundle;
         win.down('button[action=apply]').setDisabled(true);
         if (
             win.down('koordinatenart[name=newKDA]').getValue() === win.down(
@@ -297,30 +296,15 @@ Ext.define('Lada.controller.form.Ort', {
                         var messageContainer = win.down(
                             'container[name=messageContainer]');
                         var json = Ext.decode(response.responseText);
-                        if (json.data) {
-                            messageContainer.setHidden(true);
-                            win.down('koordinatenart[name=newKDA]')
-                                .setReadOnly(false);
-                            win.down('selectabledisplayfield[name=newX]')
-                                .setValue(json.data.x);
-                            win.down('selectabledisplayfield[name=newY]')
-                                .setValue(json.data.y);
-                            win.down('button[action=apply]')
-                                .setDisabled(false);
-                        } else {
-                            messageContainer.setHidden(false);
-                            var messageField = win.down(
-                                'textareafield[name=message]');
-                            messageField.setValue(
-                                i18n.getMsg('err.msg.ort.changeKda'));
-                            // TODO error handling: calculation not successful.
-                            // For now, just resets
-                            win.down('koordinatenart[name=newKDA]').setValue(
-                                win.down('koordinatenart[name=originalKDA]')
-                                    .getValue());
-                            win.down('koordinatenart[name=newKDA]')
-                                .setReadOnly(false);
-                        }
+                        messageContainer.setHidden(true);
+                        win.down('koordinatenart[name=newKDA]')
+                            .setReadOnly(false);
+                        win.down('selectabledisplayfield[name=newX]')
+                            .setValue(json.x);
+                        win.down('selectabledisplayfield[name=newY]')
+                            .setValue(json.y);
+                        win.down('button[action=apply]')
+                            .setDisabled(false);
                     }
                 },
                 failure: function(response, opts) {

@@ -22,12 +22,10 @@ Ext.define('Lada.controller.SetStatus', {
             scope: this,
             success: function(response) {
                 var json = Ext.JSON.decode(response.responseText);
-                if (json.data) {
-                    win.down('statuskombiselect').down(
-                        'combobox').getStore().setData(json.data);
-                    if (!json.data.length) {
-                        win.down('button[name=start]').disable();
-                    }
+                win.down('statuskombiselect').down(
+                    'combobox').getStore().setData(json);
+                if (!json.length) {
+                    win.down('button[name=start]').disable();
                 }
             },
             failure: this.handleRequestFailure
@@ -90,9 +88,9 @@ Ext.define('Lada.controller.SetStatus', {
                         var json = this.handleServiceFailure(
                             record, operation, '', true);
                         if (json) {
-                            var errors = json.data.errors;
-                            var warnings = json.data.warnings;
-                            var notifications = json.data.notifications;
+                            var errors = json.errors;
+                            var warnings = json.warnings;
+                            var notifications = json.notifications;
                             var out = [];
                             var numErrors, numWarnings, numNotifications;
                             if (!Ext.isObject(errors)) {
@@ -127,7 +125,7 @@ Ext.define('Lada.controller.SetStatus', {
                                 out.push('</ul></dd>');
                             } else {
                                 out.push('<dl><dd>' +
-                                         i18n.getMsg('status-' + json.message) +
+                                         i18n.getMsg('status-200') +
                                          '</dd>');
                                 out.push('</dd></dl>');
                             }

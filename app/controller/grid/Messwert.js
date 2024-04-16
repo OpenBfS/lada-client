@@ -222,15 +222,8 @@ Ext.define('Lada.controller.grid.Messwert', {
             method: 'PUT',
             scope: this,
             jsonData: {},
-            success: function(response) {
-                var json = Ext.decode(response.responseText);
-                if (json.success === true) {
-                    button.up('messungedit').down('messwertgrid')
-                        .store.reload();
-                } else {
-                    var i18n = Lada.getApplication().bundle;
-                    Ext.Msg.alert('', i18n.getMsg('err.normalize'));
-                }
+            success: function() {
+                button.up('messungedit').down('messwertgrid').store.reload();
             },
             failure: function(response, opts) {
                 this.handleRequestFailure(response, opts, 'err.normalize');

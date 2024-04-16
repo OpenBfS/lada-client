@@ -483,12 +483,9 @@ Ext.define('Lada.controller.Query', {
             jsonData: jsonData,
             scope: this,
             success: function(response) {
-                var json = Ext.decode(response.responseText);
-                if (json.success && json.data) {
-                    Ext.create('Lada.view.window.SqlDisplay', {
-                        sql: json.data
-                    }).show();
-                }
+                Ext.create('Lada.view.window.SqlDisplay', {
+                    sql: response.responseText
+                }).show();
             },
             failure: function(response, opts) {
                 this.handleRequestFailure(

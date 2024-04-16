@@ -112,9 +112,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             method: 'GET',
             success: function(response) {
-                var responseObj = Ext.decode(response.responseText);
-                //All messung objects as json object
-                var ortszuordnungArr = responseObj.data;
+                var ortszuordnungArr = Ext.decode(response.responseText);
                 fetchedOZ = ortszuordnungArr.length;
                 if (fetchedOZ === 0) {
                     me.copyMessmethoden(mp, mpCopy, finishedCallback);
@@ -178,9 +176,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             method: 'GET',
             success: function(response) {
-                var responseObj = Ext.decode(response.responseText);
-                //All messung objects as json object
-                var mmtArr = responseObj.data;
+                var mmtArr = Ext.decode(response.responseText);
                 fetchedMmt = mmtArr.length;
 
                 if (fetchedMmt === 0) {

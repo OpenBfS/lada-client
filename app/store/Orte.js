@@ -17,5 +17,15 @@ Ext.define('Lada.store.Orte', {
         direction: 'ASC'
     }],
     remoteFilter: true,
-    autoLoad: false
+    autoLoad: false,
+
+    // Special proxy with paging ability for Lada.view.grid.Orte
+    proxy: {
+        type: 'rest',
+        url: Lada.model.LadaBase.schema.getUrlPrefix() + '/site',
+        reader: {
+            rootProperty: 'data',
+            totalProperty: 'totalCount'
+        }
+    }
 });

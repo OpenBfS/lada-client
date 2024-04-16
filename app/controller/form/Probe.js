@@ -140,9 +140,7 @@ Ext.define('Lada.controller.form.Probe', {
             },
             method: 'GET',
             success: function(response) {
-                var responseObj = Ext.decode(response.responseText);
-                //All messung objects as json object
-                var ortszuordnungArr = responseObj.data;
+                var ortszuordnungArr = Ext.decode(response.responseText);
                 fetchedOZ = ortszuordnungArr.length;
                 if (fetchedOZ === 0) {
                     me.copyMessungen(probe, probeCopy, callback, toolbar);
@@ -214,9 +212,7 @@ Ext.define('Lada.controller.form.Probe', {
             },
             method: 'GET',
             success: function(response) {
-                var responseObj = Ext.decode(response.responseText);
-                //All messung objects as json object
-                var messungArr = responseObj.data;
+                var messungArr = Ext.decode(response.responseText);
                 fetchedMessungen = messungArr.length;
                 //Array of original records
                 var messungRecArr = [];
@@ -313,8 +309,7 @@ Ext.define('Lada.controller.form.Probe', {
                 method: 'GET',
                 // eslint-disable-next-line no-loop-func
                 success: function(response) {
-                    var responseObj = Ext.decode(response.responseText);
-                    var messwertArr = responseObj.data;
+                    var messwertArr = Ext.decode(response.responseText);
                     var messwertCopyArr = [];
                     var messwertRecArr = [];
                     var messungsId = messwertArr.length >= 1 ?

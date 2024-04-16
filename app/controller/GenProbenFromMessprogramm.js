@@ -76,58 +76,57 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
                             + '<br>'
                     );
                 }
-                if (json.success && json.data.proben) {
-                    // Reload tag store to have generated tag available
-                    var store = Ext.data.StoreManager.get('tags');
-                    if (store) {
-                        store.reload();
-                    }
 
-                    // Process response data
-                    var results = [];
-                    Ext.Object.each(
-                        json.data.proben,
-                        function(key, result) {
-                            if (result.success) {
-                                results.push(result);
-                                var newRes = result.data.filter(
-                                    function(r) {
-                                        return r.found !== true;
-                                    });
-                                var foundRes = result.data.filter(
-                                    function(r) {
-                                        return r.found === true;
-                                    });
-                                panel.setHtml(
-                                    panel.html +
-                                        '<br>' +
-                                        i18n.getMsg(
-                                            'gpfm.generated.success',
-                                            key)
-                                        + ':<br>'
-                                        + '<ul><li>'
-                                        + i18n.getMsg(
-                                            'gpfm.generated.found',
-                                            foundRes.length)
-                                        + ' </li><li>'
-                                        + newRes.length
-                                        + ' Probe(n) erzeugt</li></ul>'
-                                );
-                            } else {
-                                panel.setHtml(
-                                    panel.html +
-                                        '<br>' +
-                                        i18n.getMsg(
-                                            'gpfm.generated.error',
-                                            key,
-                                            i18n.getMsg(result.message)));
-                            }
-                        });
+                // Reload tag store to have generated tag available
+                var store = Ext.data.StoreManager.get('tags');
+                if (store) {
+                    store.reload();
                 }
+
+                // Process response data
+                var results = [];
+                Ext.Object.each(
+                    json.proben,
+                    function(key, result) {
+                        if (result.success) {
+                            results.push(result);
+                            var newRes = result.data.filter(
+                                function(r) {
+                                    return r.found !== true;
+                                });
+                            var foundRes = result.data.filter(
+                                function(r) {
+                                    return r.found === true;
+                                });
+                            panel.setHtml(
+                                panel.html +
+                                    '<br>' +
+                                    i18n.getMsg(
+                                        'gpfm.generated.success',
+                                        key)
+                                    + ':<br>'
+                                    + '<ul><li>'
+                                    + i18n.getMsg(
+                                        'gpfm.generated.found',
+                                        foundRes.length)
+                                    + ' </li><li>'
+                                    + newRes.length
+                                    + ' Probe(n) erzeugt</li></ul>'
+                            );
+                        } else {
+                            panel.setHtml(
+                                panel.html +
+                                    '<br>' +
+                                    i18n.getMsg(
+                                        'gpfm.generated.error',
+                                        key,
+                                        i18n.getMsg(result.message)));
+                        }
+                    });
                 win.down('toolbar').down('button').setDisabled(false);
                 me.processResults(
                     results,
-                    json.data.tag ? json.data.tag : '',
+                    json.tag ?? '',
                     reqJsondata);
                 win.setLoading(false);
             },

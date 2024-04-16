@@ -67,44 +67,39 @@ Ext.define('Lada.controller.SetTags', {
             scope: this,
             success: function(response) {
                 var json = Ext.decode(response.responseText);
-                if (json.success) {
-                    var tagStore = Ext.getStore('tags');
+                var tagStore = Ext.getStore('tags');
 
-                    // Check for errors per assignment
-                    var msgs = '';
-                    var successTags = [];
-                    json.data.forEach(function(item) {
-                        if (!item.success) {
-                            msgs += tagStore.getById(item.data.tagId)
-                                .get('name')
-                                + ': ' + i18n.getMsg(item.message) + '<br>';
-                        } else {
-                            successTags.push(item.data.tagId);
-                        }
-                    });
-
-                    // Update parent grid or tagwidget in edit form
-                    if (win.parentWindow) {
-                        var widget = win.parentWindow.down('tagwidget');
-                        var oldSelection = widget.getValue();
-                        var newSelection = isDelete
-                            ? Ext.Array.difference(oldSelection, successTags)
-                            : Ext.Array.merge(oldSelection, successTags);
-                        widget.setValue(newSelection);
+                // Check for errors per assignment
+                var msgs = '';
+                var successTags = [];
+                json.forEach(function(item) {
+                    if (!item.success) {
+                        msgs += tagStore.getById(item.data.tagId)
+                            .get('name')
+                            + ': ' + i18n.getMsg(item.message) + '<br>';
                     } else {
-                        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                        if (parentGrid.length === 1) {
-                            parentGrid[0].reload();
-                        }
+                        successTags.push(item.data.tagId);
                     }
+                });
 
-                    if (msgs) {
-                        Ext.Msg.alert(
-                            i18n.getMsg('tag.widget.err.genericsave'), msgs);
-                    }
+                // Update parent grid or tagwidget in edit form
+                if (win.parentWindow) {
+                    var widget = win.parentWindow.down('tagwidget');
+                    var oldSelection = widget.getValue();
+                    var newSelection = isDelete
+                        ? Ext.Array.difference(oldSelection, successTags)
+                        : Ext.Array.merge(oldSelection, successTags);
+                    widget.setValue(newSelection);
                 } else {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                                  i18n.getMsg(json.message));
+                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                    if (parentGrid.length === 1) {
+                        parentGrid[0].reload();
+                    }
+                }
+
+                if (msgs) {
+                    Ext.Msg.alert(
+                        i18n.getMsg('tag.widget.err.genericsave'), msgs);
                 }
             },
             failure: this.handleRequestFailure

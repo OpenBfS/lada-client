@@ -214,17 +214,17 @@ Ext.application({
     onLoginSuccess: function(response) {
         /* Parse Username and Timestamp */
         var json = Ext.decode(response.responseText);
-        Lada.username = json.data.username;
-        Lada.userId = json.data.userId;
-        Lada.userroles = json.data.roles;
-        Lada.logintime = json.data.servertime;
+        Lada.username = json.username;
+        Lada.userId = json.userId;
+        Lada.userroles = json.roles;
+        Lada.logintime = json.servertime;
         Lada.mst = []; // Messstellen this user may select
-        Lada.funktionen = json.data.funktionen;
-        Lada.netzbetreiber = json.data.netzbetreiber;
-        Lada.netzbetreiberFunktionen = json.data.netzbetreiberFunktionen;
+        Lada.funktionen = json.funktionen;
+        Lada.netzbetreiber = json.netzbetreiber;
+        Lada.netzbetreiberFunktionen = json.netzbetreiberFunktionen;
         //Lada.serverVersion
         this.getServerVersion();
-        var mstLabor = json.data.messstelleLabor;
+        var mstLabor = json.messstelleLabor;
         for (var i = 0; i < mstLabor.length; i++) {
             Lada.mst.push(mstLabor[i].messstelle);
             Lada.mst.push(mstLabor[i].labor);
@@ -472,8 +472,7 @@ Ext.application({
             method: 'GET',
             headers: {},
             success: function(response) {
-                var json = Ext.decode(response.responseText);
-                Lada.serverVersion = json.data;
+                Lada.serverVersion = response.responseText;
             },
             failure: function() {
                 console.log('Error in retrieving the server version.'

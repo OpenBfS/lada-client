@@ -119,27 +119,20 @@ Ext.define('Lada.view.window.AuditTrail', {
         var i18n = Lada.getApplication().bundle;
         var json = Ext.decode(response.responseText);
         var container = this.down('panel[name=auditcontainer]');
-        var html;
-        if (!json.success) {
-            html = '<p><strong>' + i18n.getMsg(json.message.toString())
-                + '</strong></p>';
-            container.update(html);
-        } else {
-            var title;
-            switch (this.type) {
-                case 'probe':
-                    container.update(this.createHtmlProbe(json));
-                    title = i18n.getMsg('audit.title') + ' '
-                            + i18n.getMsg('probe') + ': ' + this.titleText;
-                    this.setTitle(title);
-                    break;
-                case 'messung':
-                    container.update(this.createHtmlMessung(json));
-                    title = i18n.getMsg('audit.title') + ' ' + this.titleText;
-                    this.setTitle(title);
-                case 'messprogramm':
-                    container.update(this.createHtmlMessprogramm(json));
-            }
+        var title;
+        switch (this.type) {
+        case 'probe':
+            container.update(this.createHtmlProbe(json));
+            title = i18n.getMsg('audit.title') + ' '
+                + i18n.getMsg('probe') + ': ' + this.titleText;
+            this.setTitle(title);
+            break;
+        case 'messung':
+            container.update(this.createHtmlMessung(json));
+            title = i18n.getMsg('audit.title') + ' ' + this.titleText;
+            this.setTitle(title);
+        case 'messprogramm':
+            container.update(this.createHtmlMessprogramm(json));
         }
         Ext.ComponentQuery.query('panel#' + this.down('panel')
             .getId())[0].loadingMask.hide();
@@ -156,9 +149,9 @@ Ext.define('Lada.view.window.AuditTrail', {
     createHtmlProbe: function(json) {
         var i18n = Lada.getApplication().bundle;
         var html = '<p><strong>Probe: ' +
-            json.data.identifier +
+            json.identifier +
             '</strong><br></p>';
-        var audit = json.data.audit;
+        var audit = json.audit;
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
         } else {
@@ -197,9 +190,9 @@ Ext.define('Lada.view.window.AuditTrail', {
     createHtmlMessung: function(json) {
         var i18n = Lada.getApplication().bundle;
         var html = '<p><strong>Messung: ' +
-            json.data.identifier +
+            json.identifier +
             '</strong><br></p>';
-        var audit = json.data.audit;
+        var audit = json.audit;
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
         } else {
@@ -230,8 +223,8 @@ Ext.define('Lada.view.window.AuditTrail', {
     createHtmlMessprogramm: function(json) {
         var i18n = Lada.getApplication().bundle;
         var html = '<p><strong>Messprogramm: '
-                + json.data.id + '</strong><br></p>';
-        var audit = json.data.audit;
+                + json.id + '</strong><br></p>';
+        var audit = json.audit;
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
         } else {

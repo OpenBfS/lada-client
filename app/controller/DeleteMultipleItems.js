@@ -79,34 +79,27 @@ Ext.define('Lada.controller.DeleteMultipleItems', {
                 method: 'DELETE',
                 scope: this,
                 success: function(resp) {
-                    var json = Ext.JSON.decode(resp.responseText);
                     var delId = resp.request.url.split('/').pop();
                     var html = win.down('panel').html;
-                    if (json.success && json.message === '200') {
-                        /* Remove successfully deleted items from store
-                         * (and thus from grid) to avoid obsolete items in
-                         * grid, if not refreshed immediately */
-                        var store = win.parentGrid.getStore();
-                        var delIdx = store.find(
-                            win.parentGrid.rowtarget.dataIndex,
-                            delId, 0, false, true, true);
-                        if (delIdx > -1) {
-                            store.removeAt(delIdx);
-                        }
 
-                        html = html +
-                            i18n.getMsg(
-                                'deleteItems.callback.success',
-                                datatype,
-                                delId) +
-                            '<br>';
-                        win.down('panel').setHtml(html);
-                    } else {
-                        html = html + i18n.getMsg(
-                            'deleteItems.callback.failure', datatype, delId)
-                            + '<li>' + i18n.getMsg(json.message) + '</li><br>';
-                        win.down('panel').setHtml(html);
+                    /* Remove successfully deleted items from store
+                     * (and thus from grid) to avoid obsolete items in
+                     * grid, if not refreshed immediately */
+                    var store = win.parentGrid.getStore();
+                    var delIdx = store.find(
+                        win.parentGrid.rowtarget.dataIndex,
+                        delId, 0, false, true, true);
+                    if (delIdx > -1) {
+                        store.removeAt(delIdx);
                     }
+
+                    html = html +
+                        i18n.getMsg(
+                            'deleteItems.callback.success',
+                            datatype,
+                            delId) +
+                        '<br>';
+                    win.down('panel').setHtml(html);
                     currentProgress += 1;
                     win.down('progressbar').updateProgress(
                         currentProgress / maxSteps);
