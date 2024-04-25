@@ -53,7 +53,7 @@ Ext.define('Lada.controller.grid.Messung', {
                 probe: probeRecord,
                 record: messungRecord
             });
-            win.initData();
+            win.initData(messungRecord);
             win.show();
             probeWindow.addChild(win);
             if (win.isVisible()) {
