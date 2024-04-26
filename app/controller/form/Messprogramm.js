@@ -86,8 +86,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                                     record: copiedRecord
                                 }
                             );
-                            win.initData(copiedRecord);
                             win.show();
+                            win.initData(copiedRecord);
                             win.setPosition(pos);
                         });
                 } else {

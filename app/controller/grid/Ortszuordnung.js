@@ -135,8 +135,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             record: null,
             grid: button.up('ortszuordnunggrid')
         });
-        win.initData();
         win.show();
+        win.initData();
     },
 
     /**

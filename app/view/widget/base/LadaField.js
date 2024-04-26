@@ -60,6 +60,10 @@ Ext.define('Lada.view.widget.base.LadaField', {
         this.showMessage(errors, 'error');
     },
 
+    /**
+     * Show icon based on given messageClass and tooltip with given
+     * messages. The tooltip only works if called after rendering.
+     */
     showMessage: function(message, messageClass) {
         this.clearWarningOrError();
 
@@ -85,13 +89,13 @@ Ext.define('Lada.view.widget.base.LadaField', {
 
         // Add tooltip
         this[messageClass] = Ext.create('Ext.tip.ToolTip', {
-            target: img.getEl(),
+            target: img.getEl(), // undefined if not yet rendered
             html: message
         });
 
         // Format fields
         this.query('field:not(hiddenfield)').forEach(function(field) {
-            if (field.inputWrap && field.inputEl) {
+            if (field.rendered) {
                 field.inputWrap.addCls(cssClass);
                 field.inputEl.addCls(cssClass);
             } else {

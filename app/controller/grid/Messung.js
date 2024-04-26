@@ -53,8 +53,8 @@ Ext.define('Lada.controller.grid.Messung', {
                 probe: probeRecord,
                 record: messungRecord
             });
-            win.initData(messungRecord);
             win.show();
+            win.initData(messungRecord);
             probeWindow.addChild(win);
             if (win.isVisible()) {
                 win.setPosition(window.innerWidth - 30 - win.width);
@@ -74,8 +74,8 @@ Ext.define('Lada.controller.grid.Messung', {
                         record: precord,
                         style: 'z-index: -1;'
                     });
-                    probeWin.initData();
                     probeWin.show();
+                    probeWin.initData();
                     probeWin.setPosition(30);
                     probeLoadCallBack(probeWin, precord, record);
                 }
@@ -92,8 +92,8 @@ Ext.define('Lada.controller.grid.Messung', {
             parentWindow: probeWin,
             probe: probeWin.record
         });
-        win.initData();
         win.show();
+        win.initData();
         win.setPosition(window.innerWidth - 30 - win.width);
     },
 
