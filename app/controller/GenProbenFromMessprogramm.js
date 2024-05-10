@@ -126,7 +126,7 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
                 win.down('toolbar').down('button').setDisabled(false);
                 me.processResults(
                     results,
-                    json.tag ?? '',
+                    json.tag ? json.tag : '',
                     reqJsondata);
                 win.setLoading(false);
             },

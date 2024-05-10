@@ -787,7 +787,8 @@ Ext.define('Lada.controller.Print', {
         var ids = [];
         for (var item in selection) {
             var id = selection[item].get(grid.rowtarget.probeIdentifier)
-                ?? selection[item].get(grid.rowtarget.messungIdentifier);
+                ? selection[item].get(grid.rowtarget.probeIdentifier)
+                : selection[item].get(grid.rowtarget.messungIdentifier);
 
             // avoids printing more than one sheet per probe
             if (ids.indexOf(id < 0)) {
