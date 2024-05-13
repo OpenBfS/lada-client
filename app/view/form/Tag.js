@@ -18,20 +18,9 @@ Ext.define('Lada.view.form.Tag', {
     ],
     controller: 'tagform',
 
-    store: null,
-
     trackResetOnLoad: true,
 
     initComponent: function() {
-        var store = Ext.data.StoreManager.get('tags');
-        if (!store) {
-            Ext.create('Lada.store.Tag', {
-                storeId: 'tags'
-            });
-        }
-        this.store = Ext.data.StoreManager.get('tags');
-        this.store.reload();
-
         var i18n = Lada.getApplication().bundle;
         var me = this;
         this.items = [{
@@ -73,38 +62,11 @@ Ext.define('Lada.view.form.Tag', {
                 name: 'name',
                 xtype: 'tfield',
                 fieldLabel: i18n.getMsg('name'),
-                allowBlank: false,
-                validator: function(val) {
-                    var mstId = me.down('messstelle').getValue();
-                    var foundIdx = me.store.findBy(function(obj) {
-                        return val === obj.get('name')
-                            && mstId === obj.get('measFacilId')
-                            && me.getRecord().get('id') !== obj.get('id');
-                    });
-                    if (foundIdx > -1) {
-                        return i18n.getMsg(
-                            'tag.createwindow.err.tagalreadyexists');
-                    }
-                    return true;
-                }
+                allowBlank: false
             }, {
                 name: 'measFacilId',
                 xtype: 'messstelle',
                 fieldLabel: i18n.getMsg('meas_facil_id'),
-                validator: function() {
-                    var mstId = me.down('messstelle').getValue();
-                    var tag = me.down('textfield[name=name]').getValue();
-                    var foundIdx = me.store.findBy(function(obj) {
-                        return mstId === obj.get('measFacilId')
-                            && tag === obj.get('name')
-                            && me.getRecord().get('id') !== obj.get('id');
-                    });
-                    if (foundIdx > -1) {
-                        return i18n.getMsg(
-                            'tag.createwindow.err.tagalreadyexists');
-                    }
-                    return true;
-                },
                 filteredStore: true
             }, {
                 name: 'networkId',
