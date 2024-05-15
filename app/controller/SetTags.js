@@ -50,6 +50,9 @@ Ext.define('Lada.controller.SetTags', {
         var selection = win.getSelection();
         var taglist = win.down('tagwidget').getValue();
 
+        var linkType = win.recordType === 'messung' ?
+            'taglinkmeasm' : 'taglinksample';
+
         var payload = [];
         selection.forEach(function(selected) {
             taglist.forEach(function(tag) {
@@ -61,7 +64,7 @@ Ext.define('Lada.controller.SetTags', {
             });
         });
         Ext.Ajax.request({
-            url: 'lada-server/rest/tag/taglink' + (isDelete ? '/delete' : ''),
+            url: 'lada-server/rest/tag/' + linkType + (isDelete ? '/delete' : ''),
             method: 'POST',
             jsonData: payload,
             scope: this,
