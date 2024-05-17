@@ -67,12 +67,14 @@ Ext.define('Lada.view.form.Tag', {
                 name: 'measFacilId',
                 xtype: 'messstelle',
                 fieldLabel: i18n.getMsg('meas_facil_id'),
-                filteredStore: true
+                filteredStore: true,
+                hidden: true
             }, {
                 name: 'networkId',
                 xtype: 'netzbetreiber',
                 fieldLabel: i18n.getMsg('netzbetreiberId'),
-                filteredStore: true
+                filteredStore: true,
+                hidden: true
             }, {
                 name: 'tagType',
                 xtype: 'tagtyp',
@@ -102,6 +104,7 @@ Ext.define('Lada.view.form.Tag', {
                                 combo.up('tagform').down('datefield[name=valUntil]').getValue() !== null) {
                                 combo.up('tagform').down('datefield[name=valUntil]').setValue();
                             }
+                            combo.up('tagform').handleTagType();
                         }
                     }
                 }
@@ -114,8 +117,26 @@ Ext.define('Lada.view.form.Tag', {
         this.callParent(arguments);
     },
 
+    handleTagType: function() {
+        var type = this.down('tagtyp').getValue();
+        var networkWidget = this.down('netzbetreiber');
+        var measFacilWidget = this.down('messstelle');
+        switch (type) {
+            case 'netz':
+                measFacilWidget.clearValue();
+                measFacilWidget.setHidden(true);
+                networkWidget.setHidden(false);
+                break;
+            case 'mst':
+                networkWidget.clearValue();
+                networkWidget.setHidden(true);
+                measFacilWidget.setHidden(false);
+        }
+    },
+
     setRecord: function(tagRecord) {
         this.getForm().loadRecord(tagRecord);
         this.setReadOnly(this.getRecord().get('readonly'));
+        this.handleTagType();
     }
 });
