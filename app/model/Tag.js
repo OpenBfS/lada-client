@@ -31,7 +31,19 @@ Ext.define('Lada.model.Tag', {
         type: 'date'
     }, {
         name: 'tagType',
-        type: 'string'
+        type: 'string',
+        persist: false,
+        calculate: function(data) {
+            if (data.networkId !== null) {
+                return 'netz';
+            }
+            if (data.measFacilId !== null) {
+                return 'mst';
+            }
+            if (!data.isAutoTag) {
+                return 'global';
+            }
+        }
     }, {
         name: 'isAutoTag',
         type: 'boolean'
