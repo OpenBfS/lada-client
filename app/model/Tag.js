@@ -40,9 +40,7 @@ Ext.define('Lada.model.Tag', {
             if (data.measFacilId !== null) {
                 return 'mst';
             }
-            if (!data.isAutoTag) {
-                return 'global';
-            }
+            return 'global';
         }
     }, {
         name: 'isAutoTag',
