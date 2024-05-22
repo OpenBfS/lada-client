@@ -18,9 +18,20 @@ Ext.define('Lada.view.form.Tag', {
     ],
     controller: 'tagform',
 
+    store: null,
+
     trackResetOnLoad: true,
 
     initComponent: function() {
+        var store = Ext.data.StoreManager.get('tags');
+        if (!store) {
+            Ext.create('Lada.store.Tag', {
+                storeId: 'tags'
+            });
+        }
+        this.store = Ext.data.StoreManager.get('tags');
+        this.store.reload();
+
         var i18n = Lada.getApplication().bundle;
         var me = this;
         this.items = [{

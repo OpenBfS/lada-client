@@ -44,8 +44,9 @@ Ext.define('Lada.controller.form.Tag', {
         var me = this;
         record.save({
             scope: this,
-            success: function() {
+            success: function(rec) {
                 me.reloadParentGrid();
+                Ext.getStore('tags').add(rec);
                 win.close();
             },
             failure: this.handleSaveFailure
@@ -56,8 +57,9 @@ Ext.define('Lada.controller.form.Tag', {
         var win = button.up('tagmanagementwindow');
         var me = this;
         win.down('tagform').getForm().getRecord().erase({
-            success: function() {
+            success: function(rec) {
                 me.reloadParentGrid();
+                Ext.getStore('tags').remove(rec);
                 win.close();
             },
             failure: this.handleServiceFailure
