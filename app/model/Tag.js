@@ -56,10 +56,6 @@ Ext.define('Lada.model.Tag', {
     proxy: {
         type: 'rest',
         url: 'lada-server/rest/tag',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
         writer: {
             type: 'json',
             writeAllFields: true,

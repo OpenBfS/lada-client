@@ -14,14 +14,5 @@ Ext.define('Lada.store.Tag', {
     model: 'Lada.model.Tag',
     autoLoad: true,
 
-    sorters: ['tag'],
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/tag',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    sorters: ['tag']
 });
