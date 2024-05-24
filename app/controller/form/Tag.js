@@ -95,5 +95,31 @@ Ext.define('Lada.controller.form.Tag', {
                     || ((form.getForm().getFieldValues().typId === 'netz') &&
                         (form.getForm().getFieldValues().netzbetreiberId === null))
             );
+    },
+
+    handleTagType: function() {
+        const form = this.getView();
+        var type = form.down('tagtyp').getValue();
+        var networkWidget = form.down('netzbetreiber');
+        var measFacilWidget = form.down('messstelle');
+        var valUntilField = form.down('datetimefield[name=valUntil]');
+        switch (type) {
+            case 'netz':
+                measFacilWidget.clearValue();
+                measFacilWidget.setHidden(true);
+                networkWidget.setHidden(false);
+                valUntilField.setValue(null);
+                valUntilField.setHidden(true);
+                break;
+            case 'mst':
+                networkWidget.clearValue();
+                networkWidget.setHidden(true);
+                measFacilWidget.setHidden(false);
+                valUntilField.setHidden(false);
+                break;
+            case 'global':
+                valUntilField.setHidden(true);
+                break;
+        }
     }
 });

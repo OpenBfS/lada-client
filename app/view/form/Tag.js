@@ -82,29 +82,7 @@ Ext.define('Lada.view.form.Tag', {
                 filteredStore: true,
                 listenersJson: {
                     select: {
-                        fn: function(combo, newValue) {
-                            var tagtyp = newValue.get('value');
-                            if (tagtyp === 'mst') {
-                                if (combo.up('tagform').down('datefield[name=valUntil]').getValue() !== null) {
-                                    var dateToday = moment(new Date(), 'DD-MM-YYYY');
-                                    var dateFieldValue = moment(combo.up('tagform').down('datefield[name=valUntil]')
-                                        .getValue(), 'DD-MM-YYYY');
-                                    if (dateFieldValue.diff(dateToday, 'days') < i18n.getMsg('tag.defaultValue.gueltigBis')) {
-                                        combo.up('tagform').down('datefield[name=valUntil]')
-                                            .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'), 'days'));
-                                    }
-                                } else {
-                                    combo.up('tagform').down(
-                                    'datefield[name=valUntil]')
-                                    .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'), 'days'));
-                                }
-                            }
-                            if (tagtyp === 'netz' &&
-                                combo.up('tagform').down('datefield[name=valUntil]').getValue() !== null) {
-                                combo.up('tagform').down('datefield[name=valUntil]').setValue();
-                            }
-                            combo.up('tagform').handleTagType();
-                        }
+                        fn: 'handleTagType'
                     }
                 }
             }, {
@@ -128,34 +106,9 @@ Ext.define('Lada.view.form.Tag', {
         this.callParent(arguments);
     },
 
-    handleTagType: function() {
-        var type = this.down('tagtyp').getValue();
-        var networkWidget = this.down('netzbetreiber');
-        var measFacilWidget = this.down('messstelle');
-        var valUntilField = this.down('datetimefield[name=valUntil]');
-        switch (type) {
-            case 'netz':
-                measFacilWidget.clearValue();
-                measFacilWidget.setHidden(true);
-                networkWidget.setHidden(false);
-                valUntilField.setValue(null);
-                valUntilField.setHidden(true);
-                break;
-            case 'mst':
-                networkWidget.clearValue();
-                networkWidget.setHidden(true);
-                measFacilWidget.setHidden(false);
-                valUntilField.setHidden(false);
-                break;
-            case 'global':
-                valUntilField.setHidden(true);
-                break;
-        }
-    },
-
     setRecord: function(tagRecord) {
         this.getForm().loadRecord(tagRecord);
         this.setReadOnly(this.getRecord().get('readonly'));
-        this.handleTagType();
+        this.getController().handleTagType();
     }
 });
