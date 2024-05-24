@@ -90,12 +90,14 @@ Ext.define('Lada.view.form.Tag', {
                 xtype: 'messstelle',
                 fieldLabel: i18n.getMsg('meas_facil_id'),
                 filteredStore: true,
+                allowBlank: false,
                 hidden: true
             }, {
                 name: 'networkId',
                 xtype: 'netzbetreiber',
                 fieldLabel: i18n.getMsg('netzbetreiberId'),
                 filteredStore: true,
+                allowBlank: false,
                 hidden: true
             }, {
                 name: 'valUntil',
