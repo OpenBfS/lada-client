@@ -75,18 +75,6 @@ Ext.define('Lada.view.form.Tag', {
                 fieldLabel: i18n.getMsg('name'),
                 allowBlank: false
             }, {
-                name: 'measFacilId',
-                xtype: 'messstelle',
-                fieldLabel: i18n.getMsg('meas_facil_id'),
-                filteredStore: true,
-                hidden: true
-            }, {
-                name: 'networkId',
-                xtype: 'netzbetreiber',
-                fieldLabel: i18n.getMsg('netzbetreiberId'),
-                filteredStore: true,
-                hidden: true
-            }, {
                 name: 'tagType',
                 xtype: 'tagtyp',
                 fieldLabel: i18n.getMsg('tagtyp'),
@@ -119,6 +107,18 @@ Ext.define('Lada.view.form.Tag', {
                         }
                     }
                 }
+            }, {
+                name: 'measFacilId',
+                xtype: 'messstelle',
+                fieldLabel: i18n.getMsg('meas_facil_id'),
+                filteredStore: true,
+                hidden: true
+            }, {
+                name: 'networkId',
+                xtype: 'netzbetreiber',
+                fieldLabel: i18n.getMsg('netzbetreiberId'),
+                filteredStore: true,
+                hidden: true
             }, {
                 name: 'valUntil',
                 xtype: 'datetimefield',
