@@ -39,13 +39,26 @@ Ext.define('Lada.controller.form.Tag', {
 
     saveTag: function(button) {
         var win = button.up('tagmanagementwindow');
-        var record = win.down('tagform').getForm().getRecord();
-        record.set(win.down('tagform').getForm().getFieldValues());
-        var me = this;
+        var form = win.down('tagform');
+        form.updateRecord();
+        var record = win.down('tagform').getRecord();
+        // Disabled fields are not handled by updateRecord():
+        var type = form.down('tagtyp').getValue();
+        switch (type) {
+            case 'mst':
+                record.set('networkId', null);
+                break;
+            case 'netz':
+                record.set('measFacilId', null);
+                break;
+            case 'global':
+                record.set('networkId', null);
+                record.set('measFacilId', null);
+        }
         record.save({
             scope: this,
             success: function(rec) {
-                me.reloadParentGrid();
+                this.reloadParentGrid();
                 Ext.getStore('tags').add(rec);
                 win.close();
             },
@@ -95,5 +108,26 @@ Ext.define('Lada.controller.form.Tag', {
                     || ((form.getForm().getFieldValues().typId === 'netz') &&
                         (form.getForm().getFieldValues().netzbetreiberId === null))
             );
+    },
+
+    handleTagType: function() {
+        const form = this.getView();
+        var type = form.down('tagtyp').getValue();
+        var networkWidget = form.down('netzbetreiber');
+        var measFacilWidget = form.down('messstelle');
+        var valUntilField = form.down('datetimefield[name=valUntil]');
+        switch (type) {
+            case 'mst':
+                networkWidget.disable().hide();
+                measFacilWidget.enable().show();
+                valUntilField.show();
+                break;
+            case 'netz':
+                measFacilWidget.disable().hide();
+                networkWidget.enable().show();
+            case 'global':
+                valUntilField.hide().setValue(null);
+                break;
+        }
     }
 });

@@ -73,44 +73,7 @@ Ext.define('Lada.view.form.Tag', {
                 name: 'name',
                 xtype: 'tfield',
                 fieldLabel: i18n.getMsg('name'),
-                allowBlank: false,
-                validator: function(val) {
-                    var mstId = me.down('messstelle').getValue();
-                    var foundIdx = me.store.findBy(function(obj) {
-                        return val === obj.get('name')
-                            && mstId === obj.get('measFacilId')
-                            && me.getRecord().get('id') !== obj.get('id');
-                    });
-                    if (foundIdx > -1) {
-                        return i18n.getMsg(
-                            'tag.createwindow.err.tagalreadyexists');
-                    }
-                    return true;
-                }
-            }, {
-                name: 'measFacilId',
-                xtype: 'messstelle',
-                fieldLabel: i18n.getMsg('meas_facil_id'),
-                validator: function() {
-                    var mstId = me.down('messstelle').getValue();
-                    var tag = me.down('textfield[name=name]').getValue();
-                    var foundIdx = me.store.findBy(function(obj) {
-                        return mstId === obj.get('measFacilId')
-                            && tag === obj.get('name')
-                            && me.getRecord().get('id') !== obj.get('id');
-                    });
-                    if (foundIdx > -1) {
-                        return i18n.getMsg(
-                            'tag.createwindow.err.tagalreadyexists');
-                    }
-                    return true;
-                },
-                filteredStore: true
-            }, {
-                name: 'networkId',
-                xtype: 'netzbetreiber',
-                fieldLabel: i18n.getMsg('netzbetreiberId'),
-                filteredStore: true
+                allowBlank: false
             }, {
                 name: 'tagType',
                 xtype: 'tagtyp',
@@ -119,30 +82,23 @@ Ext.define('Lada.view.form.Tag', {
                 filteredStore: true,
                 listenersJson: {
                     select: {
-                        fn: function(combo, newValue) {
-                            var tagtyp = newValue.get('value');
-                            if (tagtyp === 'mst') {
-                                if (combo.up('tagform').down('datefield[name=valUntil]').getValue() !== null) {
-                                    var dateToday = moment(new Date(), 'DD-MM-YYYY');
-                                    var dateFieldValue = moment(combo.up('tagform').down('datefield[name=valUntil]')
-                                        .getValue(), 'DD-MM-YYYY');
-                                    if (dateFieldValue.diff(dateToday, 'days') < i18n.getMsg('tag.defaultValue.gueltigBis')) {
-                                        combo.up('tagform').down('datefield[name=valUntil]')
-                                            .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'), 'days'));
-                                    }
-                                } else {
-                                    combo.up('tagform').down(
-                                    'datefield[name=valUntil]')
-                                    .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'), 'days'));
-                                }
-                            }
-                            if (tagtyp === 'netz' &&
-                                combo.up('tagform').down('datefield[name=valUntil]').getValue() !== null) {
-                                combo.up('tagform').down('datefield[name=valUntil]').setValue();
-                            }
-                        }
+                        fn: 'handleTagType'
                     }
                 }
+            }, {
+                name: 'measFacilId',
+                xtype: 'messstelle',
+                fieldLabel: i18n.getMsg('meas_facil_id'),
+                filteredStore: true,
+                allowBlank: false,
+                hidden: true
+            }, {
+                name: 'networkId',
+                xtype: 'netzbetreiber',
+                fieldLabel: i18n.getMsg('netzbetreiberId'),
+                filteredStore: true,
+                allowBlank: false,
+                hidden: true
             }, {
                 name: 'valUntil',
                 xtype: 'datetimefield',
@@ -155,5 +111,6 @@ Ext.define('Lada.view.form.Tag', {
     setRecord: function(tagRecord) {
         this.getForm().loadRecord(tagRecord);
         this.setReadOnly(this.getRecord().get('readonly'));
+        this.getController().handleTagType();
     }
 });

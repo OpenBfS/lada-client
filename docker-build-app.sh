@@ -15,8 +15,7 @@ $SENCHA_CMD workspace init
 $SENCHA_CMD app install
 #Build development and production variant
 $SENCHA_CMD app build development
-$SENCHA_CMD app build production
-
-ln -sf $WORKSPACE/build/production/Lada $WORKSPACE/lada
+$SENCHA_CMD app build \
+    --destination /usr/local/apache2/htdocs/build/production/Lada/ production
 
 cd $WORKSPACE

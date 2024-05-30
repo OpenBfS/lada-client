@@ -31,7 +31,17 @@ Ext.define('Lada.model.Tag', {
         type: 'date'
     }, {
         name: 'tagType',
-        type: 'string'
+        type: 'string',
+        persist: false,
+        calculate: function(data) {
+            if (data.networkId !== null) {
+                return 'netz';
+            }
+            if (data.measFacilId !== null) {
+                return 'mst';
+            }
+            return 'global';
+        }
     }, {
         name: 'isAutoTag',
         type: 'boolean'
@@ -46,10 +56,6 @@ Ext.define('Lada.model.Tag', {
     proxy: {
         type: 'rest',
         url: 'lada-server/rest/tag',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
         writer: {
             type: 'json',
             writeAllFields: true,
