@@ -29,11 +29,11 @@ Ext.define('Lada.view.widget.OrtTyp', {
     minChars: 0,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{extId} - {name}</div></tpl>'),
+            '{id} - {name}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{extId} - {name}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{extId} - {name}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.orttyp');

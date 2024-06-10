@@ -45,8 +45,8 @@ Ext.define('Lada.model.Site', {
         allowNull: true
     }, {
         name: 'siteClassId',
-        type: 'int',
-        allowNull: true
+        allowNull: true,
+        type: 'nonblankstring'
     }, {
         name: 'reiOprMode',
         allowNull: true,

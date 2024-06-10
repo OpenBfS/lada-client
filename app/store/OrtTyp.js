@@ -12,11 +12,16 @@
 Ext.define('Lada.store.OrtTyp', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.SiteClass',
-    sorters: [
-        {
-            property: 'id',
-            direction: 'ASC'
-        }],
-    autoLoad: true,
-    sortOnLoad: true
+
+    data: [{
+        id: 'DYN'
+    }, {
+        id: 'GP'
+    }, {
+        id: 'REI'
+    }, {
+        id: 'VE'
+    }, {
+        id: 'ST'
+    }]
 });

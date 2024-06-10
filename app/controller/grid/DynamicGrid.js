@@ -442,7 +442,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 case 'ortId':
                     Ext.create('Lada.view.window.Ort', {
                         record: Ext.create('Lada.model.Site', {
-                            siteClassId: 1,
+                            siteClassId: 'DYN',
                             readonly: false,
                             plausibleReferenceCount: 0,
                             referenceCountMp: 0,

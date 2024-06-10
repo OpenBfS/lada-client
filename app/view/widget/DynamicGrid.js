@@ -234,7 +234,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 coordXExt: koord_x.toString(),
                 coordYExt: koord_y.toString(),
                 spatRefSysId: 4,
-                siteClassId: 1,
+                siteClassId: 'DYN',
                 plausibleReferenceCount: 0,
                 referenceCountMp: 0,
                 referenceCount: 0
