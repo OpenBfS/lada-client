@@ -331,7 +331,8 @@ Ext.define('Lada.view.window.RecordWindow', {
             map[key].forEach(validationMessage =>
                 result +=
                     i18n.getMsg(key) + ': '
-                    + i18n.getMsg(validationMessage.toString())
+                    + Lada.util.I18n.getMsgIfDefined(
+                        validationMessage.toString())
                     + '<br>');
             return result;
         };
