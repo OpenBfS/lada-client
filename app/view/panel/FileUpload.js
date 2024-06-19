@@ -252,25 +252,24 @@ Ext.define('Lada.view.panel.FileUpload', {
     uploadFiles: function(button, binFiles) {
         var win = button.up('panel');
         var cb = win.down('combobox[name=encoding]');
-        var mstSelector = win.down('combobox[name=mst]').getValue();
 
         var controller = Lada.app.getController(
             'Lada.controller.grid.Uploads');
         var queueItem = controller.addQueueItem(win.fileNames);
         queueItem.set(
             'encoding', win.down('combobox[name=encoding]').getValue());
-        queueItem.set('mst', win.down('combobox[name=mst]').getValue());
+        queueItem.set('measFacilId', win.down('combobox[name=mst]').getValue());
         Ext.Ajax.request({
             url: 'lada-server/data/import/async/laf',
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-LADA-MST': mstSelector
+                'Content-Type': 'application/json'
             },
             scope: win,
             jsonData: {
                 files: binFiles,
-                encoding: cb.getValue()
+                encoding: cb.getValue(),
+                measFacilId: queueItem.get('measFacilId')
             },
             success: function(response) {
                 var json = Ext.decode(response.responseText);

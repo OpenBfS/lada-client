@@ -143,14 +143,14 @@ Ext.define('Lada.controller.grid.Uploads', {
                     record.set('result', response);
                     record.set('resultFetched', true);
                     me.showResult(response, {
-                        mst: record.get('mst'),
+                        mst: record.get('measFacilId'),
                         encoding: record.get('encoding')
                     });
                 }
             });
         } else {
             this.showResult(record.get('result'), {
-                mst: record.get('mst'),
+                mst: record.get('measFacilId'),
                 encoding: record.get('encoding')
             });
         }
