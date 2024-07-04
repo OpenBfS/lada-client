@@ -55,7 +55,7 @@ Ext.define('Lada.controller.form.Probe', {
                 change: this.reiProgpunktGruppeChanged
             },
             'probeform [xtype="datetime"] field': {
-                blur: this.checkDate
+                blur: this.dateChanged
             },
             'probeform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
@@ -606,98 +606,21 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * checkDate() is called when a xtype=datetime field was modified
-     * It checks for two things:
-     *  - Is the date in the future
-     *  - Does the date belong to a time period and the end is before start
-     * In both cases it adds a warning to the field which was checked.
-     * TODO: also trigers for 'subfields' (hour/minute picker)
+     * dateChanged() is called when a xtype=datetime field was modified
      */
-    checkDate: function(field) {
+    dateChanged: function(field) {
         if (!field) {
             return;
         }
-        var now = new Date().valueOf();
-        var w = 0; //amount of warnings
-        var e = 0; //errors
-        var emsg = '';
-        var wmsg = '';
-        if (field.getValue()) {
-            if (field.getValue().valueOf() > now) {
-                wmsg += Lada.getApplication().bundle.getMsg('661');
-                w++;
-            }
-        }
-        // This field might be a field within a DateTime-Period.
-        // Search for Partner field (period: end/start) and validate
-        // End Before Start validation
-        if (field.period) {
-            var partners = new Array();
-            partners[0] = field.up('fieldset').down('datetime[period=start]')
-                .down().getValue();
-            partners[1] = field.up('fieldset').down('datetime[period=end]')
-                .down().getValue();
-            var msg;
-            if (partners[0] && partners[1] && partners[0] > partners[1]) {
-                msg = Lada.getApplication().bundle.getMsg('662');
-                field.up('fieldset').showWarningOrError(true, msg, false, '');
-                field.up('fset[name=entnahmePeriod]').showWarningOrError(
-                    true, msg, false, '');
-            } else {
-                field.up('fset[name=entnahmePeriod]').clearMessages();
-            }
-            if (
-                partners[0] && field.up('fieldset[name=zeit]')
-                    .down('datetime[name=origDate]').getValue()
-            ) {
-                if (partners[0] < field.up('fieldset[name=zeit]')
-                    .down('datetime[name=origDate]').getValue()
-                ) {
-                    msg = Lada.getApplication().bundle.getMsg('663');
-                    field.up('fieldset[name=zeit]')
-                        .down('fset[name=ursprung]')
-                        .showWarningOrError(true, msg, false, '');
-                } else {
-                    field.up('fieldset[name=zeit]')
-                        .down('fset[name=ursprung]')
-                        .clearMessages();
-                }
-            }
-        }
-        if (field.name === 'origDate') {
-            var partners2 = new Array();
-            partners2[0] = field.up('fieldset[name=zeit]')
-                .down('datetime[period=start]').getValue();
-            if (partners2[0] && partners2[0] < field.getValue()) {
-                msg = Lada.getApplication().bundle.getMsg('663');
-                field.up('fset[name=ursprung]').showWarningOrError(
-                    true, msg, false, '');
-            } else {
-                field.up('fset[name=ursprung]').clearMessages();
-            }
-        }
-        if (w && field.up().showWarnings) {
-            field.up().showWarnings(wmsg);
-        }
-        if (e && field.up().showErrors) {
-            field.up().showErrors(emsg);
-        }
-
-        // Clear Warnings or Errors if none Are Present
-        if (w === 0 && e === 0 && field.up().clearWarningOrError) {
-            field.up().clearWarningOrError();
-        }
+        field.up('fieldset[name=zeit]')
+            .down('fset[name=ursprung]')
+            .clearMessages();
+        field.up('fset[name=entnahmePeriod]').clearMessages();
+        field.up().clearWarningOrError();
     },
 
     mainSampleIdChanged: function(field) {
-        if (field.getValue() !== '') {
-            field.up().clearWarningOrError();
-        } else {
-            var errors = [];
-            var warnings = [];
-            var notifications = { mainSampleId: [631] };
-            field.up('probeform').setMessages(errors, warnings, notifications);
-        }
+        field.up().clearWarningOrError();
     },
 
     deskriptorSelect: function(field, records) {

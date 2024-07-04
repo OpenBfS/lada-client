@@ -34,9 +34,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform button[action=audit]': {
                 click: this.showAuditTrail
             },
-            'messprogrammform numfield numberfield': {
-                change: this.checkPeriod
-            },
             'messprogrammform probenintervall combobox': {
                 change: this.updateIntervalls
             },
@@ -342,30 +339,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
         form.owner.up('messprogramm').down(
             'button[action=generateproben]').setDisabled(disableActions);
         form.owner.down('button[action=copy]').setDisabled(disableActions);
-    },
-
-    /**
-     * checkPeriod() is called when a fields defining an intervall
-     * were modified
-     * The function validates if the start is smaller than end.
-     */
-    checkPeriod: function(field) {
-        // This field might be a field within a Period.
-        // Search for Partner field (period: end/start) and validate
-        // End Before Start validation
-        if (field.period) {
-            var partners = new Array();
-            partners[0] = field.up('fieldset')
-                .down('numberfield[period=start]').getValue();
-            partners[1] = field.up('fieldset')
-                .down('numberfield[period=end]').getValue();
-            if (partners[0] && partners[1] && partners[0] > partners [1]) {
-                var msg = Lada.getApplication().bundle.getMsg('662');
-                field.up('fieldset').showWarningOrError(false, '', true, msg);
-            } else {
-                field.up('fieldset').clearMessages();
-            }
-        }
     },
 
     deskriptorSelect: function(field, records) {
