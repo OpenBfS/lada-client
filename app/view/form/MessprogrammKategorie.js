@@ -71,7 +71,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
                 editable: true,
                 readOnly: true,
                 filteredStore: true,
-                fieldLabel: i18n.getMsg('netzbetreiberId')
+                fieldLabel: i18n.getMsg('networkId')
             }, {
                 xtype: 'tfield',
                 name: 'extId',
@@ -81,7 +81,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
             }, {
                 xtype: 'tarea',
                 name: 'name',
-                fieldLabel: i18n.getMsg('bezeichnung'),
+                fieldLabel: i18n.getMsg('name'),
                 maxLength: 120
             }]
         }];

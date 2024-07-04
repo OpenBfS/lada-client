@@ -187,7 +187,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }, {
                         xtype: 'tfield',
                         name: 'commMpg',
-                        fieldLabel: i18n.getMsg('kommentar'),
+                        fieldLabel: i18n.getMsg('commMpg'),
                         width: '100%',
                         margin: '0, 0, 5, 5',
                         labelWidth: 100
@@ -361,7 +361,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         xtype: 'tfield',
                         name: 'sampleQuant',
                         labelAlign: 'top',
-                        fieldLabel: i18n.getMsg('probenahmemenge'),
+                        fieldLabel: i18n.getMsg('sampleQuant'),
                         width: '100%',
                         labelwidth: 135
                     }]
@@ -372,7 +372,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         xtype: 'tarea',
                         name: 'commSample',
                         labelAlign: 'top',
-                        fieldLabel: i18n.getMsg('probeKommentar'),
+                        fieldLabel: i18n.getMsg('commSample'),
                         width: '100%',
                         labelwidth: 135
                     }]
@@ -401,7 +401,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         items: [{
                             xtype: 'probenintervall',
                             allowBlank: false,
-                            fieldLabel: i18n.getMsg('probenintervall'),
+                            fieldLabel: i18n.getMsg('samplePd'),
                             margin: '0 10 5 0',
                             labelWidth: 50,
                             width: '40%',
@@ -410,7 +410,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'numfield',
                             allowDecimals: false,
                             allowBlank: false,
-                            fieldLabel: i18n.getMsg('teilintervallVon'),
+                            fieldLabel: i18n.getMsg('samplePdStartDate'),
                             margin: '0 5 5 5',
                             labelWidth: 100,
                             minValue: 0,
@@ -421,7 +421,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'numfield',
                             allowDecimals: false,
                             allowBlank: false,
-                            fieldLabel: i18n.getMsg('teilintervallBis'),
+                            fieldLabel: i18n.getMsg('samplePdEndDate'),
                             margin: '0 15 5 5',
                             labelWidth: 18,
                             minValue: 0,
@@ -449,7 +449,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         items: [{
                             xtype: 'dayofyear',
                             allowBlank: false,
-                            fieldLabel: i18n.getMsg('gueltigVon'),
+                            fieldLabel: i18n.getMsg('validStartDate'),
                             width: '50%',
                             labelWidth: 90,
                             name: 'validStartDate',
@@ -457,7 +457,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }, {
                             xtype: 'dayofyear',
                             allowBlank: false,
-                            fieldLabel: i18n.getMsg('gueltigBis'),
+                            fieldLabel: i18n.getMsg('validEndDate'),
                             width: '50%',
                             labelWidth: 40,
                             name: 'validEndDate',

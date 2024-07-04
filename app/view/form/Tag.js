@@ -95,7 +95,7 @@ Ext.define('Lada.view.form.Tag', {
             }, {
                 name: 'networkId',
                 xtype: 'netzbetreiber',
-                fieldLabel: i18n.getMsg('netzbetreiberId'),
+                fieldLabel: i18n.getMsg('networkId'),
                 filteredStore: true,
                 allowBlank: false,
                 hidden: true

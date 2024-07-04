@@ -153,7 +153,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return record.get('extId');
                 }
             }, {
-                header: i18n.getMsg('staat'),
+                header: i18n.getMsg('ctry'),
                 dataIndex: 'siteId',
                 width: 45,
                 renderer: function(value, metaData, gridRec) {

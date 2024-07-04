@@ -47,7 +47,7 @@ Ext.define('Lada.view.form.OrtInfo', {
                 cls: 'text-wrapper'
             }, {
                 xtype: 'ortinforow',
-                label: i18n.getMsg('staat'),
+                label: i18n.getMsg('ctry'),
                 firstitem: 'staatISO',
                 seconditem: 'staat'
             }, {

@@ -105,7 +105,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
         }];
         this.columns = {
             items: [{
-                header: i18n.getMsg('messmethode'),
+                header: i18n.getMsg('mmtId'),
                 dataIndex: 'mmtId',
                 flex: 1,
                 renderer: function(value, metaData, record) {

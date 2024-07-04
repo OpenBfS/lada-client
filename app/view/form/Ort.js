@@ -38,7 +38,7 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'netzbetreiber',
             name: 'networkId',
             border: false,
-            fieldLabel: i18n.getMsg('netzbetreiberId'),
+            fieldLabel: i18n.getMsg('networkId'),
             labelWidth: 125,
             filteredStore: true,
             allowBlank: false
@@ -75,7 +75,7 @@ Ext.define('Lada.view.form.Ort', {
         }, {
             xtype: 'staat',
             labelWidth: 125,
-            fieldLabel: i18n.getMsg('staat'),
+            fieldLabel: i18n.getMsg('ctry'),
             name: 'stateId',
             validator: function(val) {
                 var hasMinFields = Boolean(
@@ -251,7 +251,7 @@ Ext.define('Lada.view.form.Ort', {
             items: [{
                 text: i18n.getMsg('copy'),
                 action: 'copy',
-                qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
+                qtip: i18n.getMsg('copy.qtip', i18n.getMsg('city')),
                 icon: 'resources/img/dialog-ok-apply.png',
                 disabled: true
             },

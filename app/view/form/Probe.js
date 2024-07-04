@@ -373,7 +373,7 @@ Ext.define('Lada.view.form.Probe', {
                         },
                         items: [{
                             xtype: 'selectabledisplayfield',
-                            fieldLabel: i18n.getMsg('sollVon'),
+                            fieldLabel: i18n.getMsg('schedStartDate'),
                             labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'schedStartDate',
@@ -384,7 +384,7 @@ Ext.define('Lada.view.form.Probe', {
                             }
                         }, {
                             xtype: 'selectabledisplayfield',
-                            fieldLabel: i18n.getMsg('sollBis'),
+                            fieldLabel: i18n.getMsg('schedEndDate'),
                             labelWidth: 25,
                             margin: '0, 5, 5, 5',
                             name: 'schedEndDate',

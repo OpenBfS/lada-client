@@ -119,7 +119,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
             xtype: 'selectabledisplayfield',
             name: 'netzbetreiber',
             isFormField: false,
-            fieldLabel: i18n.getMsg('netzbetreiberId'),
+            fieldLabel: i18n.getMsg('networkId'),
             labelWidth: 80
         }, {
             xtype: 'form',

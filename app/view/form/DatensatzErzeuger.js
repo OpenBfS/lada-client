@@ -43,7 +43,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 items: [{
                     text: i18n.getMsg('copy'),
                     action: 'copy',
-                    qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
+                    qtip: i18n.getMsg('copy.qtip', i18n.getMsg('city')),
                     icon: 'resources/img/dialog-ok-apply.png',
                     disabled: !this.record.phantom &&
                         !this.record.get('readonly') ?
@@ -83,7 +83,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     readOnly: true,
                     allowBlank: false,
                     filteredStore: true,
-                    fieldLabel: i18n.getMsg('netzbetreiberId'),
+                    fieldLabel: i18n.getMsg('networkId'),
                     value: this.record.get('networkId')
                 }, {
                     xtype: 'cbox',
@@ -100,14 +100,14 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     name: 'extId',
                     readOnly: true,
                     allowBlank: false,
-                    fieldLabel: i18n.getMsg('daErzeugerId'),
+                    fieldLabel: i18n.getMsg('datasetCreatorId'),
                     maxLength: 2
                 }, {
                     xtype: 'tarea',
                     name: 'descr',
                     allowBlank: false,
                     readOnly: true,
-                    fieldLabel: i18n.getMsg('bezeichnung'),
+                    fieldLabel: i18n.getMsg('descr'),
                     maxLength: 120
                 }]
             }]

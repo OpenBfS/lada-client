@@ -43,7 +43,7 @@ Ext.define('Lada.view.form.Probenehmer', {
             items: [{
                 text: i18n.getMsg('copy'),
                 action: 'copy',
-                qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
+                qtip: i18n.getMsg('copy.qtip', i18n.getMsg('city')),
                 icon: 'resources/img/dialog-ok-apply.png',
                 disabled: !this.record.phantom && !this.record.get('readonly') ?
                     false :
@@ -105,7 +105,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         allowBlank: false,
                         width: '50%',
                         filteredStore: true,
-                        fieldLabel: i18n.getMsg('netzbetreiberId'),
+                        fieldLabel: i18n.getMsg('networkId'),
                         margin: '0 0 0 5',
                         labelWidth: 110,
                         value: this.record.get('netzbetreiberId')
@@ -116,7 +116,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     items: [{
                         xtype: 'tfield',
                         name: 'shortText',
-                        fieldLabel: i18n.getMsg('kurzBezeichnung'),
+                        fieldLabel: i18n.getMsg('shortText'),
                         labelWidth: 110,
                         readOnly: true,
                         width: '50%',
@@ -127,7 +127,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         xtype: 'tfield',
                         name: 'editor',
                         margin: '0 0 0 5',
-                        fieldLabel: i18n.getMsg('bearbeiter'),
+                        fieldLabel: i18n.getMsg('editor'),
                         labelWidth: 110,
                         readOnly: true,
                         width: '50%',
@@ -136,7 +136,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                 }, {
                     xtype: 'tfield',
                     name: 'comm',
-                    fieldLabel: i18n.getMsg('bemerkung'),
+                    fieldLabel: i18n.getMsg('comm'),
                     margin: '5 5 0 5',
                     labelWidth: 110,
                     readOnly: true,
@@ -145,7 +145,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                 }, {
                     xtype: 'tarea',
                     name: 'descr',
-                    fieldLabel: i18n.getMsg('bezeichnung'),
+                    fieldLabel: i18n.getMsg('descr'),
                     margin: '5 5 0 5',
                     width: '100%',
                     allowBlank: false,
@@ -159,7 +159,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     items: [{
                         xtype: 'tfield',
                         name: 'routePlanning',
-                        fieldLabel: i18n.getMsg('tourenplan'),
+                        fieldLabel: i18n.getMsg('routePlanning'),
                         margin: '0 5 0 0',
                         width: '50%',
                         readOnly: true,
@@ -168,7 +168,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     }, {
                         xtype: 'tfield',
                         name: 'type',
-                        fieldLabel: i18n.getMsg('typ'),
+                        fieldLabel: i18n.getMsg('type'),
                         margin: '0, 0, 0, 5',
                         width: '50%',
                         readOnly: true,
@@ -186,7 +186,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     items: [{
                         xtype: 'tfield',
                         name: 'inst',
-                        fieldLabel: i18n.getMsg('betrieb'),
+                        fieldLabel: i18n.getMsg('inst'),
                         labelWidth: 100,
                         margin: '5 10 5 10',
                         readOnly: true,
@@ -194,7 +194,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     }, {
                         xtype: 'tfield',
                         name: 'street',
-                        fieldLabel: i18n.getMsg('strasse'),
+                        fieldLabel: i18n.getMsg('street'),
                         labelWidth: 100,
                         margin: '5 10 5 10',
                         readOnly: true,
@@ -208,7 +208,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         items: [{
                             xtype: 'tfield',
                             name: 'zip',
-                            fieldLabel: i18n.getMsg('plz'),
+                            fieldLabel: i18n.getMsg('zip'),
                             maxLength: 5,
                             readOnly: true,
                             width: '30%',
@@ -218,7 +218,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                             xtype: 'tfield',
                             name: 'city',
                             margin: '0 0 0 10',
-                            fieldLabel: i18n.getMsg('ort'),
+                            fieldLabel: i18n.getMsg('city'),
                             width: '70%',
                             readOnly: true,
                             labelWidth: 100,
@@ -228,7 +228,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         xtype: 'tfield',
                         name: 'phone',
                         margin: '5 10 5 10',
-                        fieldLabel: i18n.getMsg('telefon'),
+                        fieldLabel: i18n.getMsg('phone'),
                         labelWidth: 100,
                         readOnly: true,
                         maxLength: 20
@@ -236,7 +236,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         xtype: 'tfield',
                         name: 'phoneMobile',
                         margin: '5 10 5 10',
-                        fieldLabel: i18n.getMsg('telefon_mobil'),
+                        fieldLabel: i18n.getMsg('phoneMobile'),
                         labelWidth: 100,
                         readOnly: true,
                         maxLength: 20

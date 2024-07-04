@@ -115,7 +115,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                     matchFieldWidth: false
                 }
             }, {
-                header: i18n.getMsg('pzwKleinerALs'),
+                header: i18n.getMsg('smallerThan'),
                 width: 50,
                 dataIndex: 'smallerThan',
                 editor: {
