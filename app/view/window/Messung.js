@@ -287,10 +287,6 @@ Ext.define('Lada.view.window.Messung', {
             });
             record.set('id', null);
             loadCallback(record);
-            this.setMessages(
-                [],
-                { messdauer: [631], nebenprobenNr: [631] },
-                []);
         } else {
             loadCallback(loadedRecord);
         }

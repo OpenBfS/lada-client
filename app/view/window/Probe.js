@@ -273,11 +273,6 @@ Ext.define('Lada.view.window.Probe', {
             });
             record.set('id', null);
             loadCallBack(record);
-            this.down('probeform').setMessages(
-                [],
-                { sampleStartDate: [631], envMediumId: [631] },
-                { mainSampleId: [631] }
-            );
         } else {
             loadCallBack(loadedRecord);
         }
