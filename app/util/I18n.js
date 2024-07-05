@@ -11,6 +11,11 @@
  */
 Ext.define('Lada.util.I18n', {
     statics: {
+        /**
+         * Error code constants
+         */
+        ERROR_VALIDATION: '604',
+        NOT_ALLOWED: '699',
 
         msgNotFound: /\.undefined$/,
 

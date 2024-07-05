@@ -188,20 +188,12 @@ Ext.application({
         var i18n = Lada.getApplication().bundle;
         try {
             var json = Ext.decode(response.responseText);
-            if (json) {
-                if (json.message === '699') {
-                    /* This is the unauthorized message with the authentication
-                     * redirect in the data */
-                    Ext.MessageBox.alert(i18n.getMsg('err.init.noname'),
-                        json.data);
-                    return;
-                }
-                if (json.message === '698') {
-                    /* This is general authentication error */
-                    Ext.MessageBox.alert(i18n.getMsg('err.init.nologin'),
-                        json.data);
-                    return;
-                }
+            if (json && json.message === Lada.util.I18n.NOT_ALLOWED) {
+                /* This is the unauthorized message with the authentication
+                    * redirect in the data */
+                Ext.MessageBox.alert(i18n.getMsg('err.init.noname'),
+                    json.data);
+                return;
             }
         } catch (e) {
             /* This is likely a 404 or some unknown error.
