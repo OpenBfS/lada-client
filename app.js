@@ -186,21 +186,13 @@ Ext.application({
 
     onLoginFailure: function(response) {
         var i18n = Lada.getApplication().bundle;
-        try {
-            var json = Ext.decode(response.responseText);
-            if (json && json.message === Lada.util.I18n.NOT_ALLOWED) {
-                /* This is the unauthorized message with the authentication
-                    * redirect in the data */
-                Ext.MessageBox.alert(i18n.getMsg('err.init.noname'),
-                    json.data);
-                return;
-            }
-        } catch (e) {
-            /* This is likely a 404 or some unknown error.
-             * Show general error then. */
+        if (response.status === 401) {
+            Ext.MessageBox.alert(i18n.getMsg('err.init.noname'),
+                response.responseText);
+        } else {
+            Ext.MessageBox.alert(i18n.getMsg('err.init.generic.title'),
+                i18n.getMsg('err.init.generic.msg'));
         }
-        Ext.MessageBox.alert(i18n.getMsg('err.init.generic.title'),
-            i18n.getMsg('err.init.generic.msg'));
     },
 
     onLoginSuccess: function(response) {
