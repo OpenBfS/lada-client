@@ -94,6 +94,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     setToolbar: function() {
+        //Clear current toolbar buttons
+        this.toolbarbuttons = [];
+
         this.i18n = Lada.getApplication().bundle;
         var tbcontent = [];
         if (this.title) {
