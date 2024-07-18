@@ -12,9 +12,11 @@ Ext.define('Lada.model.SiteClass', {
     fields: [{
         name: 'id'
     }, {
+        name: 'extId'
+    }, {
         name: 'name',
         calculate: function(data) {
-            return Lada.getApplication().bundle.getMsg(data.id);
+            return Lada.getApplication().bundle.getMsg(data.extId);
         }
     }]
 });
