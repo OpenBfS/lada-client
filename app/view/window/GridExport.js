@@ -522,8 +522,6 @@ Ext.define('Lada.view.window.GridExport', {
         } else {
             requestData = {
                 columns: win.getColumnDefinitions(win),
-                exportSubData: win.down('checkbox[name=secondarycolumns]')
-                    .getValue(),
                 idField: win.grid.rowtarget.dataIndex,
                 idFilter: win.getExportIds(win),
                 filename: filename,
