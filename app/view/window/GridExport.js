@@ -683,12 +683,10 @@ Ext.define('Lada.view.window.GridExport', {
     requestExport: function(type, url, data, scope) {
         var queueItem = this.controller.addQueueItem(data.filename, 'export');
         var me = scope || this;
+        data.encoding = me.down('combobox[name=encoding]').getValue();
         Ext.Ajax.request({
             url: url,
             jsonData: data,
-            headers: {
-                'X-FILE-ENCODING': me.down('combobox[name=encoding]').getValue()
-            },
             success: function(response) {
                 var json = Ext.JSON.decode(response.responseText, true);
                 if (json) {
