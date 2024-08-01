@@ -1112,6 +1112,8 @@ Ext.define('Lada.view.window.GridExport', {
         var columnstore = Ext.data.StoreManager.get('columnstore');
         var genericResults = Ext.StoreManager.get('genericresults');
         var cols = genericResults.getProxy().payload;
+        const quId = Ext.getCmp('querypanelid')
+            .down('combobox[name=selectedQuery]').value;
         if (!cols || !cols.length) {
             return [];
         }
@@ -1119,6 +1121,7 @@ Ext.define('Lada.view.window.GridExport', {
             return a.colIndex - b.colIndex;
         });
         return Ext.Array.map(cols, function(c) {
+            c.queryUserId = quId;
             c.export = false;
             if ( c.colIndex > -1 && c.isVisible !== false) {
                 var gridColumn = columnstore.findRecord(
