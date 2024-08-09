@@ -14,14 +14,19 @@ Ext.define('Lada.store.OrtTyp', {
     model: 'Lada.model.SiteClass',
 
     data: [{
-        id: 'DYN'
+        id: 1,
+        extId: 'DYN'
     }, {
-        id: 'GP'
+        id: 2,
+        extId: 'GP'
     }, {
-        id: 'REI'
+        id: 3,
+        extId: 'REI'
     }, {
-        id: 'VE'
+        id: 4,
+        extId: 'VE'
     }, {
-        id: 'ST'
+        id: 5,
+        extId: 'ST'
     }]
 });

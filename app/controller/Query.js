@@ -844,6 +844,7 @@ Ext.define('Lada.controller.Query', {
                         options.multiSelect = true;
                         options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
+                        options.valueField = 'id';
                         field = Ext.create('Lada.view.widget.OrtTyp',
                             options);
                         negateCheckbox = true;

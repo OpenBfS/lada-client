@@ -119,7 +119,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     }
                 }
             }, {
-                header: i18n.getMsg('typ'),
+                header: i18n.getMsg('typeRegulation'),
                 dataIndex: 'typeRegulation',
                 width: 30,
                 editor: {

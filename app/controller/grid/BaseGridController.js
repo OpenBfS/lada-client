@@ -21,9 +21,9 @@ Ext.define('Lada.controller.grid.BaseGridController', {
     handleSaveFailure: function(record, response, editContextRecord) {
         var json = this.handleServiceFailure(
             record, response, 'err.msg.save.title');
-        if (json && json.data && editContextRecord) {
+        if (json && editContextRecord) {
             for (var msgKey of ['errors', 'warnings', 'notifications']) {
-                var msgs = json.data[msgKey];
+                var msgs = json[msgKey];
                 if (msgs) {
                     editContextRecord.set(msgKey, msgs);
                 }

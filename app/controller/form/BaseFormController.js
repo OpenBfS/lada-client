@@ -22,9 +22,9 @@ Ext.define('Lada.controller.form.BaseFormController', {
         form.loadRecord(record);
         var json = this.handleServiceFailure(
             record, response, 'err.msg.save.title');
-        if (json && json.data) {
+        if (json) {
             form.setMessages(
-                json.data.errors, json.data.warnings, json.data.notifications);
+                json.errors, json.warnings, json.notifications);
         }
         form.setLoading(false);
     }

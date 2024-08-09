@@ -175,7 +175,7 @@ Ext.define('Lada.controller.form.Ort', {
 
     checkorttyp: function(combo) {
         var orttyp = combo.getValue();
-        if (orttyp === 3) {
+        if (orttyp === 'REI') {
             combo.up('ortform').down('fieldset').expand();
         } else {
             var form = combo.up('ortform');

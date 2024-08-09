@@ -12,17 +12,6 @@ Ext.define('Lada.model.QueryUser', {
     ],
     extend: 'Lada.model.ValidatedModel',
     autoLoad: true,
-    proxy: {
-        type: 'rest',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    },
 
     fields: [{
         name: 'id'
