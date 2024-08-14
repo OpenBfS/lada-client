@@ -86,7 +86,7 @@ Ext.define('Lada.view.window.SetStatus', {
                 }, {
                     xtype: 'statuskombiselect',
                     allowBlank: false,
-                    fieldLabel: i18n.getMsg('statusmp'),
+                    fieldLabel: i18n.getMsg('statusMp'),
                     listenersJson: {
                         added: 'getPossibleStatus'
                     }
