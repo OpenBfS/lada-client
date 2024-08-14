@@ -154,7 +154,7 @@ Ext.define('Lada.view.form.Messung', {
                     width: '100%',
                     padding: '0,5,0,5',
                     isFormField: false,
-                    fieldLabel: i18n.getMsg('header.statuskombi')
+                    fieldLabel: i18n.getMsg('statusmp')
                 }]
             }]
         }];
