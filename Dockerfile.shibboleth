@@ -1,39 +1,37 @@
 # See README.markdown in the LADA server repository for usage hints
-
-FROM centos:centos7
+FROM debian:bullseye
 MAINTAINER mlechner@bfs.de
 
-ENV HTTPD_PREFIX=/etc/httpd \
-    JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk \
-    INSTALL4J_JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+ENV HTTPD_PREFIX=/etc/apache2 \
+    JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64 \
+    INSTALL4J_JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
 ENV OPENSSL_CONF /etc/ssl/
 
 #
 # Install required packages
 #
-RUN yum clean expire-cache && \
-    yum install -y yum-plugin-ovl && \
-    yum install -y which curl gzip unzip tar java-1.8.0-openjdk-devel git \
-                   libsemanage httpd ca-certificates
-
-#Workaround for cap_set_file bug: Use centos 6 and add repo manually
-ADD shibboleth/shibboleth.repo /etc/yum.repos.d/
-
-RUN yum install -y shibboleth.x86_64
-
+RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
+    curl unzip git apache2 libapache2-mod-shib openjdk-11-jdk && \
+    apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 80 81 82 83 84 85
 
+
 # httpd setup
+RUN a2enmod -q ssl
+RUN a2enmod -q headers
+RUN a2enmod -q proxy_http
+RUN a2dissite -q 000-default
 
-RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
-
-RUN mkdir /usr/local/lada
+RUN mkdir /usr/local/lada && mkdir -p /usr/local/apache2/htdocs/ && mkdir /etc/apache2/logs/
+RUN ln -s /usr/local/lada/ /usr/local/apache2/htdocs/
 RUN rm -rf /var/www/html && ln -s /usr/local/lada/ /var/www/html
+
 WORKDIR /usr/local/lada
 
 ADD custom-vhosts.conf ./
-RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf.d/httpd-vhosts.conf
+RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/sites-available/httpd-vhosts.conf
+RUN a2ensite -q httpd-vhosts
 
 ADD *.sh /usr/local/lada/
 
@@ -75,4 +73,4 @@ RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.j
 #
 RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
 
-CMD export LANG=en_US.UTF-8 && /usr/sbin/httpd && /usr/sbin/shibd -f -F
+CMD export LANG=en_US.UTF-8 && service shibd start && apachectl -D FOREGROUND
