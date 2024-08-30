@@ -242,10 +242,7 @@ Ext.define('Lada.view.window.GridExport', {
             }, {
                 xtype: 'checkbox',
                 name: 'allrows',
-                fieldLabel: i18n.getMsg('export.allrows'),
-                listeners: {
-                    change: me.checkExportButton
-                }
+                fieldLabel: i18n.getMsg('export.allrows')
             }, {
                 xtype: 'tagfield',
                 name: 'exportcolumns',
@@ -369,7 +366,6 @@ Ext.define('Lada.view.window.GridExport', {
         this.down('button[action=copyGeoJson]').on({
             click: me.doCopy
         });
-        this.checkExportButton();
 
         // get rowexpander and their columns
         var toggled = false;
@@ -1033,24 +1029,6 @@ Ext.define('Lada.view.window.GridExport', {
             content.push(item);
         }
         return content;
-    },
-
-    checkExportButton: function(item) {
-        var win = item ? item.up('window') : this;
-        var button = win.down('button[action=export]');
-        if (win.grid.getSelectionModel().getSelection().length) {
-            button.setDisabled(false);
-            return;
-        } else {
-            if (
-                win.down('combobox[name=formatselection]').getValue() ===
-                    'laf'
-            ) {
-                button.setDisabled(true);
-                return;
-            }
-            button.setDisabled(!win.down('checkbox[name=allrows]').getValue());
-        }
     },
 
     getExportIds: function(win) {
