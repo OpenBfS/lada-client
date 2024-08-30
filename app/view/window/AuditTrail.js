@@ -131,6 +131,7 @@ Ext.define('Lada.view.window.AuditTrail', {
             container.update(this.createHtmlMessung(json));
             title = i18n.getMsg('audit.title') + ' ' + this.titleText;
             this.setTitle(title);
+            break;
         case 'messprogramm':
             container.update(this.createHtmlMessprogramm(json));
         }

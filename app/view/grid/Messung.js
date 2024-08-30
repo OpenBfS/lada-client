@@ -143,9 +143,9 @@ Ext.define('Lada.view.grid.Messung', {
                 return dt;
             }
         }, {
-            header: i18n.getMsg('header.statuskombi'),
+            header: i18n.getMsg('statusMp'),
             flex: 2,
-            dataIndex: 'statusKombi',
+            dataIndex: 'statusMp',
             renderer: function(value, meta, record) {
                 var statusId = record.get('status');
                 var mId = record.get('id');
@@ -326,7 +326,7 @@ Ext.define('Lada.view.grid.Messung', {
                 // this is necessary to let the controller determine
                 // which actions are allowed.
                 opts.record.beginEdit();
-                opts.record.set('statusKombi', value);
+                opts.record.set('statusMp', value);
                 opts.record.endEdit();
                 opts.record.commit();
             }
@@ -359,7 +359,7 @@ Ext.define('Lada.view.grid.Messung', {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly &&
-            record.get('statusKombi') === 1 &&
+            record.get('statusMp') === 1 &&
             record.get('owner')) {
             grid.down('button[action=delete]').enable();
         }

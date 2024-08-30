@@ -25,8 +25,12 @@ Ext.define('Lada.controller.BaseController', {
         var i18n = Lada.getApplication().bundle;
         var msg = '';
         //Check for bean validation messages
-        if (response.getResponseHeader('validation-exception')) {
-            var errors = this.getBeanValidationErrors(response);
+        var violationReport = Ext.decode(response.responseText, true);
+        if (response.getResponseHeader('validation-exception')
+            && violationReport
+        ) {
+            var errors = this.getBeanValidationErrors(
+                violationReport.parameterViolations);
             for (const [key, value] of Object.entries(errors)) {
                 var violations = '';
                 // eslint-disable-next-line no-loop-func
@@ -64,9 +68,13 @@ Ext.define('Lada.controller.BaseController', {
                 msg = err;
             } else {
                 var response = err.response;
-                if (response.getResponseHeader('validation-exception')) {
-                    var errors = this.getBeanValidationErrors(response, record);
-                    msg = i18n.getMsg(Lada.util.I18n.ERROR_VALIDATION);
+                var violationReport = Ext.decode(response.responseText, true);
+                if (response.getResponseHeader('validation-exception')
+                    && violationReport
+                ) {
+                    var errors = this.getBeanValidationErrors(
+                        violationReport.parameterViolations, record);
+                    msg = i18n.getMsg('604');
                     responseJson = { errors: errors };
                 } else {
                     msg = this.getHttpError(response);
@@ -102,10 +110,8 @@ Ext.define('Lada.controller.BaseController', {
         return msg;
     },
 
-    getBeanValidationErrors: function(response, record) {
-        // Translate RESTEasy validation violation report
-        var violations = Ext.decode(response.responseText)
-            .parameterViolations;
+    // Translate RESTEasy validation violation report
+    getBeanValidationErrors: function(violations, record) {
         var errors = {};
         for (var violation of violations) {
             var path = violation.path.split('\.');
