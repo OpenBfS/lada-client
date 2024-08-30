@@ -732,20 +732,15 @@ Ext.define('Lada.view.window.GridExport', {
      */
     changeFormat: function(box, newValue) {
         var win = box.up('window');
-        win.down('fieldset[name=csvoptions]').setVisible(
-            newValue === 'csv' ? true : false
-        );
+        win.down('fieldset[name=csvoptions]').setVisible(newValue === 'csv');
         win.resetCopyButton(win);
-        if (newValue === 'geojson') {
-            win.down('button[action=copyGeoJson]').setVisible(true);
-            win.down('button[action=copyGeoJson]').setText(
-                Lada.getApplication().bundle.getMsg('export.button.copy'));
-        } else {
-            win.down('button[action=copyGeoJson]').setVisible(false);
-        }
+
+        win.down('button[action=copyGeoJson]').setVisible(
+            newValue === 'geojson');
+
         win.down('combobox[name=encoding]').setVisible(
-            newValue === 'csv' || newValue === 'laf' ? true : false
-        );
+            newValue === 'csv' || newValue === 'laf');
+
         win.down('checkbox[name=allrows]').setVisible(newValue !== 'laf');
         var ecolVisible = true;
         if (win.down('checkbox[name=allcolumns]').getValue()) {
