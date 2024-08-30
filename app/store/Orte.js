@@ -22,7 +22,7 @@ Ext.define('Lada.store.Orte', {
     // Special proxy with paging ability for Lada.view.grid.Orte
     proxy: {
         type: 'rest',
-        url: Lada.model.LadaBase.schema.getUrlPrefix() + '/site',
+        url: Lada.model.LadaBase.schema.getUrlPrefix() + 'site',
         reader: {
             rootProperty: 'data',
             totalProperty: 'totalCount'
