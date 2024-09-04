@@ -525,10 +525,6 @@ Ext.define('Lada.view.window.GridExport', {
                 timezone: Lada.util.Date.getCurrentTimeZone()
             };
             switch (exportFormat) {
-                case 'laf':
-                    win.requestExport(
-                        'laf', win.lafRequestURL, requestData, win);
-                    break;
                 case 'geojson':
                     var data = JSON.stringify(win.getGeoJson());
                     var blob = new Blob([data],
