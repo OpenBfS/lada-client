@@ -642,23 +642,12 @@ Ext.define('Lada.view.window.GridExport', {
                     jsondata.messungen.push(mid);
                 }
             }
-            if (!jsondata.messungen.length) {
-                this.showError('export.nodata');
-                return false;
-            }
         } else if (this.hasProbe) {
             jsondata.proben = [];
             for (var k = 0; k < dataset.length; k++) {
                 var pid = dataset[k].get(this.hasProbe);
                 jsondata.proben.push(pid);
             }
-            if (!jsondata.proben.length) {
-                this.showError('export.nodata');
-                return false;
-            }
-        } else { //should not happen
-            this.showError('export.wrongformat');
-            return false;
         }
         this.requestExport('laf', this.lafRequestUrl, jsondata);
     },
