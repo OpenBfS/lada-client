@@ -11,7 +11,9 @@
  * updates
  */
 Ext.define('Lada.controller.grid.Uploads', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.BaseController',
+    alias: 'controller.upload',
+
     record: null,
 
     resultUrl: 'lada-server/data/import/async/result/',
@@ -21,7 +23,7 @@ Ext.define('Lada.controller.grid.Uploads', {
      * Initialize the controller, request polling to run every 2 seconds
      */
     init: function() {
-        window.setInterval(this.refreshQueue, 2000);
+        window.setInterval(() => this.refreshQueue(), 2000);
     },
 
     /**
@@ -48,12 +50,11 @@ Ext.define('Lada.controller.grid.Uploads', {
      * Tries to refresh all queued item info.
      */
     refreshQueue: function() {
-        var controller = Lada.app.getController(
-            'Lada.controller.grid.Uploads');
         var store = Ext.getStore('uploadqueue');
+        var me = this;
         Ext.each(store.getData().items, function(item) {
             if (item.get('done') !== true) {
-                controller.refreshItemInfo(item);
+                me.refreshItemInfo(item);
             }
         });
     },
@@ -143,14 +144,14 @@ Ext.define('Lada.controller.grid.Uploads', {
                     record.set('result', response);
                     record.set('resultFetched', true);
                     me.showResult(response, {
-                        mst: record.get('mst'),
+                        mst: record.get('measFacilId'),
                         encoding: record.get('encoding')
                     });
                 }
             });
         } else {
             this.showResult(record.get('result'), {
-                mst: record.get('mst'),
+                mst: record.get('measFacilId'),
                 encoding: record.get('encoding')
             });
         }

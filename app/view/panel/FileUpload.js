@@ -19,6 +19,8 @@ Ext.define('Lada.view.panel.FileUpload', {
     ],
     alias: 'widget.fileupload',
 
+    controller: 'upload',
+
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -252,25 +254,22 @@ Ext.define('Lada.view.panel.FileUpload', {
     uploadFiles: function(button, binFiles) {
         var win = button.up('panel');
         var cb = win.down('combobox[name=encoding]');
-        var mstSelector = win.down('combobox[name=mst]').getValue();
 
-        var controller = Lada.app.getController(
-            'Lada.controller.grid.Uploads');
-        var queueItem = controller.addQueueItem(win.fileNames);
+        var queueItem = this.controller.addQueueItem(win.fileNames);
         queueItem.set(
             'encoding', win.down('combobox[name=encoding]').getValue());
-        queueItem.set('mst', win.down('combobox[name=mst]').getValue());
+        queueItem.set('measFacilId', win.down('combobox[name=mst]').getValue());
         Ext.Ajax.request({
             url: 'lada-server/data/import/async/laf',
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-LADA-MST': mstSelector
+                'Content-Type': 'application/json'
             },
             scope: win,
             jsonData: {
                 files: binFiles,
-                encoding: cb.getValue()
+                encoding: cb.getValue(),
+                measFacilId: queueItem.get('measFacilId')
             },
             success: function(response) {
                 var json = Ext.decode(response.responseText);
@@ -282,16 +281,16 @@ Ext.define('Lada.view.panel.FileUpload', {
                     queueItem.set('status', 'error');
                 }
             },
-            failure: function(response) {
+            failure: function(response, opts) {
                 queueItem.set('status', 'error');
-                var msg = 'importResponse.failure.server.multi';
+                var msg = win.controller.handleRequestFailure(
+                    response, opts, null, true);
                 if (response.status === 502 || response.status === 413) {
                     // correct status for an expected "file too big" would be
                     // 413, needs server adaption, 502 could be something else
                     msg = 'importResponse.failure.server.bigfile';
                 }
-                var i18n = Lada.getApplication().bundle;
-                queueItem.set('message', i18n.getMsg(msg));
+                queueItem.set('message', Lada.util.I18n.getMsgIfDefined(msg));
                 queueItem.set('done', true);
             }
         });
