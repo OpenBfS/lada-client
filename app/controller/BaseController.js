@@ -74,7 +74,7 @@ Ext.define('Lada.controller.BaseController', {
                 ) {
                     var errors = this.getBeanValidationErrors(
                         violationReport.parameterViolations, record);
-                    msg = i18n.getMsg(Lada.util.I18n.ERROR_VALIDATION);
+                    msg = i18n.getMsg('604');
                     responseJson = { errors: errors };
                 } else {
                     msg = this.getHttpError(response);

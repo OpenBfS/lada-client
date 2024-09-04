@@ -20,10 +20,28 @@ Ext.define('Lada.controller.grid.Downloads', {
     },
 
     /**
-     * Initialize the controller, request polling to run every 2 seconds
+     * Initialize the controller
      */
     init: function() {
+        this.control({
+            'exportdata checkbox[name=allrows]': {
+                change: this.setExportButtonDisabled
+            },
+            'exportdata combobox[name=formatselection]': {
+                change: this.setExportButtonDisabled
+            }
+        });
+
+        // Request polling to run every 2 seconds
         window.setInterval(() => this.refreshQueue(), 2000);
+    },
+
+    setExportButtonDisabled: function(item) {
+        var win = item.up('window');
+        win.down('button[action=export]').setDisabled(
+            !win.grid.getSelectionModel().getSelection().length
+            && (win.down('combobox[name=formatselection]').getValue() === 'laf'
+                || !win.down('checkbox[name=allrows]').getValue()));
     },
 
     /**

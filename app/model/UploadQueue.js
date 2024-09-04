@@ -49,9 +49,9 @@ Ext.define('Lada.model.UploadQueue', {
         name: 'warnings',
         type: 'boolean'
     }, {
-        name: 'mst'
+        name: 'measFacilId'
     }, {
-        'name': 'encoding'
+        name: 'encoding'
     }],
     idProperty: 'id'
 });

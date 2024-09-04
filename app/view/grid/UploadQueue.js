@@ -15,6 +15,9 @@
 Ext.define('Lada.view.grid.UploadQueue', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.uploadqueuegrid',
+
+    controller: 'upload',
+
     store: null, //TODO needs to be set
     viewConfig: {
         deferEmptyText: true,
@@ -23,8 +26,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
     emptyText: 'emptygrid.uploadqueue',
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var controller = Lada.app.getController(
-            'Lada.controller.grid.Uploads');
+        var controller = this.controller;
         this.emptyText = i18n.getMsg('emptygrid.uploadqueue');
         this.columns = [{
             header: i18n.getMsg('export.filename'),

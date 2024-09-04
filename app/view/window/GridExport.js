@@ -96,20 +96,20 @@ Ext.define('Lada.view.window.GridExport', {
             fields: ['name', 'value'],
             data: [{
                 name: i18n.getMsg('lineseparator.windows'),
-                value: 'windows'
+                value: '\r\n'
             }, {
                 name: i18n.getMsg('lineseparator.linux'),
-                value: 'linux'
+                value: '\n'
             }]
         });
         this.csv_textlimstore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: [{
                 name: i18n.getMsg('doublequotes'),
-                value: 'doublequote'
+                value: '"'
             }, {
                 name: i18n.getMsg('singlequotes'),
-                value: 'singlequote'
+                value: '\''
             }]
         });
 
@@ -117,16 +117,16 @@ Ext.define('Lada.view.window.GridExport', {
             fields: ['name', 'value'],
             data: [{
                 name: i18n.getMsg('semicolon'),
-                value: 'semicolon'
+                value: ';'
             }, {
                 name: i18n.getMsg('comma'),
-                value: 'comma'
+                value: ','
             }, {
                 name: i18n.getMsg('whitespace'),
-                value: 'space'
+                value: ' '
             }, {
                 name: i18n.getMsg('dot'),
-                value: 'period'
+                value: '.'
             }]
         });
 
@@ -134,10 +134,10 @@ Ext.define('Lada.view.window.GridExport', {
             fields: ['name', 'value'],
             data: [{
                 name: i18n.getMsg('comma'),
-                value: 'comma'
+                value: ','
             }, {
                 name: i18n.getMsg('dot'),
-                value: 'period'
+                value: '.'
             }]
         });
 
@@ -242,10 +242,7 @@ Ext.define('Lada.view.window.GridExport', {
             }, {
                 xtype: 'checkbox',
                 name: 'allrows',
-                fieldLabel: i18n.getMsg('export.allrows'),
-                listeners: {
-                    change: me.checkExportButton
-                }
+                fieldLabel: i18n.getMsg('export.allrows')
             }, {
                 xtype: 'tagfield',
                 name: 'exportcolumns',
@@ -317,25 +314,25 @@ Ext.define('Lada.view.window.GridExport', {
                     name: 'linesep',
                     store: me.csv_linesepstore,
                     fieldLabel: i18n.getMsg('export.linesep'),
-                    value: 'windows'
+                    value: '\r\n'
                 }, {
                     xtype: 'combobox',
                     name: 'textlim',
                     fieldLabel: i18n.getMsg('export.textsep'),
                     store: me.csv_textlimstore,
-                    value: 'doublequote'
+                    value: '"'
                 }, {
                     xtype: 'combobox',
                     name: 'colsep',
                     fieldLabel: i18n.getMsg('export.columnlim'),
                     store: me.csv_colsepstore,
-                    value: 'semicolon'
+                    value: ';'
                 }, {
                     xtype: 'combobox',
                     name: 'decsep',
                     store: me.csv_decSepStore,
                     fieldLabel: i18n.getMsg('decimalseparator'),
-                    value: 'comma'
+                    value: ','
                 }]
             }, {
                 xtype: 'textfield',
@@ -369,7 +366,6 @@ Ext.define('Lada.view.window.GridExport', {
         this.down('button[action=copyGeoJson]').on({
             click: me.doCopy
         });
-        this.checkExportButton();
 
         // get rowexpander and their columns
         var toggled = false;
@@ -522,8 +518,6 @@ Ext.define('Lada.view.window.GridExport', {
         } else {
             requestData = {
                 columns: win.getColumnDefinitions(win),
-                exportSubData: win.down('checkbox[name=secondarycolumns]')
-                    .getValue(),
                 idField: win.grid.rowtarget.dataIndex,
                 idFilter: win.getExportIds(win),
                 filename: filename,
@@ -554,13 +548,13 @@ Ext.define('Lada.view.window.GridExport', {
                     }
                     requestData.subDataColumnNames = win
                         .getSubdataColumNames(requestData.subDataColumns);
-                    requestData.csvOptions = {
+                    Object.assign(requestData, {
                         rowDelimiter: win.down('combobox[name=linesep]')
                             .getValue(),
                         fieldSeparator: colsep,
                         decimalSeparator: decsep,
-                        quoteType: win.down('combobox[name=textlim]').getValue()
-                    };
+                        quote: win.down('combobox[name=textlim]').getValue()
+                    });
                     win.requestExport(
                         'csv', win.csvRequestURL, requestData, win);
                     break;
@@ -683,12 +677,10 @@ Ext.define('Lada.view.window.GridExport', {
     requestExport: function(type, url, data, scope) {
         var queueItem = this.controller.addQueueItem(data.filename, 'export');
         var me = scope || this;
+        data.encoding = me.down('combobox[name=encoding]').getValue();
         Ext.Ajax.request({
             url: url,
             jsonData: data,
-            headers: {
-                'X-FILE-ENCODING': me.down('combobox[name=encoding]').getValue()
-            },
             success: function(response) {
                 var json = Ext.JSON.decode(response.responseText, true);
                 if (json) {
@@ -711,18 +703,11 @@ Ext.define('Lada.view.window.GridExport', {
                     queueItem.set('status', 'error');
                 }
             },
-            failure: function(response) {
+            failure: function(response, opts) {
                 queueItem.set('done', true);
                 queueItem.set('status', 'error');
-
-                var msg = response.responseText;
-                if (!msg) {
-                    var i18n = Lada.getApplication().bundle;
-                    msg = response.timedout
-                        ? i18n.getMsg('err.msg.timeout')
-                        : response.statusText;
-                }
-                queueItem.set('message', msg);
+                queueItem.set('message', me.controller.handleRequestFailure(
+                    response, opts, null, true));
             }
         });
     },
@@ -732,20 +717,15 @@ Ext.define('Lada.view.window.GridExport', {
      */
     changeFormat: function(box, newValue) {
         var win = box.up('window');
-        win.down('fieldset[name=csvoptions]').setVisible(
-            newValue === 'csv' ? true : false
-        );
+        win.down('fieldset[name=csvoptions]').setVisible(newValue === 'csv');
         win.resetCopyButton(win);
-        if (newValue === 'geojson') {
-            win.down('button[action=copyGeoJson]').setVisible(true);
-            win.down('button[action=copyGeoJson]').setText(
-                Lada.getApplication().bundle.getMsg('export.button.copy'));
-        } else {
-            win.down('button[action=copyGeoJson]').setVisible(false);
-        }
+
+        win.down('button[action=copyGeoJson]').setVisible(
+            newValue === 'geojson');
+
         win.down('combobox[name=encoding]').setVisible(
-            newValue === 'csv' || newValue === 'laf' ? true : false
-        );
+            newValue === 'csv' || newValue === 'laf');
+
         win.down('checkbox[name=allrows]').setVisible(newValue !== 'laf');
         var ecolVisible = true;
         if (win.down('checkbox[name=allcolumns]').getValue()) {
@@ -1040,24 +1020,6 @@ Ext.define('Lada.view.window.GridExport', {
         return content;
     },
 
-    checkExportButton: function(item) {
-        var win = item ? item.up('window') : this;
-        var button = win.down('button[action=export]');
-        if (win.grid.getSelectionModel().getSelection().length) {
-            button.setDisabled(false);
-            return;
-        } else {
-            if (
-                win.down('combobox[name=formatselection]').getValue() ===
-                    'laf'
-            ) {
-                button.setDisabled(true);
-                return;
-            }
-            button.setDisabled(!win.down('checkbox[name=allrows]').getValue());
-        }
-    },
-
     getExportIds: function(win) {
         if (win.down('checkbox[name=allrows]').getValue()) {
             return [];
@@ -1114,6 +1076,8 @@ Ext.define('Lada.view.window.GridExport', {
         var columnstore = Ext.data.StoreManager.get('columnstore');
         var genericResults = Ext.StoreManager.get('genericresults');
         var cols = genericResults.getProxy().payload;
+        const quId = Ext.getCmp('querypanelid')
+            .down('combobox[name=selectedQuery]').value;
         if (!cols || !cols.length) {
             return [];
         }
@@ -1121,6 +1085,7 @@ Ext.define('Lada.view.window.GridExport', {
             return a.colIndex - b.colIndex;
         });
         return Ext.Array.map(cols, function(c) {
+            c.queryUserId = quId;
             c.export = false;
             if ( c.colIndex > -1 && c.isVisible !== false) {
                 var gridColumn = columnstore.findRecord(
