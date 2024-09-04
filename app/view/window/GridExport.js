@@ -220,6 +220,8 @@ Ext.define('Lada.view.window.GridExport', {
                 name: 'formatselection',
                 store: me.formatStore,
                 value: 'csv',
+                allowBlank: false,
+                forceSelection: true,
                 listeners: {
                     change: me.changeFormat
                 }
@@ -503,17 +505,16 @@ Ext.define('Lada.view.window.GridExport', {
      */
     doExport: function(button) {
         var win = button.up('window');
+
         var exportFormat = win.down('combobox[name=formatselection]')
             .getValue();
-        if (!exportFormat) {
-            win.showError('export.noformat');
-            return;
-        }
+
         var filename = win.down('textfield[name=filename]').getValue();
         const suffix = '.' + exportFormat;
         if (!filename.endsWith(suffix)) {
             filename += suffix;
         }
+
         var requestData = {};
         if (exportFormat === 'laf') {
             requestData = win.getLAF(filename);
