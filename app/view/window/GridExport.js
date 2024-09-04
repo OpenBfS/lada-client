@@ -560,6 +560,7 @@ Ext.define('Lada.view.window.GridExport', {
             }
         }
     },
+
     /**
      * Fetches the data as geojson points with the row's data as properties
      * TODO: legacy (async download of secondary data), but still used for
@@ -763,8 +764,7 @@ Ext.define('Lada.view.window.GridExport', {
     getDataSets: function() {
         var dataset = this.grid.getSelectionModel().getSelection();
         if (!dataset.length) {
-            this.showError('export.nodata');
-            this.close();
+            this.showError('export.noselection');
         }
         return dataset;
     },
