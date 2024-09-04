@@ -15,6 +15,7 @@ Ext.application({
 
     requires: [
         'Lada.view.Viewport',
+        'Lada.override.DisplayField',
         'Lada.override.Table',
         'Lada.override.RestProxy',
         'Lada.override.Toolbar',
