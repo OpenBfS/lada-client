@@ -39,7 +39,8 @@ Ext.define('Lada.controller.grid.Downloads', {
     setExportButtonDisabled: function(item) {
         var win = item.up('window');
         win.down('button[action=export]').setDisabled(
-            !win.grid.getSelectionModel().getSelection().length
+            !win.down('form').isValid()
+            || !win.grid.getSelectionModel().getSelection().length
             && (win.down('combobox[name=formatselection]').getValue() === 'laf'
                 || !win.down('checkbox[name=allrows]').getValue()));
     },

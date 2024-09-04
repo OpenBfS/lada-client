@@ -74,23 +74,6 @@ Ext.define('Lada.view.window.GridExport', {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('export.title');
 
-        this.buttons = [{
-            action: 'export',
-            text: i18n.getMsg('export.button')
-        }, {
-            action: 'copyGeoJson',
-            icon: 'resources/img/map_add.png',
-            iconAlign: 'left',
-            text: i18n.getMsg('export.button.copy'),
-            hidden: true
-        }, '->', {
-            text: i18n.getMsg('close'),
-            scope: this,
-            handler: this.close
-        }];
-
-        var columns = this.grid.getColumns();
-
         // add CSV export options
         this.csv_linesepstore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
@@ -141,6 +124,7 @@ Ext.define('Lada.view.window.GridExport', {
             }]
         });
 
+        var columns = this.grid.getColumns();
         var columnslist = [];
         var preselected = [];
         for (var i = 0; i < columns.length; i++) {
@@ -201,7 +185,7 @@ Ext.define('Lada.view.window.GridExport', {
 
         // create comboboxes and checkboxes
         this.items = [{
-            xtype: 'container',
+            xtype: 'form',
             name: 'form',
             layout: {
                 type: 'vbox',
@@ -213,6 +197,23 @@ Ext.define('Lada.view.window.GridExport', {
                 labelWidth: 200,
                 width: 400
             },
+
+            buttons: [{
+                action: 'export',
+                text: i18n.getMsg('export.button'),
+                formBind: true
+            }, {
+                action: 'copyGeoJson',
+                icon: 'resources/img/map_add.png',
+                iconAlign: 'left',
+                text: i18n.getMsg('export.button.copy'),
+                hidden: true
+            }, '->', {
+                text: i18n.getMsg('close'),
+                scope: this,
+                handler: this.close
+            }],
+
             items: [{
                 xtype: 'combobox',
                 fieldLabel: i18n.getMsg('export.format'),
@@ -339,8 +340,9 @@ Ext.define('Lada.view.window.GridExport', {
                 name: 'filename',
                 margin: '3, 3, 3, 3',
                 fieldLabel: i18n.getMsg('export.filename'),
-                allowBlank: true,
-                editable: true
+                value: 'export',
+                regex: new RegExp(/^(\w|[-äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i),
+                allowBlank: false
             }, {
                 xtype: 'downloadqueuegrid',
                 store: 'downloadqueue-export'
@@ -507,10 +509,10 @@ Ext.define('Lada.view.window.GridExport', {
             win.showError('export.noformat');
             return;
         }
-        var filename = win.validateFilename(exportFormat);
-        if (!filename) {
-            win.showError('export.invalidfilename');
-            return;
+        var filename = win.down('textfield[name=filename]').getValue();
+        const suffix = '.' + exportFormat;
+        if (!filename.endsWith(suffix)) {
+            filename += suffix;
         }
         var requestData = {};
         if (exportFormat === 'laf') {
@@ -744,7 +746,6 @@ Ext.define('Lada.view.window.GridExport', {
 
     exportsecondarytoggle: function(box, newValue) {
         var me = box.up('window');
-        var expButton = me.down('button[action=export]');
         if (newValue && !me.down('checkbox[name=allcolumns]').getValue()) {
             me.down('tagfield[name=exportexpcolumns]').setVisible(
                 !me.down('checkbox[name=allcolumns]').getValue()
@@ -752,7 +753,6 @@ Ext.define('Lada.view.window.GridExport', {
         } else {
             me.down('tagfield[name=exportexpcolumns]').setVisible(false);
         }
-        expButton.setDisabled(false);
         me.resetCopyButton(me);
     },
 
@@ -936,37 +936,6 @@ Ext.define('Lada.view.window.GridExport', {
     },
 
     /**
-     * Validation of filename input. Returns the valid filename, 'export' if
-     * textfield is empty or "false" if the text is invalid.
-     * Appends the extension if not already present
-     */
-    validateFilename: function(defaultending) {
-        var defaultend = defaultending || 'txt';
-        var fname = this.down('textfield[name=filename]').getValue();
-        if (!fname) {
-            fname = 'export.' + defaultend;
-        }
-        //TODO better regex: this is quite basic
-        var pattern = new RegExp(/^(\w|[-äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i);
-        if (!pattern.test(fname)) {
-            this.showError('export.invalidfilename');
-            return false;
-        } else {
-            // fname may be shorter than ending
-            if (
-                (fname.length > defaultend.length + 1) &&
-                fname.toLowerCase().indexOf(defaultend.toLowerCase()) ===
-                    (fname.length - defaultend.length)
-            ) {
-                return fname;
-            } else {
-                return fname + '.' + defaultend;
-
-            }
-        }
-    },
-
-    /**
      * Adds the rowExpander data by sending an AJAX request; the resultobject
      * will be ammended asynchronously after an answer is received.
      * @param {*} parentId Number/String to find the original record entry in
@@ -1100,5 +1069,4 @@ Ext.define('Lada.view.window.GridExport', {
             button.setVisible(false);
         }
     }
-
 });
