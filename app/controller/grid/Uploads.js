@@ -11,40 +11,11 @@
  * updates
  */
 Ext.define('Lada.controller.grid.Uploads', {
-    extend: 'Lada.controller.BaseController',
+    extend: 'Lada.controller.grid.Queue',
     alias: 'controller.upload',
-
-    record: null,
 
     resultUrl: 'lada-server/data/import/async/result/',
     statusUrl: 'lada-server/data/import/async/status/',
-
-    /**
-     * Initialize the controller, request polling to run every 2 seconds
-     */
-    init: function() {
-        window.setInterval(() => this.refreshQueue(), 2000);
-    },
-
-    /**
-     * Cancels the mapfish creation of a queued DownloadQueue item
-     * @param {*} model
-     */
-    onCancelItem: function(model) {
-        model.set('done', true);
-        model.set('status', 'cancelled');
-    },
-
-    /**
-     * Deletes an old entry from queue
-     * @param {*} model
-     * @param store
-     */
-    onDeleteItem: function(model, store) {
-        if (model.get('done') === true) {
-            store.remove(model);
-        }
-    },
 
     /**
      * Tries to refresh all queued item info.

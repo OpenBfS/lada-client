@@ -11,14 +11,13 @@
  * updates
  */
 Ext.define('Lada.controller.grid.Downloads', {
-    extend: 'Lada.controller.BaseController',
+    extend: 'Lada.controller.grid.Queue',
     alias: 'controller.download',
 
     ladaPrintUrlPrefix: 'lada-printer/print/',
-    exportUrls: {
-        status: 'lada-server/data/asyncexport/status/',
-        download: 'lada-server/data/asyncexport/download/'
-    },
+
+    resultUrl: 'lada-server/data/asyncexport/download/',
+    statusUrl: 'lada-server/data/asyncexport/status/',
 
     /**
      * Initialize the controller
@@ -33,8 +32,7 @@ Ext.define('Lada.controller.grid.Downloads', {
             }
         });
 
-        // Request polling to run every 2 seconds
-        window.setInterval(() => this.refreshQueue(), 2000);
+        this.callParent(arguments);
     },
 
     setExportButtonDisabled: function(item) {
@@ -63,19 +61,7 @@ Ext.define('Lada.controller.grid.Downloads', {
         } else if (type === 'laf') {
             // LAF export offers no server side cancelling API. This just stops
             // caring about some future answer
-            model.set('done', true);
-            model.set('status', 'cancelled');
-        }
-    },
-
-    /**
-     * Deletes an old entry from queue
-     * @param {*} model
-     * @param store
-     */
-    onDeleteItem: function(model, store) {
-        if (model.get('done') === true) {
-            store.remove(model);
+            this.callParent(arguments);
         }
     },
 
@@ -93,7 +79,7 @@ Ext.define('Lada.controller.grid.Downloads', {
                 url = this.ladaPrintUrlPrefix + 'report/' + model.get('refId');
                 break;
             case 'export':
-                url = this.exportUrls.download + model.get('refId');
+                url = this.resultUrl + model.get('refId');
                 break;
         }
         if (url) {
@@ -165,7 +151,7 @@ Ext.define('Lada.controller.grid.Downloads', {
                     url = this.ladaPrintUrlPrefix + '/status/' + refId + '.json';
                     break;
                 case 'export':
-                    url = this.exportUrls.status + refId;
+                    url = this.statusUrl + refId;
                     break;
             }
             var me = this;
