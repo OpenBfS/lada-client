@@ -503,7 +503,6 @@ Ext.application({
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.Global',
-        'Lada.controller.ElanScenario',
-        'Lada.controller.grid.Downloads'
+        'Lada.controller.ElanScenario'
     ]
 });

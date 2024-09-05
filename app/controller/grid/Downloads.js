@@ -11,7 +11,8 @@
  * updates
  */
 Ext.define('Lada.controller.grid.Downloads', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.BaseController',
+    alias: 'controller.download',
 
     ladaPrintUrlPrefix: 'lada-printer/print/',
     exportUrls: {
@@ -57,7 +58,7 @@ Ext.define('Lada.controller.grid.Downloads', {
             Ext.Ajax.request({
                 url: this.ladaPrintUrlPrefix + 'cancel/' + ref,
                 method: 'DELETE',
-                callback: this.refreshQueue
+                failure: this.handleRequestFailure
             });
         } else if (type === 'laf') {
             // LAF export offers no server side cancelling API. This just stops
