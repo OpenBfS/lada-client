@@ -50,17 +50,12 @@ Ext.define('Lada.view.window.GridExport', {
      * the first entry (to get column definitions).
      */
     rowexp: null,
+
     /**
      * the (optional) list of gridrowExpander columns to be exported. Will be
      * filled by the ui user
      */
     expcolumns: [],
-
-
-    /**
-     * internal storage for fetched secondaty data
-     */
-    secondaryData: [],
 
     requestUrl: 'lada-server/data/asyncexport/',
 
@@ -379,11 +374,6 @@ Ext.define('Lada.view.window.GridExport', {
             if (this.grid.plugins[j].ptype === 'gridrowexpander') {
                 this.down('checkbox[name=secondarycolumns]').setHidden(false);
                 this.rowexp = this.grid.plugins[j];
-                var dataset = this.grid.getSelectionModel().getSelection();
-                if (dataset.length) {
-                    this.secondaryDataIsPrefetched = false;
-                    this.getSecondaryData();
-                }
                 var nodes = this.rowexp.view.getNodes();
                 var node = Ext.fly(nodes[0]);
                 if (node.hasCls(this.rowexp.rowCollapsedCls) === true) {
@@ -417,86 +407,12 @@ Ext.define('Lada.view.window.GridExport', {
         var i18n = Lada.getApplication().bundle;
         button.setDisabled(true);
         button.setText(i18n.getMsg('export.button.loading'));
-        var me = button.up('window');
-        var prefetchCallBack = function() {
-            var data = JSON.stringify(me.getGeoJson());
-            window.localStorage.setItem('gis-transfer-data', data);
-            window.localStorage.setItem(
-                'gis-transfer-data-transfer-date', new Date().valueOf());
-            button.setText(i18n.getMsg('export.button.copy.success'));
-        };
-        if (
-            me.down('checkbox[name=secondarycolumns]').getValue() &&
-            !me.secondaryDataIsPrefetched
-        ) {
-            me.secondaryDataIsPrefetching.then(
-                prefetchCallBack,
-                function() {
-                    me.showError('export.preloadfailed');
-                }
-            );
-        } else {
-            prefetchCallBack();
-        }
+        var data = JSON.stringify(button.up('window').getGeoJson());
+        window.localStorage.setItem('gis-transfer-data', data);
+        window.localStorage.setItem(
+            'gis-transfer-data-transfer-date', new Date().valueOf());
+        button.setText(i18n.getMsg('export.button.copy.success'));
     },
-
-    /**
-     * Asynchronously retrieves secondary rowExpander data in the background
-     * data will be written to the this.secondaryData array.
-     * The promise will be returned, but also available as
-     *  this.secondaryDataIsPrefetching (), the status as boolean
-     *  this.secondaryDataIsPrefetched for sync operations (e.g. button status)
-     * TODO legacy, still used in "copy geojson"
-     */
-    getSecondaryData: function() {
-        this.secondaryDataIsPrefetched = false;
-        var data = this.getDataSets();
-        var prm = [];
-        var di = this.grid.rowtarget.dataIndex;
-        for (var i = 0; i < data.length; i++) {
-            var urlString = '';
-            switch (this.rowexp.type) {
-                case 'Lada.view.grid.Messung':
-                    urlString = 'measm?sampleId=' + data[i].get(di);
-                    break;
-                case 'Lada.view.grid.Messwert':
-                    urlString = 'measval?measmId=' + data[i].get(di);
-                    break;
-            }
-            if (urlString) {
-                prm.push(
-                    // eslint-disable-next-line no-loop-func
-                    new Ext.Promise(function(resolve, reject) {
-                        Ext.Ajax.request({
-                            url: 'lada-server/rest/' + urlString,
-                            timeout: 30 * 1000,
-                            success: function(response) {
-                                resolve(JSON.parse(response.responseText).data);
-                            },
-                            failure: function() {
-                                reject('err.msg.timeout');
-                            }
-                        });
-                    })
-                );
-            }
-        }
-        var me = this;
-        this.secondaryDataIsPrefetching = new Ext.Promise(
-            function(resolve, reject) {
-                Ext.Promise.all(prm).then(function(result) {
-                    me.secondaryData = result.reduce(function(acc, val) {
-                        return acc.concat(val);
-                    }, []);
-                    me.secondaryDataIsPrefetched = true;
-                    resolve();
-                }, function(error) {
-                    reject(error);
-                });
-            });
-        return this.secondaryDataIsPrefetching;
-    },
-
 
     /**
      * Evaluates the options set and starts the corresponding export
@@ -611,8 +527,6 @@ Ext.define('Lada.view.window.GridExport', {
 
     /**
      * Fetches the data as geojson points with the row's data as properties
-     * TODO: legacy (async download of secondary data), but still used for
-     * geojson "doCopy"
      */
     getGeoJson: function() {
         var data = this.getDataSets();
@@ -622,7 +536,6 @@ Ext.define('Lada.view.window.GridExport', {
             this.showError('export.nocolumn');
             return false;
         }
-        var expcolumns = this.getColumns(true);
         for (var row = 0; row < data.length; row++) {
             var iresult = {
                 type: 'Feature',
@@ -652,18 +565,6 @@ Ext.define('Lada.view.window.GridExport', {
             if (Ext.Object.isEmpty(iresult.geometry)) {
                 iresult.geometry = null;
             }
-            var entryId = data[row].get(this.grid.rowtarget.dataIndex);
-            if (
-                this.rowexp &&
-                this.down('checkbox[name=secondarycolumns]').getValue()
-            ) {
-                var secondaryData = this.setSecondaryJson(entryId, expcolumns);
-                if (this.rowexp.type === 'Lada.view.grid.Messung') {
-                    iresult.Messungen = secondaryData;
-                } else if (this.rowexp.type === 'Lada.view.grid.Messwert') {
-                    iresult.Messwerte = secondaryData;
-                }
-            }
             resultObj.push(iresult);
         }
         return {
@@ -687,21 +588,18 @@ Ext.define('Lada.view.window.GridExport', {
             newValue === 'csv' || newValue === 'laf');
 
         win.down('checkbox[name=allrows]').setVisible(newValue !== 'laf');
-        var ecolVisible = true;
-        if (win.down('checkbox[name=allcolumns]').getValue()) {
-            ecolVisible = false;
-        }
-        if (newValue === 'laf') {
-            ecolVisible = false;
-            win.down('checkbox[name=allcolumns]').setVisible(false);
-            win.down('checkbox[name=secondarycolumns]').setVisible(false);
-        } else {
-            win.down('checkbox[name=allcolumns]').setVisible(true);
-            if (win.rowexp) {
-                win.down('checkbox[name=secondarycolumns]').setVisible(true);
-            }
-        }
-        win.down('tagfield[name=exportcolumns]').setVisible(ecolVisible);
+
+        // No column choice possible for LAF
+        win.down('checkbox[name=allcolumns]').setVisible(newValue !== 'laf');
+        win.down('tagfield[name=exportcolumns]').setVisible(
+            newValue !== 'laf'
+                && !win.down('checkbox[name=allcolumns]').getValue()
+        );
+
+        // Secondary data only if available and format is not LAF or GeoJSON
+        win.down('checkbox[name=secondarycolumns]').setVisible(
+            win.rowexp && newValue !== 'laf' && newValue !== 'geojson'
+        );
     },
 
     exportallcolumntoggle: function(box, newValue) {
@@ -905,45 +803,6 @@ Ext.define('Lada.view.window.GridExport', {
             default:
                 return value.toString();
         }
-    },
-
-    /**
-     * Adds the rowExpander data by sending an AJAX request; the resultobject
-     * will be ammended asynchronously after an answer is received.
-     * @param {*} parentId Number/String to find the original record entry in
-     * the resultobject
-     * @param {*} columns Columns to be included
-     * TODO: legacy. Can be removed if getGeoJson is removed
-     */
-    setSecondaryJson: function(parentId, columns) {
-        var secondaryData = [];
-        var me = this;
-        switch (me.rowexp.type) {
-            case 'Lada.view.grid.Messung':
-                secondaryData = me.secondaryData.filter(function(entry) {
-                    return entry.probeId === parentId;
-                });
-                break;
-            case 'Lada.view.grid.Messwert':
-                secondaryData = me.secondaryData.filter(function(entry) {
-                    return entry.messungsId === parentId;
-                });
-        }
-        var content = [];
-        for (var j = 0; j < secondaryData.length; j++) {
-            var item = {};
-            // eslint-disable-next-line no-loop-func
-            Object.keys(secondaryData[j]).forEach(function() {
-                for (var i = 0; i < columns.length; i++) {
-                    var di = columns[i].dataIndex;
-                    if (di) {
-                        item[di] = secondaryData[j][di];
-                    }
-                }
-            });
-            content.push(item);
-        }
-        return content;
     },
 
     getExportIds: function(win) {
