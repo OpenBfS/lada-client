@@ -57,10 +57,6 @@ Ext.define('Lada.controller.grid.Uploads', {
                             item.set('message', json.error);
                             item.set('status', 'error');
                         }
-                        var store = Ext.data.StoreManager.get('tags');
-                        if (store) {
-                            store.reload();
-                        }
                     },
                     failure: function(response) {
                         item.set('done', true);
@@ -118,6 +114,12 @@ Ext.define('Lada.controller.grid.Uploads', {
                         mst: record.get('measFacilId'),
                         encoding: record.get('encoding')
                     });
+
+                    // Refresh tag store in order to add import tag
+                    var store = Ext.data.StoreManager.get('tags');
+                    if (store) {
+                        store.reload();
+                    }
                 }
             });
         } else {
