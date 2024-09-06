@@ -178,17 +178,17 @@ Ext.define('Lada.view.window.SetStatus', {
                     ? '<strong>' + i18n.getMsg('mainSampleId') + '</strong> '
                     + item.get('hpNr')
                     : item.get('extId')
-                    ? '<strong>' + i18n.getMsg('extProbeId') + '</strong> '
+                        ? '<strong>' + i18n.getMsg('extProbeId') + '</strong> '
                     + item.get('extId')
-                    : '<strong>' + i18n.getMsg('mainSampleId')
+                        : '<strong>' + i18n.getMsg('mainSampleId')
                     + ' nicht definiert</strong> ';
                 var messungsnumber = item.get('npNr')
                     ? '<strong>' + i18n.getMsg('minSampleId') + '</strong> '
                     + item.get('npNr')
                     : item.get('externeMessungsId')
-                    ? '<strong>' + i18n.getMsg('measm.ext_id') + '</strong> '
+                        ? '<strong>' + i18n.getMsg('measm.ext_id') + '</strong> '
                     + item.get('externeMessungsId')
-                    : '<strong>' + i18n.getMsg('minSampleId')
+                        : '<strong>' + i18n.getMsg('minSampleId')
                     + ' nicht definiert</strong> ';
                 this.resultMessage +=
                         probenumber +

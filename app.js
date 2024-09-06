@@ -132,11 +132,11 @@ Ext.application({
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [
-        {value: 50, label: '50'},
-        {value: 100, label: '100'},
-        {value: 500, label: '500'},
-        {value: 2000, label: '2000'},
-        {value: 5000, label: '5000 (lange Ladezeit!)'}
+            {value: 50, label: '50'},
+            {value: 100, label: '100'},
+            {value: 500, label: '500'},
+            {value: 2000, label: '2000'},
+            {value: 5000, label: '5000 (lange Ladezeit!)'}
         ];
 
         //initial default paging size, may be changed by user
@@ -249,7 +249,7 @@ Ext.application({
                 load: {
                     fn: function() {
                         var lst = Ext.data.StoreManager.get(
-                                     'leitstellenwidget');
+                            'leitstellenwidget');
                         lst.removeAll(true);
                         var reclst = [];
                         var rec = [];

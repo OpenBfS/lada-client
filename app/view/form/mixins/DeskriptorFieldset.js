@@ -58,7 +58,7 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
                         if (mediatext.data.name !== 'leer'
                             && (ndx <= 3 && media[1] === '01'
                                 || ndx <= 1 && media[1] !== '01')
-                           ) {
+                        ) {
                             beschreibung = mediatext.data.name;
                         }
                     }

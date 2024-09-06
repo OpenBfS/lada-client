@@ -14,16 +14,16 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
     model: 'Lada.model.ReiAgGr',
     sorters: {
         sorterFn: function(record1, record2) {
-            if ((record1.data.name.indexOf("2006x") != -1) && (record2.data.name.indexOf("2006x") != -1) ||
-                (record1.data.name.indexOf("2006x") == -1) && (record2.data.name.indexOf("2006x") == -1)) {
+            if ((record1.data.name.indexOf('2006x') != -1) && (record2.data.name.indexOf('2006x') != -1) ||
+                (record1.data.name.indexOf('2006x') == -1) && (record2.data.name.indexOf('2006x') == -1)) {
                 var name1 = record1.data.name;
                 var name2 = record2.data.name;
                 return name1 > name2 ? 1 : (name1 === name2) ? 0 : -1;
-            } else if (record1.data.name.indexOf("2006x") != -1 && record2.data.name.indexOf("2006x") == -1 ) {
+            } else if (record1.data.name.indexOf('2006x') != -1 && record2.data.name.indexOf('2006x') == -1 ) {
                 var name1 = record1.data.name;
                 var name2 = record2.data.name;
                 return 1;
-            } else if (record1.data.name.indexOf("2006x") == -1 && record2.data.name.indexOf("2006x") != -1 ) {
+            } else if (record1.data.name.indexOf('2006x') == -1 && record2.data.name.indexOf('2006x') != -1 ) {
                 var name1 = record1.data.name;
                 var name2 = record2.data.name;
                 return -1;

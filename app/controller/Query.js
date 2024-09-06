@@ -610,11 +610,11 @@ Ext.define('Lada.controller.Query', {
                         if (dt.format === 'd.m.Y') {
                             field = Ext.create(
                                 'Lada.view.widget.base.DateRange',
-                            options);
+                                options);
                         } else {
                             field = Ext.create(
                                 'Lada.view.widget.base.DateTimeRange',
-                            options);
+                                options);
                         }
                         negateCheckbox = true;
                         field.setValue(recs[i].get('filterVal'));

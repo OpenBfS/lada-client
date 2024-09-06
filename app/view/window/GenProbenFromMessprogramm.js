@@ -400,11 +400,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         button.up('window').close();
                     }
                 },
-                    {
-                        xtype: 'button',
-                        text: i18n.getMsg('button.tagToClipboard'),
-                        name: 'tagclipboard'
-                    }]
+                {
+                    xtype: 'button',
+                    text: i18n.getMsg('button.tagToClipboard'),
+                    name: 'tagclipboard'
+                }]
             }],
             onFocusEnter: function(event) {
                 var resultWin = event.toComponent.up('window') ||

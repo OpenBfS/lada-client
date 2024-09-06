@@ -849,7 +849,7 @@ Ext.define('Lada.controller.Print', {
                                         grid.rowtarget.probeIdentifier] !==
                                             undefined ||
                                      selection.data[
-                                        grid.rowtarget.messungIdentifier] !==
+                                         grid.rowtarget.messungIdentifier] !==
                                             undefined
                                 ) {
                                     data.push({name: json[i]});

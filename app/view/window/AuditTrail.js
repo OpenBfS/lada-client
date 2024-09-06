@@ -121,19 +121,19 @@ Ext.define('Lada.view.window.AuditTrail', {
         var container = this.down('panel[name=auditcontainer]');
         var title;
         switch (this.type) {
-        case 'probe':
-            container.update(this.createHtmlProbe(json));
-            title = i18n.getMsg('audit.title') + ' '
+            case 'probe':
+                container.update(this.createHtmlProbe(json));
+                title = i18n.getMsg('audit.title') + ' '
                 + i18n.getMsg('probe') + ': ' + this.titleText;
-            this.setTitle(title);
-            break;
-        case 'messung':
-            container.update(this.createHtmlMessung(json));
-            title = i18n.getMsg('audit.title') + ' ' + this.titleText;
-            this.setTitle(title);
-            break;
-        case 'messprogramm':
-            container.update(this.createHtmlMessprogramm(json));
+                this.setTitle(title);
+                break;
+            case 'messung':
+                container.update(this.createHtmlMessung(json));
+                title = i18n.getMsg('audit.title') + ' ' + this.titleText;
+                this.setTitle(title);
+                break;
+            case 'messprogramm':
+                container.update(this.createHtmlMessprogramm(json));
         }
         Ext.ComponentQuery.query('panel#' + this.down('panel')
             .getId())[0].loadingMask.hide();
