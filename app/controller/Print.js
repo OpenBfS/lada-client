@@ -509,7 +509,7 @@ Ext.define('Lada.controller.Print', {
                 probenAttribute = attribute;
             }
         }
-        var qitem = this.addQueueItem(filename, 'lada-print');
+        var qitem = this.addQueueItem(filename);
         if (probenAttribute) {
             //TODO: preset fields are ignored here as they are no longer needed
             // see printSelection, prepareData, createSheetData
@@ -540,7 +540,6 @@ Ext.define('Lada.controller.Print', {
             );
         }
     },
-
 
     /**
      * Send a prepared request to the print server, saves the answer as
@@ -1061,26 +1060,18 @@ Ext.define('Lada.controller.Print', {
     /**
      * Add an entry to the downloadqueue.
      * @param filename: The name used to save results
-     * @param type: queue type (defining the interface for communication)
-     *          available: 'lada-print', 'export'
      * @returns reference to the model item
      */
-    addQueueItem: function(filename, type) {
+    addQueueItem: function(filename) {
         var storeItem = Ext.create('Lada.model.DownloadQueue', {
-            type: type,
+            type: 'lada-print',
             filename: filename,
             startDate: new Date().valueOf(),
             status: 'preparation',
             done: false,
             autodownload: false
         });
-        var store;
-        if (type === 'lada-print') {
-            store = Ext.data.StoreManager.get('downloadqueue-print');
-        } else {
-            store = Ext.data.StoreManager.get('downloadqueue-export');
-        }
-        store.add(storeItem);
+        Ext.data.StoreManager.get('downloadqueue-print').add(storeItem);
         return storeItem;
     }
 });

@@ -45,6 +45,24 @@ Ext.define('Lada.controller.grid.Downloads', {
     },
 
     /**
+     * Add an entry to the downloadqueue.
+     * @param filename: The name used to save results
+     * @returns reference to the model item
+     */
+    addQueueItem: function(filename) {
+        var storeItem = Ext.create('Lada.model.DownloadQueue', {
+            type: 'export',
+            filename: filename,
+            startDate: new Date().valueOf(),
+            status: 'preparation',
+            done: false,
+            autodownload: false
+        });
+        Ext.data.StoreManager.get('downloadqueue-export').add(storeItem);
+        return storeItem;
+    },
+
+    /**
      * Cancels the mapfish creation of a queued DownloadQueue item
      * @param {*} model
      */

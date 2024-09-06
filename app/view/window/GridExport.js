@@ -13,11 +13,11 @@ Ext.define('Lada.view.window.GridExport', {
     extend: 'Ext.window.Window',
     alias: 'widget.exportdata',
     requires: [
-        'Lada.controller.Print',
+        'Lada.controller.grid.Downloads',
         'Lada.view.grid.DownloadQueue'
     ],
 
-    controller: 'print',
+    controller: 'download',
 
     defaults: {
         margin: '5, 5, 5, 5',
@@ -489,7 +489,7 @@ Ext.define('Lada.view.window.GridExport', {
                 });
         }
 
-        var queueItem = win.controller.addQueueItem(filename, 'export');
+        var queueItem = win.controller.addQueueItem(filename);
 
         Ext.Ajax.request({
             url: win.requestUrl + exportFormat,
