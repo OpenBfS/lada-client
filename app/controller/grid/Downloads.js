@@ -16,6 +16,7 @@ Ext.define('Lada.controller.grid.Downloads', {
 
     store: 'downloadqueue-export',
     urlPrefix: 'lada-server/data/asyncexport/',
+    downloadPath: 'download/',
 
     /**
      * Initialize the controller
@@ -56,37 +57,5 @@ Ext.define('Lada.controller.grid.Downloads', {
         });
         Ext.data.StoreManager.get(this.store).add(storeItem);
         return storeItem;
-    },
-
-    /**
-     * Retrieves a finished item to DownloadQueue Item and saves it to disk
-     * @param {*} model
-     */
-    onSaveItem: function(model) {
-        model.set('downloadRequested', true);
-        var me = this;
-        Ext.Ajax.request({
-            url: this.urlPrefix + 'download/' + model.get('refId'),
-            method: 'GET',
-            headers: {
-                Accept: 'application/octet-stream'
-            },
-            binary: true,
-            timeout: 60000,
-            success: function(response) {
-                var content = response.responseBytes;
-                var filetype = response.getResponseHeader('Content-Type');
-                var blob = new Blob([content], {type: filetype});
-                saveAs(blob, model.get('filename'));
-                me.refreshQueue();
-            },
-            failure: function(error) {
-                model.set('status', 'error');
-                // sets more of a debug info. Needs end user readability why
-                // download failed.
-                model.set('message', error.error);
-                me.refreshQueue();
-            }
-        });
     }
 });

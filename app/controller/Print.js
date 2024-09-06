@@ -38,6 +38,7 @@ Ext.define('Lada.controller.Print', {
     irixServletURL: 'irix-servlet',
 
     statusUrlSuffix: '.json',
+    downloadPath: 'report/',
 
     //Templates requiring additional server data
     specialTemplates: [
@@ -1089,38 +1090,6 @@ Ext.define('Lada.controller.Print', {
                 'print-servlet'];
         }
         this.callParent(arguments);
-    },
-
-    /**
-     * Retrieves a finished item to DownloadQueue Item and saves it to disk
-     * @param {*} model
-     */
-    onSaveItem: function(model) {
-        model.set('downloadRequested', true);
-        var me = this;
-        Ext.Ajax.request({
-            url: this.urlPrefix + 'report/' + model.get('refId'),
-            method: 'GET',
-            headers: {
-                Accept: 'application/octet-stream'
-            },
-            binary: true,
-            timeout: 60000,
-            success: function(response) {
-                var content = response.responseBytes;
-                var filetype = response.getResponseHeader('Content-Type');
-                var blob = new Blob([content], {type: filetype});
-                saveAs(blob, model.get('filename'));
-                me.refreshQueue();
-            },
-            failure: function(error) {
-                model.set('status', 'error');
-                // sets more of a debug info. Needs end user readability why
-                // download failed.
-                model.set('message', error.error);
-                me.refreshQueue();
-            }
-        });
     },
 
     /**

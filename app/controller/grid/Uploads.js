@@ -16,6 +16,7 @@ Ext.define('Lada.controller.grid.Uploads', {
 
     store: 'uploadqueue',
     urlPrefix: 'lada-server/data/import/async/',
+    downloadPath: 'result/',
 
     /**
      * Add an entry to the upload queue.
@@ -42,10 +43,10 @@ Ext.define('Lada.controller.grid.Uploads', {
      * Get the result of an import and show a result window
      * @param {Lada.model.UploadQueue} record UploadQueue record
      */
-    getResult: function(record) {
+    onSaveItem: function(record) {
         if (record.get('resultFetched') === false) {
             var me = this;
-            var url = this.urlPrefix + 'result/' + record.get('refId');
+            var url = this.urlPrefix + this.downloadPath + record.get('refId');
             Ext.Ajax.request({
                 url: url,
                 success: function(response) {

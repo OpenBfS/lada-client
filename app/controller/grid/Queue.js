@@ -13,6 +13,7 @@ Ext.define('Lada.controller.grid.Queue', {
     extend: 'Lada.controller.BaseController',
 
     statusUrlSuffix: '',
+    downloadPath: '',
 
     /**
      * Initialize the controller, request polling to run every 2 seconds
@@ -56,6 +57,35 @@ Ext.define('Lada.controller.grid.Queue', {
                 item.set('status', 'error');
 
                 item.set('message', this.handleRequestFailure(
+                    response, opts, null, true));
+            }
+        });
+    },
+
+    /**
+     * Retrieves a finished item to DownloadQueue Item and saves it to disk
+     * @param {*} model
+     */
+    onSaveItem: function(model) {
+        model.set('downloadRequested', true);
+        Ext.Ajax.request({
+            url: this.urlPrefix + this.downloadPath + model.get('refId'),
+            method: 'GET',
+            headers: {
+                Accept: 'application/octet-stream'
+            },
+            binary: true,
+            timeout: 60000,
+            scope: this,
+            success: function(response) {
+                var content = response.responseBytes;
+                var filetype = response.getResponseHeader('Content-Type');
+                var blob = new Blob([content], {type: filetype});
+                saveAs(blob, model.get('filename'));
+            },
+            failure: function(response, opts) {
+                model.set('status', 'error');
+                model.set('message', this.handleRequestFailure(
                     response, opts, null, true));
             }
         });
