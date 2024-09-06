@@ -7,23 +7,23 @@
  */
 
 /**
- * Grid for the UploadQueue - Stores, listing all uploads that have been
- * initiated and might have pending results
+ * Grid for the upload queue.
  */
-
-
 Ext.define('Lada.view.grid.UploadQueue', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.uploadqueuegrid',
+    requires: [
+        'Lada.controller.grid.Uploads'
+    ],
 
     controller: 'upload',
 
-    store: null, //TODO needs to be set
     viewConfig: {
         deferEmptyText: true,
         markDirty: false
     },
     emptyText: 'emptygrid.uploadqueue',
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var controller = this.controller;
@@ -68,29 +68,55 @@ Ext.define('Lada.view.grid.UploadQueue', {
                 if (rec.get('status') === 'error') {
                     return i18n.getMsg('importResponse.failure.true');
                 }
-                if (!rec.get('warnings') && !rec.get('errors') && !rec.get('notifications')) {
+                if (!rec.get('warnings')
+                    && !rec.get('errors')
+                    && !rec.get('notifications')
+                ) {
                     return ' ';
                 }
                 if (!rec.get('warnings') && !rec.get('notifications')) {
                     return i18n.getMsg('importResponse.failure.true');
                 }
-                if (!rec.get('errors') && !rec.get('warnings') && rec.get('notifications')) {
+                if (!rec.get('errors')
+                    && !rec.get('warnings')
+                    && rec.get('notifications')
+                ) {
                     return i18n.getMsg('importResponse.notifications.true');
                 }
-                if (!rec.get('errors') && rec.get('warnings') && rec.get('notifications') ) {
-                    return i18n.getMsg('importResponse.warningsANDnotifications.true');
+                if (!rec.get('errors')
+                    && rec.get('warnings')
+                    && rec.get('notifications')
+                ) {
+                    return i18n.getMsg(
+                        'importResponse.warningsANDnotifications.true');
                 }
-                if (!rec.get('errors') && rec.get('warnings') && !rec.get('notifications')) {
+                if (!rec.get('errors')
+                    && rec.get('warnings')
+                    && !rec.get('notifications')
+                ) {
                     return i18n.getMsg('importResponse.warnings.warninglist');
                 }
-                if (rec.get('errors') && rec.get('warnings') && rec.get('notifications')) {
-                    return i18n.getMsg('importResponse.failureAndWarningsAndNotifications.true');
+                if (rec.get('errors')
+                    && rec.get('warnings')
+                    && rec.get('notifications')
+                ) {
+                    return i18n.getMsg(
+                        'importResponse.failureAndWarningsAndNotifications.true'
+                    );
                 }
-                if (rec.get('errors') && !rec.get('warnings') && rec.get('notifications')) {
-                    return i18n.getMsg('importResponse.failureAndNotifications.true');
+                if (rec.get('errors')
+                    && !rec.get('warnings')
+                    && rec.get('notifications')
+                ) {
+                    return i18n.getMsg(
+                        'importResponse.failureAndNotifications.true');
                 }
-                if (rec.get('errors') && rec.get('warnings') && !rec.get('notifications')) {
-                    return i18n.getMsg('importResponse.failureAndWarnings.true');
+                if (rec.get('errors')
+                    && rec.get('warnings')
+                    && !rec.get('notifications')
+                ) {
+                    return i18n.getMsg(
+                        'importResponse.failureAndWarnings.true');
                 }
             },
             getClass: function(value, meta, rec) {

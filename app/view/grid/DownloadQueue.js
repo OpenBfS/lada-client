@@ -7,25 +7,24 @@
  */
 
 /**
- * Grid for the downloadqueue- Stores, listing all open and recently failed
- * print jobs for the current session
+ * Grid for the export and print queues.
  */
-
-
 Ext.define('Lada.view.grid.DownloadQueue', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.downloadqueuegrid',
-    requires: ['Lada.controller.grid.Downloads'],
+    requires: [
+        'Lada.controller.grid.Downloads'
+    ],
 
     controller: 'download',
 
-    store: null, //TODO needs to be set
     viewConfig: {
         deferEmptyText: true,
         markDirty: false
     },
     maxHeight: 200,
     emptyText: 'emptygrid.downloadqueue',
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var controller = this.controller;
