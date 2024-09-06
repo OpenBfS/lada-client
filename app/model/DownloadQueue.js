@@ -17,9 +17,6 @@ Ext.define('Lada.model.DownloadQueue', {
     fields: [{
         name: 'id'
     }, {
-        name: 'type'
-        // 'lada-print', 'laf'
-    }, {
         name: 'refId'
         // a unique identifier
     }, {

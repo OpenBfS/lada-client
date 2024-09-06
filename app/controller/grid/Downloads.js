@@ -49,7 +49,6 @@ Ext.define('Lada.controller.grid.Downloads', {
      */
     addQueueItem: function(filename) {
         var storeItem = Ext.create('Lada.model.DownloadQueue', {
-            type: 'export',
             filename: filename,
             startDate: new Date().valueOf(),
             status: 'preparation',

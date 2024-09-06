@@ -1065,7 +1065,6 @@ Ext.define('Lada.controller.Print', {
      */
     addQueueItem: function(filename) {
         var storeItem = Ext.create('Lada.model.DownloadQueue', {
-            type: 'lada-print',
             filename: filename,
             startDate: new Date().valueOf(),
             status: 'preparation',
