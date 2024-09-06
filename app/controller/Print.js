@@ -28,8 +28,7 @@
  *
  */
 Ext.define('Lada.controller.Print', {
-    extend: 'Lada.controller.BaseController',
-
+    extend: 'Lada.controller.grid.Queue',
     alias: 'controller.print',
 
     // may be overwritten by any appContext settings
@@ -59,6 +58,8 @@ Ext.define('Lada.controller.Print', {
                 gridupdate: this.handleGridUpdate
             }
         });
+
+        this.callParent(arguments);
     },
 
     /**
@@ -1073,5 +1074,123 @@ Ext.define('Lada.controller.Print', {
         });
         Ext.data.StoreManager.get('downloadqueue-print').add(storeItem);
         return storeItem;
+    },
+
+    /**
+     * Tries to refresh all queued item info.
+     */
+    refreshQueue: function() {
+        // this should be done only once, but after initialization
+        // (after app.js: GET appContext.json finished)
+        if (Lada.appContext && Lada.appContext.merge.urls['print-servlet']) {
+            this.printUrlPrefix = Lada.appContext.merge.urls[
+                'print-servlet'];
+        }
+        var store = Ext.data.StoreManager.get('downloadqueue-print');
+        var me = this;
+        if (store) {
+            Ext.each(store.getData().items, function(item) {
+                me.refreshItemInfo(item);
+            });
+        }
+    },
+
+    /**
+     * Polls the status of a queue item
+     * @param {*} item Lada.model.DownloadQueue instance
+     */
+    refreshItemInfo: function(item) {
+        var refId = item.get('refId');
+        if (refId && !item.get('done')) {
+            var url = this.printUrlPrefix + '/status/' + refId + '.json';
+            var me = this;
+            return new Ext.Promise(function() {
+                Ext.Ajax.request({
+                    url: url,
+                    success: function(response) {
+                        var json = Ext.decode(response.responseText);
+                        // save to disk if autodownload is true.
+                        if ( item.status !== 'finished' &&
+                            json.status === 'finished' &&
+                            item.get('autodownload') === true &&
+                            item.get('downloadRequested') === false) {
+                            me.onSaveItem(item);
+                        }
+                        item.set('done', json.done);
+                        item.set('status', json.status);
+                        item.set('downloadURL', json.downloadURL || null);
+                        if (json.message) {
+                            item.set('message', json.message);
+                        } else {
+                            if (json.error) {
+                                item.set('message', json.error);
+                            } else {
+                                item.set('message', '');
+                            }
+                        }
+                    },
+                    failure: function(response) {
+                        item.set('done', true);
+                        item.set('status', 'error');
+
+                        var msg = response.responseText;
+                        if (!msg) {
+                            var i18n = Lada.getApplication().bundle;
+                            msg = response.timedout
+                                ? i18n.getMsg('err.msg.timeout')
+                                : response.statusText;
+                        }
+                        item.set('message', msg);
+                    }
+                });
+            });
+        }
+    },
+
+    /**
+     * Retrieves a finished item to DownloadQueue Item and saves it to disk
+     * @param {*} model
+     */
+    onSaveItem: function(model) {
+        model.set('downloadRequested', true);
+        var me = this;
+        Ext.Ajax.request({
+            url: this.printUrlPrefix + 'report/' + model.get('refId'),
+            method: 'GET',
+            headers: {
+                Accept: 'application/octet-stream'
+            },
+            binary: true,
+            timeout: 60000,
+            success: function(response) {
+                var content = response.responseBytes;
+                var filetype = response.getResponseHeader('Content-Type');
+                var blob = new Blob([content], {type: filetype});
+                saveAs(blob, model.get('filename'));
+                me.refreshQueue();
+            },
+            failure: function(error) {
+                model.set('status', 'error');
+                // sets more of a debug info. Needs end user readability why
+                // download failed.
+                model.set('message', error.error);
+                me.refreshQueue();
+            }
+        });
+    },
+
+    /**
+     * Cancels the mapfish creation of a queued DownloadQueue item
+     * @param {*} model
+     */
+    onCancelItem: function(model) {
+        var ref = model.get('refId');
+        if (ref) {
+            Ext.Ajax.request({
+                url: this.printUrlPrefix + 'cancel/' + ref,
+                method: 'DELETE',
+                failure: this.handleRequestFailure
+            });
+        }
     }
 });

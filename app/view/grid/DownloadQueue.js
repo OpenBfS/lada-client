@@ -8,15 +8,11 @@
 
 /**
  * Grid for the export and print queues.
+ *
+ * Subclasses use different controllers.
  */
 Ext.define('Lada.view.grid.DownloadQueue', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.downloadqueuegrid',
-    requires: [
-        'Lada.controller.grid.Downloads'
-    ],
-
-    controller: 'download',
 
     viewConfig: {
         deferEmptyText: true,

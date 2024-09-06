@@ -14,10 +14,10 @@ Ext.define('Lada.view.window.GridExport', {
     alias: 'widget.exportdata',
     requires: [
         'Lada.controller.grid.Downloads',
-        'Lada.view.grid.DownloadQueue'
+        'Lada.view.grid.ExportQueue'
     ],
 
-    controller: 'download',
+    controller: 'export',
 
     defaults: {
         margin: '5, 5, 5, 5',
@@ -339,7 +339,7 @@ Ext.define('Lada.view.window.GridExport', {
                 regex: new RegExp(/^(\w|[-äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i),
                 allowBlank: false
             }, {
-                xtype: 'downloadqueuegrid',
+                xtype: 'exportqueue',
                 store: 'downloadqueue-export'
             }]
         }];
