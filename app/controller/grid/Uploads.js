@@ -14,67 +14,8 @@ Ext.define('Lada.controller.grid.Uploads', {
     extend: 'Lada.controller.grid.Queue',
     alias: 'controller.upload',
 
-    resultUrl: 'lada-server/data/import/async/result/',
-    statusUrl: 'lada-server/data/import/async/status/',
-
-    /**
-     * Tries to refresh all queued item info.
-     */
-    refreshQueue: function() {
-        var store = Ext.getStore('uploadqueue');
-        var me = this;
-        Ext.each(store.getData().items, function(item) {
-            if (item.get('done') !== true) {
-                me.refreshItemInfo(item);
-            }
-        });
-    },
-
-    /**
-     * Polls the status of an queue item
-     * @param {*} item Lada.model.UploadQueue instance
-     */
-    refreshItemInfo: function(item) {
-        var url;
-        var refId = item.get('refId');
-        url = this.statusUrl + refId;
-        if (url && refId) {
-            return new Ext.Promise(function() {
-                Ext.Ajax.request({
-                    url: url,
-                    success: function(response) {
-                        var json = Ext.decode(response.responseText);
-                        item.set('done', json.done);
-                        item.set('errors', json.errors);
-                        item.set('warnings', json.warnings);
-                        item.set('notifications', json.notifications);
-                        item.set('status', json.status);
-                        if (!json.error) {
-                            if (json.message) {
-                                item.set('message', json.message);
-                            }
-                        } else {
-                            item.set('message', json.error);
-                            item.set('status', 'error');
-                        }
-                    },
-                    failure: function(response) {
-                        item.set('done', true);
-                        item.set('status', 'error');
-                        if (response.status === 404) {
-                            item.set('message', 'URL not found');
-                        } else {
-                            item.set('message', 'bad server answer');
-                        }
-                        var store = Ext.data.StoreManager.get('tags');
-                        if (store) {
-                            store.reload();
-                        }
-                    }
-                });
-            });
-        }
-    },
+    store: 'uploadqueue',
+    urlPrefix: 'lada-server/data/import/async/',
 
     /**
      * Add an entry to the upload queue.
@@ -92,7 +33,7 @@ Ext.define('Lada.controller.grid.Uploads', {
             errors: false,
             notifications: false
         });
-        var store = Ext.data.StoreManager.get('uploadqueue');
+        var store = Ext.data.StoreManager.get(this.store);
         store.add(storeItem);
         return storeItem;
     },
@@ -104,7 +45,7 @@ Ext.define('Lada.controller.grid.Uploads', {
     getResult: function(record) {
         if (record.get('resultFetched') === false) {
             var me = this;
-            var url = this.resultUrl + record.get('refId');
+            var url = this.urlPrefix + 'result/' + record.get('refId');
             Ext.Ajax.request({
                 url: url,
                 success: function(response) {

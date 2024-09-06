@@ -14,8 +14,8 @@ Ext.define('Lada.controller.grid.Downloads', {
     extend: 'Lada.controller.grid.Queue',
     alias: 'controller.export',
 
-    resultUrl: 'lada-server/data/asyncexport/download/',
-    statusUrl: 'lada-server/data/asyncexport/status/',
+    store: 'downloadqueue-export',
+    urlPrefix: 'lada-server/data/asyncexport/',
 
     /**
      * Initialize the controller
@@ -54,7 +54,7 @@ Ext.define('Lada.controller.grid.Downloads', {
             status: 'preparation',
             done: false
         });
-        Ext.data.StoreManager.get('downloadqueue-export').add(storeItem);
+        Ext.data.StoreManager.get(this.store).add(storeItem);
         return storeItem;
     },
 
@@ -66,7 +66,7 @@ Ext.define('Lada.controller.grid.Downloads', {
         model.set('downloadRequested', true);
         var me = this;
         Ext.Ajax.request({
-            url: this.resultUrl + model.get('refId'),
+            url: this.urlPrefix + 'download/' + model.get('refId'),
             method: 'GET',
             headers: {
                 Accept: 'application/octet-stream'
@@ -88,62 +88,5 @@ Ext.define('Lada.controller.grid.Downloads', {
                 me.refreshQueue();
             }
         });
-    },
-
-    /**
-     * Tries to refresh all queued item info.
-     */
-    refreshQueue: function() {
-        var store = Ext.data.StoreManager.get('downloadqueue-export');
-        var me = this;
-        if (store) {
-            Ext.each(store.getData().items, function(item) {
-                me.refreshItemInfo(item);
-            });
-        }
-    },
-
-    /**
-     * Polls the status of a queue item
-     * @param {*} item Lada.model.DownloadQueue instance
-     */
-    refreshItemInfo: function(item) {
-        var refId = item.get('refId');
-        if (refId && !item.get('done')) {
-            var url = this.statusUrl + refId;
-            return new Ext.Promise(function() {
-                Ext.Ajax.request({
-                    url: url,
-                    success: function(response) {
-                        var json = Ext.decode(response.responseText);
-                        item.set('done', json.done);
-                        item.set('status', json.status);
-                        item.set('downloadURL', json.downloadURL || null);
-                        if (json.message) {
-                            item.set('message', json.message);
-                        } else {
-                            if (json.error) {
-                                item.set('message', json.error);
-                            } else {
-                                item.set('message', '');
-                            }
-                        }
-                    },
-                    failure: function(response) {
-                        item.set('done', true);
-                        item.set('status', 'error');
-
-                        var msg = response.responseText;
-                        if (!msg) {
-                            var i18n = Lada.getApplication().bundle;
-                            msg = response.timedout
-                                ? i18n.getMsg('err.msg.timeout')
-                                : response.statusText;
-                        }
-                        item.set('message', msg);
-                    }
-                });
-            });
-        }
     }
 });

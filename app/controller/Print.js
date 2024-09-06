@@ -31,9 +31,13 @@ Ext.define('Lada.controller.Print', {
     extend: 'Lada.controller.grid.Queue',
     alias: 'controller.print',
 
+    store: 'downloadqueue-print',
+
     // may be overwritten by any appContext settings
-    printUrlPrefix: 'lada-printer/print/',
+    urlPrefix: 'lada-printer/print/',
     irixServletURL: 'irix-servlet',
+
+    statusUrlSuffix: '.json',
 
     //Templates requiring additional server data
     specialTemplates: [
@@ -71,7 +75,7 @@ Ext.define('Lada.controller.Print', {
     getTemplateParams: function(template, callbackFn) {
         var me = this;
         Ext.Ajax.request({
-            url: me.printUrlPrefix + template + '/capabilities.json',
+            url: me.urlPrefix + template + '/capabilities.json',
             success: function(response) {
                 if (response.responseText) {
                     var json = Ext.decode(response.responseText);
@@ -609,7 +613,7 @@ Ext.define('Lada.controller.Print', {
             };
             requestData.url = this.irixServletURL;
         } else {
-            requestData.url = me.printUrlPrefix + templateName + '/report.pdf';
+            requestData.url = me.urlPrefix + templateName + '/report.pdf';
             requestData.timeout = 60000;
             requestData.jsonData = JSON.stringify(jsonData);
         }
@@ -825,7 +829,7 @@ Ext.define('Lada.controller.Print', {
     getAvailableTemplates: function(window) {
         var me = this;
         Ext.Ajax.request({
-            url: me.printUrlPrefix + 'apps.json',
+            url: me.urlPrefix + 'apps.json',
             success: function(response) {
                 var data = [];
                 if (response.responseText) {
@@ -1070,7 +1074,7 @@ Ext.define('Lada.controller.Print', {
             status: 'preparation',
             done: false
         });
-        Ext.data.StoreManager.get('downloadqueue-print').add(storeItem);
+        Ext.data.StoreManager.get(this.store).add(storeItem);
         return storeItem;
     },
 
@@ -1081,60 +1085,10 @@ Ext.define('Lada.controller.Print', {
         // this should be done only once, but after initialization
         // (after app.js: GET appContext.json finished)
         if (Lada.appContext && Lada.appContext.merge.urls['print-servlet']) {
-            this.printUrlPrefix = Lada.appContext.merge.urls[
+            this.urlPrefix = Lada.appContext.merge.urls[
                 'print-servlet'];
         }
-        var store = Ext.data.StoreManager.get('downloadqueue-print');
-        var me = this;
-        if (store) {
-            Ext.each(store.getData().items, function(item) {
-                me.refreshItemInfo(item);
-            });
-        }
-    },
-
-    /**
-     * Polls the status of a queue item
-     * @param {*} item Lada.model.DownloadQueue instance
-     */
-    refreshItemInfo: function(item) {
-        var refId = item.get('refId');
-        if (refId && !item.get('done')) {
-            var url = this.printUrlPrefix + '/status/' + refId + '.json';
-            return new Ext.Promise(function() {
-                Ext.Ajax.request({
-                    url: url,
-                    success: function(response) {
-                        var json = Ext.decode(response.responseText);
-                        item.set('done', json.done);
-                        item.set('status', json.status);
-                        item.set('downloadURL', json.downloadURL || null);
-                        if (json.message) {
-                            item.set('message', json.message);
-                        } else {
-                            if (json.error) {
-                                item.set('message', json.error);
-                            } else {
-                                item.set('message', '');
-                            }
-                        }
-                    },
-                    failure: function(response) {
-                        item.set('done', true);
-                        item.set('status', 'error');
-
-                        var msg = response.responseText;
-                        if (!msg) {
-                            var i18n = Lada.getApplication().bundle;
-                            msg = response.timedout
-                                ? i18n.getMsg('err.msg.timeout')
-                                : response.statusText;
-                        }
-                        item.set('message', msg);
-                    }
-                });
-            });
-        }
+        this.callParent(arguments);
     },
 
     /**
@@ -1145,7 +1099,7 @@ Ext.define('Lada.controller.Print', {
         model.set('downloadRequested', true);
         var me = this;
         Ext.Ajax.request({
-            url: this.printUrlPrefix + 'report/' + model.get('refId'),
+            url: this.urlPrefix + 'report/' + model.get('refId'),
             method: 'GET',
             headers: {
                 Accept: 'application/octet-stream'
@@ -1177,7 +1131,7 @@ Ext.define('Lada.controller.Print', {
         var ref = model.get('refId');
         if (ref) {
             Ext.Ajax.request({
-                url: this.printUrlPrefix + 'cancel/' + ref,
+                url: this.urlPrefix + 'cancel/' + ref,
                 method: 'DELETE',
                 failure: this.handleRequestFailure
             });
