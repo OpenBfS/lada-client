@@ -45,9 +45,6 @@ Ext.define('Lada.model.DownloadQueue', {
         name: 'done',
         type: 'boolean'
     }, {
-        name: 'autodownload',
-        type: 'boolean'
-    }, {
         name: 'downloadRequested',
         type: 'boolean'
     }],

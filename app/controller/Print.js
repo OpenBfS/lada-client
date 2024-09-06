@@ -1069,8 +1069,7 @@ Ext.define('Lada.controller.Print', {
             filename: filename,
             startDate: new Date().valueOf(),
             status: 'preparation',
-            done: false,
-            autodownload: false
+            done: false
         });
         Ext.data.StoreManager.get('downloadqueue-print').add(storeItem);
         return storeItem;
@@ -1103,19 +1102,11 @@ Ext.define('Lada.controller.Print', {
         var refId = item.get('refId');
         if (refId && !item.get('done')) {
             var url = this.printUrlPrefix + '/status/' + refId + '.json';
-            var me = this;
             return new Ext.Promise(function() {
                 Ext.Ajax.request({
                     url: url,
                     success: function(response) {
                         var json = Ext.decode(response.responseText);
-                        // save to disk if autodownload is true.
-                        if ( item.status !== 'finished' &&
-                            json.status === 'finished' &&
-                            item.get('autodownload') === true &&
-                            item.get('downloadRequested') === false) {
-                            me.onSaveItem(item);
-                        }
                         item.set('done', json.done);
                         item.set('status', json.status);
                         item.set('downloadURL', json.downloadURL || null);
