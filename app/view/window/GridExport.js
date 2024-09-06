@@ -194,12 +194,14 @@ Ext.define('Lada.view.window.GridExport', {
             buttons: [{
                 action: 'export',
                 text: i18n.getMsg('export.button'),
+                handler: 'doExport',
                 formBind: true
             }, {
                 action: 'copyGeoJson',
                 icon: 'resources/img/map_add.png',
                 iconAlign: 'left',
                 text: i18n.getMsg('export.button.copy'),
+                handler: 'doCopy',
                 hidden: true
             }, '->', {
                 text: i18n.getMsg('close'),
@@ -345,11 +347,6 @@ Ext.define('Lada.view.window.GridExport', {
         }];
         this.callParent(arguments);
 
-        // listeners. Can not be listener at button definition because of scope
-        this.down('button[action=export]').on({
-            click: me.doExport
-        });
-
         // If no idField can be provided, allow export of all rows only
         if (this.grid.rowtarget.dataIndex === null) {
             this.down('checkbox[name=allrows]').disable();
@@ -359,10 +356,6 @@ Ext.define('Lada.view.window.GridExport', {
         ) {
             this.down('checkbox[name=allrows]').setValue(true);
         }
-
-        this.down('button[action=copyGeoJson]').on({
-            click: me.doCopy
-        });
 
         // get rowexpander and their columns
         var toggled = false;
@@ -401,128 +394,6 @@ Ext.define('Lada.view.window.GridExport', {
         }
 
         this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
-    },
-
-    doCopy: function(button) {
-        var i18n = Lada.getApplication().bundle;
-        button.setDisabled(true);
-        button.setText(i18n.getMsg('export.button.loading'));
-        var data = JSON.stringify(button.up('window').getGeoJson());
-        window.localStorage.setItem('gis-transfer-data', data);
-        window.localStorage.setItem(
-            'gis-transfer-data-transfer-date', new Date().valueOf());
-        button.setText(i18n.getMsg('export.button.copy.success'));
-    },
-
-    /**
-     * Evaluates the options set and starts the corresponding export
-     */
-    doExport: function(button) {
-        var win = button.up('window');
-
-        var exportFormat = win.down('combobox[name=formatselection]')
-            .getValue();
-
-        var filename = win.down('textfield[name=filename]').getValue();
-        const suffix = '.' + exportFormat;
-        if (!filename.endsWith(suffix)) {
-            filename += suffix;
-        }
-
-        var requestData = {
-            filename: filename,
-            encoding: win.down('combobox[name=encoding]').getValue()
-        };
-        switch (exportFormat) {
-            case 'geojson':
-                var data = JSON.stringify(win.getGeoJson());
-                var blob = new Blob(
-                    [data], {type: 'application/json;charset=utf-8'});
-                saveAs(blob, filename, true);
-                return; // GeoJSON is not handled by server-side export
-            case 'laf':
-                var dataset = win.getDataSets();
-                if (win.hasMessung) {
-                    requestData.messungen = [];
-                    for (var i = 0; i < dataset.length; i++) {
-                        var mid = dataset[i].get(win.hasMessung);
-                        if (Array.isArray(mid)) {
-                            for (var j = 0; j < mid.length; j++) {
-                                requestData.messungen.push(mid[j]);
-                            }
-                        } else {
-                            requestData.messungen.push(mid);
-                        }
-                    }
-                } else if (win.hasProbe) {
-                    requestData.proben = [];
-                    for (var k = 0; k < dataset.length; k++) {
-                        var pid = dataset[k].get(win.hasProbe);
-                        requestData.proben.push(pid);
-                    }
-                }
-                break;
-            case 'csv':
-                var colsep = win.down('combobox[name=colsep]').getValue();
-                var decsep = win.down('combobox[name=decsep]').getValue();
-                if (colsep === decsep) {
-                    win.showError('export.differentcoldecimal');
-                    return;
-                }
-                requestData.subDataColumnNames = win
-                    .getSubdataColumNames(requestData.subDataColumns);
-                Object.assign(requestData, {
-                    rowDelimiter: win.down('combobox[name=linesep]')
-                        .getValue(),
-                    fieldSeparator: colsep,
-                    decimalSeparator: decsep,
-                    quote: win.down('combobox[name=textlim]').getValue()
-                });
-            case 'json':
-                // Parameters for both CSV and JSON
-                Object.assign(requestData, {
-                    columns: win.getColumnDefinitions(win),
-                    idField: win.grid.rowtarget.dataIndex,
-                    idFilter: win.getExportIds(win),
-                    subDataColumns: win.getSubdataColumns(win),
-                    timezone: Lada.util.Date.getCurrentTimeZone()
-                });
-        }
-
-        var queueItem = win.controller.addQueueItem(filename);
-
-        Ext.Ajax.request({
-            url: win.requestUrl + exportFormat,
-            jsonData: requestData,
-            success: function(response) {
-                var json = Ext.JSON.decode(response.responseText, true);
-                if (json) {
-                    if (json.refId) {
-                        queueItem.set('refId', json.refId);
-                        queueItem.set('status', 'waiting');
-                    } else {
-                        queueItem.set('status', 'error');
-                    }
-
-                    if (json.error) {
-                        queueItem.set('message', json.error );
-                    } else {
-                        queueItem.set('message', '' );
-                    }
-                } else {
-                    // TODO: Handle SSO HTML form like in
-                    // RestProxy.processResponse
-                    queueItem.set('done', true);
-                    queueItem.set('status', 'error');
-                }
-            },
-            failure: function(response, opts) {
-                queueItem.set('done', true);
-                queueItem.set('status', 'error');
-                queueItem.set('message', win.controller.handleRequestFailure(
-                    response, opts, null, true));
-            }
-        });
     },
 
     /**
