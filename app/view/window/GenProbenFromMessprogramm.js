@@ -258,7 +258,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (record) {
                             r = record.get('name');
                         }
-                        return r;
+                        return Ext.htmlEncode(r);
                     }
                 }, {
                     header: i18n.getMsg('regulationId'),
@@ -273,7 +273,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (record) {
                             r = record.get('name');
                         }
-                        return r;
+                        return Ext.htmlEncode(r);
                     }
                 }, {
                     header: i18n.getMsg('oprModeId'),
@@ -290,7 +290,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (record) {
                             r = record.get('betriebsart');
                         }
-                        return r;
+                        return Ext.htmlEncode(r);
                     }
                 }, {
                     header: i18n.getMsg('sampleMethId'),
@@ -305,7 +305,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (record) {
                             r = record.get('extId');
                         }
-                        return r;
+                        return Ext.htmlEncode(r);
                     }
                 }, {
                     xtype: 'datecolumn',
@@ -343,11 +343,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         }
                         var store = umwStore;
                         var model = store.getById(value);
+                        var result = '';
                         if (model) {
-                            return value + ' - ' + model.get('name');
+                            result = value + ' - ' + model.get('name');
                         } else {
-                            return value;
+                            result = value;
                         }
+                        return Ext.htmlEncode(result);
                     }
                 }, {
                     header: i18n.getMsg('messungen'),
@@ -356,7 +358,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (value && value.length) {
                             var result = value.length
                                 + ' (' + value.join(', ') + ')';
-                            return result;
+                            return Ext.htmlEncode(result);
                         } else {
                             return '-';
                         }
@@ -366,11 +368,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     dataIndex: 'gemId',
                     renderer: function(value, metadata, rec) {
                         if (!rec) {
-                            return value;
+                            return Ext.htmlEncode(value);
                         }
                         var id = rec.get('gemId');
                         if (id) {
-                            return id;
+                            return Ext.htmlEncode(id);
                         }
                         return '';
                     }

@@ -114,8 +114,9 @@ Ext.define('Lada.view.grid.Messmethoden', {
                         return '';
                     }
                     var store = me.mmtStore;
-                    return value + ' - ' + store.findRecord(
-                        'id', value, 0, false, false, true).get('name');
+                    var result = Ext.htmlEncode(value) + ' - ';
+                    return result + Ext.htmlEncode(store.findRecord(
+                        'id', value, 0, false, false, true).get('name'));
                 },
                 editor: {
                     xtype: 'combobox',
@@ -159,7 +160,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                         var record = store.getById(value[i]);
                         returnvalues = returnvalues + record.get('name');
                     }
-                    return returnvalues;
+                    return Ext.htmlEncode(returnvalues);
                 },
                 editor: {
                     xtype: 'tagfield',

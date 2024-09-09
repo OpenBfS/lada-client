@@ -161,7 +161,7 @@ Ext.define('Lada.view.grid.Messung', {
                 var kombi = kombis.getById(value);
                 var st = kombi.get('statusLev').lev + ' - '
                             + kombi.get('statusVal').val;
-                return st;
+                return Ext.htmlEncode(st);
             }
         }, {
             header: i18n.getMsg('isCompleted'),
@@ -195,7 +195,7 @@ Ext.define('Lada.view.grid.Messung', {
                 } else {
                     this.messwerteLoading = false;
                 }
-                return value;
+                return Ext.htmlEncode(value);
             }
         }];
         this.listeners = {

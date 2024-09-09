@@ -169,9 +169,9 @@ Ext.define('Lada.view.grid.Messwert', {
                         return '';
                     }
                     var store = Ext.data.StoreManager.get('messgroessen');
-                    return store.findRecord(
+                    return Ext.htmlEncode(store.findRecord(
                         'id', value, 0, false, false, true)
-                        .get('name');
+                        .get('name'));
                 },
                 editor: {
                     xtype: 'combobox',
@@ -257,17 +257,19 @@ Ext.define('Lada.view.grid.Messwert', {
                         return '';
                     }
                     var store = me.mehComboStore;
+                    var result = '';
                     if (
                         store.findRecord(
                             'id', value, 0, false, false, true) === null
                     ) {
-                        return Ext.data.StoreManager.get('messeinheiten')
+                        result = Ext.data.StoreManager.get('messeinheiten')
                             .findRecord('id', value, 0, false, false, true)
                             .get('unitSymbol');
                     } else {
-                        return store.findRecord('id', value, 0, false, false, true)
+                        result = store.findRecord('id', value, 0, false, false, true)
                             .get('unitSymbol');
                     }
+                    return Ext.htmlEncode(result);
                 },
                 editor: {
                     xtype: 'combobox',

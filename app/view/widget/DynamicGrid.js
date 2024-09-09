@@ -409,7 +409,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 return null;
                             }
                             return '<div style="white-space: normal !important;">' +
-                                value + '</div>' || '';
+                                Ext.htmlEncode(value) + '</div>' || '';
                         };
                         break;
                     default:
@@ -418,7 +418,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             if (value === 0 || value === null) {
                                 return value;
                             }
-                            return value || '';
+                            return Ext.htmlEncode(value) || '';
                         };
                 }
 
@@ -656,7 +656,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!value) {
                 return '';
             }
-            return value;
+            return Ext.htmlEncode(value);
         };
     },
 
@@ -732,7 +732,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             // var rec = st.findRecord('id', value, false,false,
             //     false,true);
             // if (!rec) {
-            return value;
+            return Ext.htmlEncode(value);
             // }
             // if (rec.get('stufe') !== undefined) {
             //     return rec.get('stufe');
@@ -746,7 +746,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!value) {
                 return '';
             } else {
-                return value;
+                return Ext.htmlEncode(value);
             }
         };
     },
@@ -760,7 +760,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             // var rec = st.findRecord('id', value, false,false,
             //     false,true);
             // if (!rec) {
-            return value;
+            return Ext.htmlEncode(value);
             // }
             // if (rec.get('wert') !== undefined) {
             //     return rec.get('wert');
@@ -779,7 +779,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var rec = st.findRecord('id', value, false, false,
                 false, true);
             if (!rec) {
-                return value;
+                return Ext.htmlEncode(value);
             }
             if (rec.get('statusLev') !== undefined
                 && rec.get('statusVal') !== undefined
@@ -797,7 +797,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!value) {
                 return '';
             } else {
-                return value;
+                return Ext.htmlEncode(value);
             }
         };
     },
@@ -808,7 +808,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!value) {
                 return '';
             } else {
-                return value;
+                return Ext.htmlEncode(value);
             }
         };
     },
@@ -823,7 +823,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             // var rec = st.findRecord('id', value, false,false,
             //     false,true);
             // if (!rec) {
-            return value;
+            return Ext.htmlEncode(value);
             // }
             // if (rec.get('datenbasis') !== undefined) {
             //     return rec.get('datenbasis');
@@ -842,7 +842,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             // var rec = st.findRecord('id', value, false,false,
             //     false,true);
             // if (!rec) {
-            return value;
+            return Ext.htmlEncode(value);
             // }
             // if (rec.get('datenbasis') !== undefined) {
             //     return rec.get('datenbasis');
@@ -862,7 +862,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             //var rec = st.findRecord('id', value, false,false,
             //    false,true);
             // if (!rec) {
-            return value;
+            return Ext.htmlEncode(value);
             // }
             // if (rec.get('staatIso') !== undefined) {
             //     return rec.get('staatIso');

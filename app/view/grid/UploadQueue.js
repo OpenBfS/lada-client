@@ -33,7 +33,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             dataIndex: 'filename',
             renderer: function(value) {
                 return '<div style="white-space: normal !important;">' +
-                    value + '</div>';
+                    Ext.htmlEncode(value) + '</div>';
             },
             flex: 1.2
         }, {
@@ -55,7 +55,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             dataIndex: 'message',
             renderer: function(value) {
                 return '<div style="white-space: normal !important;">' +
-                    value + '</div>';
+                    Ext.htmlEncode(value) + '</div>';
             },
             flex: 2
         }, {

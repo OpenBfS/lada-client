@@ -30,7 +30,7 @@ Ext.define('Lada.view.widget.ColumnChoser', {
                 if (!value || value === '') {
                     return '';
                 }
-                return record.get('gridCol');
+                return Ext.htmlEncode(record.get('gridCol'));
             },
             flex: 1
         }];

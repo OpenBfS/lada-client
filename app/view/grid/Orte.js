@@ -102,7 +102,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (record) {
                     r = record.get('name');
                 }
-                return r;
+                return Ext.htmlEncode(r);
             },
             dataIndex: 'networkId'
         }, {
@@ -130,7 +130,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('extId');
+                return Ext.htmlEncode(record.get('extId'));
             },
             dataIndex: 'siteClassId'
         }, {
@@ -172,7 +172,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('name');
+                return Ext.htmlEncode(record.get('name'));
             }
         }, {
             header: i18n.getMsg('orte.staatId'),
@@ -199,7 +199,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('ctry');
+                return Ext.htmlEncode(record.get('ctry'));
             }
         }, {
             header: i18n.getMsg('orte.ozIdS'),
@@ -218,7 +218,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('name');
+                return Ext.htmlEncode(record.get('name'));
             },
             dataIndex: 'poiId'
         }, {
@@ -235,7 +235,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('name');
+                return Ext.htmlEncode(record.get('name'));
             },
             dataIndex: 'nuclFacilGrId'
         }, {
@@ -298,7 +298,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('name');
+                return Ext.htmlEncode(record.get('name'));
             },
             dataIndex: 'spatRefSysId'
         }, {
