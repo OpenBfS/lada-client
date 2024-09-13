@@ -184,7 +184,7 @@ Ext.define('Lada.view.panel.FileUpload', {
                     name: 'save',
                     margin: '3, 3, 3, 3',
                     disabled: true,
-                    handler: this.readFiles
+                    handler: 'readFiles'
                 }, {
                     xtype: 'button',
                     text: i18n.getMsg('cancel'),
@@ -206,94 +206,6 @@ Ext.define('Lada.view.panel.FileUpload', {
     abort: function(button) {
         var win = button.up('panel');
         win.clear();
-    },
-
-    /**
-     * @private
-     * A handler for the Upload-Button, reading the file specified in the
-     * form field
-     */
-    readFiles: function(button) {
-        var win = button.up('panel');
-        var fileInput = win.down('filefield');
-        var files = fileInput.fileInputEl.dom.files;
-        var readers = new Array(files.length);
-        if (readers.length === 0) {
-            return;
-        }
-        win.files = files;
-        win.fileNames = [];
-        var binFiles = {};
-        var filesRead = 0;
-        win.fileCount = files.length;
-        for (var i = 0; i < files.length; i++) {
-            win.fileNames[i] = files[i].name;
-            var file = files[i];
-            readers[i] = new FileReader();
-            readers[i].fileName = files[i].name;
-            // eslint-disable-next-line no-loop-func
-            readers[i].onload = function(evt) {
-                var binData = evt.target.result;
-                //Remove mime type and save to array
-                binFiles[evt.target.fileName] = binData.split(',')[1];
-                filesRead++;
-                if (filesRead === files.length) {
-                    win.uploadFiles(button, binFiles);
-                }
-            };
-            readers[i].readAsDataURL(file);
-        }
-    },
-
-    /**
-     * Upload a list of files to the import service
-     * @param {Ext.button.Button} button Button that triggered the upload event
-     * @param {Object} binFiles Object containing file name as keys and file
-     * content as value
-     */
-    uploadFiles: function(button, binFiles) {
-        var win = button.up('panel');
-        var cb = win.down('combobox[name=encoding]');
-
-        var queueItem = this.controller.addQueueItem(win.fileNames);
-        queueItem.set(
-            'encoding', win.down('combobox[name=encoding]').getValue());
-        queueItem.set('measFacilId', win.down('combobox[name=mst]').getValue());
-        Ext.Ajax.request({
-            url: 'lada-server/data/import/async/laf',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            scope: win,
-            jsonData: {
-                files: binFiles,
-                encoding: cb.getValue(),
-                measFacilId: queueItem.get('measFacilId')
-            },
-            success: function(response) {
-                var json = Ext.decode(response.responseText);
-                queueItem.set('refId', json.refId);
-                queueItem.set('status', 'waiting');
-                queueItem.set('message', '' );
-                if (json.error) {
-                    queueItem.set('message', json.error );
-                    queueItem.set('status', 'error');
-                }
-            },
-            failure: function(response, opts) {
-                queueItem.set('status', 'error');
-                var msg = win.controller.handleRequestFailure(
-                    response, opts, null, true);
-                if (response.status === 502 || response.status === 413) {
-                    // correct status for an expected "file too big" would be
-                    // 413, needs server adaption, 502 could be something else
-                    msg = 'importResponse.failure.server.bigfile';
-                }
-                queueItem.set('message', Lada.util.I18n.getMsgIfDefined(msg));
-                queueItem.set('done', true);
-            }
-        });
     },
 
     clear: function() {
