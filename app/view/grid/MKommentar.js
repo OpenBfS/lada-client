@@ -122,9 +122,9 @@ Ext.define('Lada.view.grid.MKommentar', {
                 flex: 1,
                 renderer: function(value, metaData, record) {
                     var val = '<div style="white-space: normal !important;">' +
-                    value + '</div>';
+                    Ext.htmlEncode(value) + '</div>';
                     this.validationResultRenderer(val, metaData, record);
-                    return Ext.htmlEncode(val);
+                    return val;
                 },
                 editor: {
                     xtype: 'textfield',
