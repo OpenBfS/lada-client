@@ -111,7 +111,10 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'string'
             },
-            dataIndex: 'extId'
+            dataIndex: 'extId',
+            renderer: function(value) {
+                return Ext.htmlEncode(value);
+            }
         }, {
             header: i18n.getMsg('siteClassId'),
             width: 40,
@@ -138,14 +141,20 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'string'
             },
-            dataIndex: 'shortText'
+            dataIndex: 'shortText',
+            renderer: function(value) {
+                return Ext.htmlEncode(value);
+            }
         }, {
             header: i18n.getMsg('orte.langtext'),
             width: 200,
             filter: {
                 type: 'string'
             },
-            dataIndex: 'longText'
+            dataIndex: 'longText',
+            renderer: function(value) {
+                return Ext.htmlEncode(value);
+            }
         }, {
             header: i18n.getMsg('orte.verwaltungseinheit'),
             dataIndex: 'adminUnitId',
