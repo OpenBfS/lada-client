@@ -123,12 +123,14 @@ Ext.define('Lada.controller.grid.Downloads', {
         Ext.Ajax.request({
             url: win.requestUrl + exportFormat,
             jsonData: requestData,
+            scope: this,
             success: function(response) {
                 var json = Ext.JSON.decode(response.responseText, true);
                 if (json) {
                     if (json.refId) {
                         queueItem.set('refId', json.refId);
                         queueItem.set('status', 'waiting');
+                        this.refreshItemInfo(queueItem);
                     } else {
                         queueItem.set('status', 'error');
                     }

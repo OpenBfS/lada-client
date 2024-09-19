@@ -16,50 +16,35 @@ Ext.define('Lada.controller.grid.Queue', {
     downloadPath: '',
 
     /**
-     * Initialize the controller, request polling to run every 2 seconds
-     */
-    init: function() {
-        window.setInterval(() => this.refreshQueue(), 2000);
-    },
-
-    /**
-     * Tries to refresh all queued item info.
-     */
-    refreshQueue: function() {
-        var me = this;
-        Ext.each(Ext.getStore(this.store).getData().items, function(item) {
-            // Only refresh jobs that have been given an ID and are not done
-            if (item.get('refId') && !item.get('done')) {
-                me.refreshItemInfo(item);
-            }
-        });
-    },
-
-    /**
      * Polls the status of a queue item
      * @param {*} item Lada.model.DownloadQueue instance
      */
     refreshItemInfo: function(item) {
-        Ext.Ajax.request({
-            url: this.urlPrefix + 'status/'
-                + item.get('refId') + this.statusUrlSuffix,
-            scope: this,
-            success: function(response) {
-                var json = Ext.decode(response.responseText);
-                item.set(json);
-                if (json.error) {
-                    item.set('message', json.error);
+        var me = this;
+        window.setTimeout(function() {
+            Ext.Ajax.request({
+                url: me.urlPrefix + 'status/'
+                    + item.get('refId') + me.statusUrlSuffix,
+                success: function(response) {
+                    var json = Ext.decode(response.responseText);
+                    item.set(json);
+                    if (json.error) {
+                        item.set('message', json.error);
+                        item.set('status', 'error');
+                    }
+                    if (!item.get('done')) {
+                        me.refreshItemInfo(item);
+                    }
+                },
+                failure: function(response, opts) {
+                    item.set('done', true);
                     item.set('status', 'error');
-                }
-            },
-            failure: function(response, opts) {
-                item.set('done', true);
-                item.set('status', 'error');
 
-                item.set('message', this.handleRequestFailure(
-                    response, opts, null, true));
-            }
-        });
+                    item.set('message', me.handleRequestFailure(
+                        response, opts, null, true));
+                }
+            });
+        }, 2000);
     },
 
     /**

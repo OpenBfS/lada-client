@@ -128,6 +128,7 @@ Ext.define('Lada.controller.grid.Uploads', {
      * content as value
      */
     uploadFiles: function(button, binFiles) {
+        var me = this;
         var win = button.up('panel');
         var cb = win.down('combobox[name=encoding]');
 
@@ -155,6 +156,9 @@ Ext.define('Lada.controller.grid.Uploads', {
                 if (json.error) {
                     queueItem.set('message', json.error );
                     queueItem.set('status', 'error');
+                }
+                if (json.refId) {
+                    me.refreshItemInfo(queueItem);
                 }
             },
             failure: function(response, opts) {

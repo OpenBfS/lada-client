@@ -65,6 +65,10 @@ Ext.define('Lada.controller.Print', {
         });
 
         this.callParent(arguments);
+        if (Lada.appContext && Lada.appContext.merge.urls['print-servlet']) {
+            this.urlPrefix = Lada.appContext.merge.urls[
+                'print-servlet'];
+        }
     },
 
     /**
@@ -582,6 +586,9 @@ Ext.define('Lada.controller.Print', {
                     } else {
                         queueItem.set('message', '' );
                     }
+                    if (json.ref) {
+                        me.refreshItemInfo(queueItem);
+                    }
                 } else {
                     if (response.responseText) {
                         window.open(
@@ -1077,19 +1084,6 @@ Ext.define('Lada.controller.Print', {
         });
         Ext.data.StoreManager.get(this.store).add(storeItem);
         return storeItem;
-    },
-
-    /**
-     * Tries to refresh all queued item info.
-     */
-    refreshQueue: function() {
-        // this should be done only once, but after initialization
-        // (after app.js: GET appContext.json finished)
-        if (Lada.appContext && Lada.appContext.merge.urls['print-servlet']) {
-            this.urlPrefix = Lada.appContext.merge.urls[
-                'print-servlet'];
-        }
-        this.callParent(arguments);
     },
 
     /**
