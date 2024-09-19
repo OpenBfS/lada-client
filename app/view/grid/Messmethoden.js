@@ -135,9 +135,10 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     tpl: Ext.create('Ext.XTemplate',
                         '<tpl for=".">' +
                     '<div class="x-combo-list-item  x-boundlist-item" >' +
-                    '{id} - {name}</div></tpl>'),
+                    '{id:htmlEncode} - {name:htmlEncode}</div></tpl>'),
                     displayTpl: Ext.create('Ext.XTemplate',
-                        '<tpl for=".">{id} - {name}</tpl>'),
+                        '<tpl for=".">{id:htmlEncode} - ' +
+                        '{name:htmlEncode}</tpl>'),
                     listeners: {
                         change: me.setNuklide
                     }

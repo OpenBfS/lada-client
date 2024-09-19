@@ -26,11 +26,14 @@ Ext.define('Lada.view.widget.Deskriptor', {
     forceSelection: true,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-        '<tpl if="levVal &gt; 9">{levVal} - {name}</tpl>',
-        '<tpl if="levVal &lt; 10">0{levVal} - {name}</tpl></div></tpl>'),
+        '<tpl if="levVal &gt; 9">{levVal:htmlEncode} - {name:htmlEncode}</tpl>',
+        '<tpl if="levVal &lt; 10">0{levVal:htmlEncode} - ' +
+        '{name:htmlEncode}</tpl></div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for="."><tpl if="levVal &gt; 9">{levVal} - {name}</tpl>',
-        '<tpl if="levVal &gt; 0 &amp;&amp;levVal &lt; 10">0{levVal} - {name}</tpl>',
+        '<tpl for="."><tpl if="levVal &gt; 9">{levVal:htmlEncode}' +
+        ' - {name:htmlEncode}</tpl>',
+        '<tpl if="levVal &gt; 0 &amp;&amp;levVal &lt; 10">0' +
+        '{levVal:htmlEncode} - {name:htmlEncode}</tpl>',
         '</tpl>'),
 
     initComponent: function() {

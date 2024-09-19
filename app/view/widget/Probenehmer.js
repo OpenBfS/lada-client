@@ -28,12 +28,12 @@ Ext.define('Lada.view.widget.Probenehmer', {
     typeAhead: false,
     minChars: 0,
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{shortText}</tpl>'),
+        '<tpl for=".">{shortText:htmlEncode}</tpl>'),
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{extId} - {shortText:htmlEncode}</div></tpl>'),
+            '{extId:htmlEncode} - {shortText:htmlEncode}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{shortText}</tpl>'),
+        '<tpl for=".">{shortText:htmlEncode}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

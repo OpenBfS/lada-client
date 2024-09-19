@@ -27,11 +27,11 @@ Ext.define('Lada.view.widget.Messstelle', {
     filteredStore: false,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{id} - {name}</div></tpl>'),
+            '{id:htmlEncode} - {name:htmlEncode}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {name}</tpl>'),
+        '<tpl for=".">{id:htmlEncode} - {name:htmlEncode}</tpl>'),
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {name}</tpl>'),
+        '<tpl for=".">{id:htmlEncode} - {name:htmlEncode}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

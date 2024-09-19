@@ -24,7 +24,7 @@ Ext.define('Lada.view.widget.Probenart', {
     maxChars: 1,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{extId} - {name}</div></tpl>'),
+            '{extId:htmlEncode} - {name:htmlEncode}</div></tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

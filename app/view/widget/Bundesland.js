@@ -23,12 +23,12 @@ Ext.define('Lada.view.widget.Bundesland', {
     typeAhead: false,
     minChars: 2,
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {name}</tpl>'),
+        '<tpl for=".">{id:htmlEncode} - {name:htmlEncode}</tpl>'),
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{id} - {name}</div></tpl>'),
+            '{id:htmlEncode} - {name:htmlEncode}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {name}</tpl>'),
+        '<tpl for=".">{id:htmlEncode} - {name:htmlEncode}</tpl>'),
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {

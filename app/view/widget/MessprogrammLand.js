@@ -30,9 +30,9 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     listConfig: {maxWidth: 800},
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{extId} - {name}</div></tpl>'),
+            '{extId:htmlEncode} - {name:htmlEncode}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{name}</tpl>'),
+        '<tpl for=".">{name:htmlEncode}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

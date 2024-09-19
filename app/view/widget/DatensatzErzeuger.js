@@ -28,9 +28,9 @@ Ext.define('Lada.view.widget.DatensatzErzeuger', {
     minChars: 0,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{extId} - {descr:htmlEncode}</div></tpl>'),
+            '{extId:htmlEncode} - {descr:htmlEncode}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{extId} - {descr}</tpl>'),
+        '<tpl for=".">{extId:htmlEncode} - {descr:htmlEncode}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

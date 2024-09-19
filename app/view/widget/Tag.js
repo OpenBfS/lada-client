@@ -54,20 +54,20 @@ Ext.define('Lada.view.widget.Tag', {
         '<ul class="x-list-plain"><tpl for=".">',
         '<li role="option" class="x-boundlist-item">',
         '<tpl if="isAutoTag">',
-        '<div class="italic-text"> {name}*</div>',
+        '<div class="italic-text"> {name:htmlEncode}*</div>',
         '<tpl elseif="tagType === `global`">',
-        '<div class="italic-text bold-text"> {name}</div>',
+        '<div class="italic-text bold-text"> {name:htmlEncode}</div>',
         '<tpl elseif="tagType === `netz`">',
-        '<div class="bold-text"> {name}</div>',
+        '<div class="bold-text"> {name:htmlEncode}</div>',
         '<tpl else>',
-        '<div> {name}</div>',
+        '<div> {name:htmlEncode}</div>',
         '</tpl>',
         '</li>',
         '</tpl></ul>'
 
     ),
     //Tagfield
-    labelTpl: Ext.create('Ext.XTemplate', '{name}<tpl if="isAutoTag">*</tpl>'),
+    labelTpl: Ext.create('Ext.XTemplate', '{name:htmlEncode}<tpl if="isAutoTag">*</tpl>'),
 
     /**
      * Get the component to render the loading/reloading mask to.

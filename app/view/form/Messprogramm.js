@@ -490,13 +490,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                             'Ext.XTemplate',
                             '<ul class="x-list-plain"><tpl for=".">',
                             '<li role="option" class="x-boundlist-item">',
-                            '{id} - {name}',
+                            '{id:htmlEncode} - {name:htmlEncode}',
                             '</li>',
                             '</tpl></ul>'
                         ),
                         labelTpl: Ext.create(
                             'Ext.XTemplate',
-                            '<tpl for=".">{id} - {name}</tpl>'),
+                            '<tpl for=".">{id:htmlEncode} -' +
+                            ' {name:htmlEncode}</tpl>'),
                         // See Lada.override.FilteredComboBox:
                         displayField: 'id',
                         searchValueField: 'name'
