@@ -147,18 +147,10 @@ Ext.define('Lada.view.grid.Messung', {
             flex: 2,
             dataIndex: 'statusMp',
             renderer: function(value, meta, record) {
-                var statusId = record.get('status');
-                var mId = record.get('id');
-                //also fwd the record to the async loading of statuswerte
-                // in order to add the statuswert to the record,
-                // after the grid was rendered...
-                if (!value || value === '') {
-                    // the loading happens in linked 'status' column
-                    this.updateStatus(mId, statusId, record);
-                    return 'Lade...';
-                }
+                var statusProt = record.getStatusProt();
+                var statusMpId = statusProt.get('statusMpId');
                 var kombis = Ext.data.StoreManager.get('statuskombi');
-                var kombi = kombis.getById(value);
+                var kombi = kombis.getById(statusMpId);
                 var st = kombi.get('statusLev').lev + ' - '
                             + kombi.get('statusVal').val;
                 return Ext.htmlEncode(st);
@@ -249,26 +241,6 @@ Ext.define('Lada.view.grid.Messung', {
         this.store.reload();
     },
 
-    /**
-     * Load the statusstore,
-     * afterwards: retrieve the statusid
-     */
-    updateStatus: function(value, statusId, record) {
-        var statusStore = Ext.create('Lada.store.Status');
-        statusStore.onAfter({
-            load: {
-                fn: this.updateStatusColumn,
-                scope: this,
-                options: {statusId: statusId, record: record}
-            }
-        });
-        statusStore.load({
-            params: {
-                measmId: value
-            }
-        });
-    },
-
     updateNuklide: function(id, record) {
         var messwerte = Ext.create('Lada.store.Messwerte');
         var me = this;
@@ -308,29 +280,6 @@ Ext.define('Lada.view.grid.Messung', {
         opts.record.beginEdit();
         opts.record.set(opts.type, value);
         opts.record.endEdit();
-    },
-
-    /**
-     * Retrieve Statuswert and update the column
-     */
-    updateStatusColumn: function(sstore, record, success, operation, options) {
-        var opts = options.options;
-        var value = 0;
-        if (sstore.getTotalCount() === 0 || !opts.statusId) {
-            value = 0;
-        } else {
-            var rec = sstore.getById(opts.statusId);
-            if (rec) {
-                value = rec.get('statusMpId');
-                //add the determined statuswert to the record.
-                // this is necessary to let the controller determine
-                // which actions are allowed.
-                opts.record.beginEdit();
-                opts.record.set('statusMp', value);
-                opts.record.endEdit();
-                opts.record.commit();
-            }
-        }
     },
 
     setReadOnly: function(b) {
