@@ -23,24 +23,18 @@ Ext.define('Lada.controller.grid.Downloads', {
      */
     init: function() {
         this.control({
-            'exportdata checkbox[name=allrows]': {
-                change: this.setExportButtonDisabled
-            },
-            'exportdata combobox[name=formatselection]': {
-                change: this.setExportButtonDisabled
+            ['exportdata checkbox[name=allrows], ' +
+                'exportdata combobox[name=formatselection], ' +
+                'exportdata checkbox[name=allcolumns], ' +
+                'exportdata checkbox[name=secondarycolumns], ' +
+                'exportdata tagfield[name=exportcolumns], ' +
+                'exportdata tagfield[name=exportexpcolumns]'
+            ]: {
+                change: this.updateUI
             }
         });
 
         this.callParent(arguments);
-    },
-
-    setExportButtonDisabled: function(item) {
-        var win = item.up('window');
-        win.down('button[action=export]').setDisabled(
-            !win.down('form').isValid()
-            || !win.grid.getSelectionModel().getSelection().length
-            && (win.down('combobox[name=formatselection]').getValue() === 'laf'
-                || !win.down('checkbox[name=allrows]').getValue()));
     },
 
     /**
@@ -181,5 +175,39 @@ Ext.define('Lada.controller.grid.Downloads', {
         });
         Ext.data.StoreManager.get(this.store).add(storeItem);
         return storeItem;
+    },
+
+    /**
+     * updateUI sets the current state of the UI depending on selected values
+     * @param win window context
+     */
+    updateUI: function(item) {
+        var win = item.up('window');
+        var FORMATSELEKTOR = 'combobox[name=formatselection]';
+        var formatSelection = win.down(FORMATSELEKTOR).getValue();
+        var isAllColumnsSet = win.down('checkbox[name=allcolumns]').getValue();
+        var SECONDARYCOLS = 'checkbox[name=secondarycolumns]';
+        var isSecondaryColumnsSet = win.down(SECONDARYCOLS).getValue();
+        var isLAF = formatSelection === 'laf';
+        var isCSV = formatSelection === 'csv';
+        var isJSON = formatSelection === 'json';
+        var isGeoJSON = formatSelection === 'geojson';
+        win.down('fieldset[name=csvoptions]').setVisible(isCSV);
+        win.down('combobox[name=encoding]').setVisible( isLAF || isCSV);
+        win.down('checkbox[name=allrows]').setVisible(!isLAF);
+        win.down('checkbox[name=allcolumns]').setVisible(!isLAF);
+        win.down('checkbox[name=secondarycolumns]').setVisible(isCSV || isJSON);
+        win.down('button[action=copyGeoJson]').setVisible(isGeoJSON);
+        win.down('button[action=copyGeoJson]').setDisabled(!isGeoJSON);
+        win.down('tagfield[name=exportcolumns]')
+            .setVisible(!isLAF && !isAllColumnsSet);
+        win.down('tagfield[name=exportexpcolumns]')
+            .setVisible(!isAllColumnsSet &&
+                !isLAF && !isGeoJSON && isSecondaryColumnsSet);
+        win.down('button[action=export]').setDisabled(
+            !win.down('form').isValid()
+            || !win.grid.getSelectionModel().getSelection().length
+            && (win.down('combobox[name=formatselection]').getValue() === 'laf'
+                || !win.down('checkbox[name=allrows]').getValue()));
     }
 });

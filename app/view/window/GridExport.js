@@ -216,26 +216,17 @@ Ext.define('Lada.view.window.GridExport', {
                 store: me.formatStore,
                 value: 'csv',
                 allowBlank: false,
-                forceSelection: true,
-                listeners: {
-                    change: me.changeFormat
-                }
+                forceSelection: true
             }, {
                 xtype: 'checkbox',
                 name: 'allcolumns',
                 fieldLabel: i18n.getMsg('export.allcolumns'),
                 checked: true,
-                listeners: {
-                    change: me.exportallcolumntoggle
-                }
             }, {
                 xtype: 'checkbox',
                 name: 'secondarycolumns',
                 fieldLabel: i18n.getMsg('export.secondarycolumns'),
                 checked: this.grid.exportRowexp ? true : false,
-                listeners: {
-                    change: me.exportsecondarytoggle
-                },
                 hidden: true
             }, {
                 xtype: 'checkbox',
@@ -250,11 +241,6 @@ Ext.define('Lada.view.window.GridExport', {
                 hidden: true,
                 value: preselected,
                 multiSelect: true,
-                listeners: {
-                    change: function() {
-                        me.resetCopyButton(me);
-                    }
-                }
             }, {
                 xtype: 'tagfield',
                 name: 'exportexpcolumns',
@@ -263,12 +249,7 @@ Ext.define('Lada.view.window.GridExport', {
                 store: me.expcolumnList,
                 hidden: true,
                 value: null,
-                multiSelect: true,
-                listeners: {
-                    change: function() {
-                        me.resetCopyButton(me);
-                    }
-                }
+                multiSelect: true
             }, {
                 xtype: 'combobox',
                 fieldLabel: i18n.getMsg('encoding'),
@@ -443,61 +424,6 @@ Ext.define('Lada.view.window.GridExport', {
             'features': resultObj
         };
     },
-
-    /**
-     * change the GUI as another export format is selected
-     */
-    changeFormat: function(box, newValue) {
-        var win = box.up('window');
-        win.down('fieldset[name=csvoptions]').setVisible(newValue === 'csv');
-        win.resetCopyButton(win);
-
-        win.down('button[action=copyGeoJson]').setVisible(
-            newValue === 'geojson');
-
-        win.down('combobox[name=encoding]').setVisible(
-            newValue === 'csv' || newValue === 'laf');
-
-        win.down('checkbox[name=allrows]').setVisible(newValue !== 'laf');
-
-        // No column choice possible for LAF
-        win.down('checkbox[name=allcolumns]').setVisible(newValue !== 'laf');
-        win.down('tagfield[name=exportcolumns]').setVisible(
-            newValue !== 'laf'
-                && !win.down('checkbox[name=allcolumns]').getValue()
-        );
-
-        // Secondary data only if available and format is not LAF or GeoJSON
-        win.down('checkbox[name=secondarycolumns]').setVisible(
-            win.rowexp && newValue !== 'laf' && newValue !== 'geojson'
-        );
-    },
-
-    exportallcolumntoggle: function(box, newValue) {
-        var me = box.up('window');
-        me.down('tagfield[name=exportcolumns]').setVisible(
-            !newValue);
-        if (
-            me.rowexp &&
-            me.down('checkbox[name=secondarycolumns]').getValue()
-        ) {
-            me.down('tagfield[name=exportexpcolumns]').setVisible(!newValue);
-        }
-        me.resetCopyButton(me);
-    },
-
-    exportsecondarytoggle: function(box, newValue) {
-        var me = box.up('window');
-        if (newValue && !me.down('checkbox[name=allcolumns]').getValue()) {
-            me.down('tagfield[name=exportexpcolumns]').setVisible(
-                !me.down('checkbox[name=allcolumns]').getValue()
-            );
-        } else {
-            me.down('tagfield[name=exportexpcolumns]').setVisible(false);
-        }
-        me.resetCopyButton(me);
-    },
-
     /**
      * Prepares the data selected
      */
@@ -757,18 +683,5 @@ Ext.define('Lada.view.window.GridExport', {
             delete c.isVisible;
             return c;
         });
-    },
-
-    resetCopyButton: function(scope) {
-        var button = scope.down('button[action=copyGeoJson]');
-        if (
-            scope.down('combobox[name=formatselection]').getValue() ===
-                'geojson'
-        ) {
-            button.setVisible(true);
-            button.setDisabled(false);
-        } else {
-            button.setVisible(false);
-        }
     }
 });
