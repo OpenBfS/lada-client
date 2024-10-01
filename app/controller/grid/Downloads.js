@@ -183,15 +183,16 @@ Ext.define('Lada.controller.grid.Downloads', {
      */
     updateUI: function(item) {
         var win = item.up('window');
-        var FORMATSELEKTOR = 'combobox[name=formatselection]';
-        var formatSelection = win.down(FORMATSELEKTOR).getValue();
-        var isAllColumnsSet = win.down('checkbox[name=allcolumns]').getValue();
-        var SECONDARYCOLS = 'checkbox[name=secondarycolumns]';
-        var isSecondaryColumnsSet = win.down(SECONDARYCOLS).getValue();
+
+        var formatSelection = win.down('combobox[name=formatselection]')
+            .getValue();
         var isLAF = formatSelection === 'laf';
         var isCSV = formatSelection === 'csv';
         var isJSON = formatSelection === 'json';
         var isGeoJSON = formatSelection === 'geojson';
+
+        var isAllColumnsSet = win.down('checkbox[name=allcolumns]').getValue();
+
         win.down('fieldset[name=csvoptions]').setVisible(isCSV);
         win.down('combobox[name=encoding]').setVisible( isLAF || isCSV);
         win.down('checkbox[name=allrows]').setVisible(!isLAF);
@@ -202,12 +203,11 @@ Ext.define('Lada.controller.grid.Downloads', {
         win.down('tagfield[name=exportcolumns]')
             .setVisible(!isLAF && !isAllColumnsSet);
         win.down('tagfield[name=exportexpcolumns]')
-            .setVisible(!isAllColumnsSet &&
-                !isLAF && !isGeoJSON && isSecondaryColumnsSet);
+            .setVisible(!isAllColumnsSet && !isLAF && !isGeoJSON
+                && win.down('checkbox[name=secondarycolumns]').getValue());
         win.down('button[action=export]').setDisabled(
             !win.down('form').isValid()
             || !win.grid.getSelectionModel().getSelection().length
-            && (win.down('combobox[name=formatselection]').getValue() === 'laf'
-                || !win.down('checkbox[name=allrows]').getValue()));
+            && (isLAF || !win.down('checkbox[name=allrows]').getValue()));
     }
 });
