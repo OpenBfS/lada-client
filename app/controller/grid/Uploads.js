@@ -46,7 +46,7 @@ Ext.define('Lada.controller.grid.Uploads', {
     onSaveItem: function(record) {
         if (record.get('resultFetched') === false) {
             var me = this;
-            var url = this.urlPrefix + this.downloadPath + record.get('refId');
+            var url = this.urlPrefix + this.downloadPath + record.get('jobId');
             Ext.Ajax.request({
                 url: url,
                 success: function(response) {
@@ -150,14 +150,14 @@ Ext.define('Lada.controller.grid.Uploads', {
             },
             success: function(response) {
                 var json = Ext.decode(response.responseText);
-                queueItem.set('refId', json.refId);
+                queueItem.set('jobId', json.jobId);
                 queueItem.set('status', 'waiting');
                 queueItem.set('message', '' );
                 if (json.error) {
                     queueItem.set('message', json.error );
                     queueItem.set('status', 'error');
                 }
-                if (json.refId) {
+                if (json.jobId) {
                     me.refreshItemInfo(queueItem);
                 }
             },

@@ -17,7 +17,7 @@ Ext.define('Lada.model.DownloadQueue', {
     fields: [{
         name: 'id'
     }, {
-        name: 'refId'
+        name: 'jobId'
         // a unique identifier
     }, {
         name: 'filename'

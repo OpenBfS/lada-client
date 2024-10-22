@@ -20,7 +20,7 @@ Ext.define('Lada.model.UploadQueue', {
         name: 'type'
         // '', 'laf'
     }, {
-        name: 'refId'
+        name: 'jobId'
         // a unique identifier
     }, {
         name: 'filename'

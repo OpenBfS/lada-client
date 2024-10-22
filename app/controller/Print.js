@@ -577,7 +577,7 @@ Ext.define('Lada.controller.Print', {
             success: function(response) {
                 if (!isIrix) {
                     var json = Ext.decode(response.responseText);
-                    queueItem.set('refId', json.ref);
+                    queueItem.set('jobId', json.ref);
                     queueItem.set('mapfish_statusURL', json.statusURL);
                     queueItem.set('mapfish_downloadURL', json.downloadURL);
                     queueItem.set('status', 'waiting');
@@ -1091,7 +1091,7 @@ Ext.define('Lada.controller.Print', {
      * @param {*} model
      */
     onCancelItem: function(model) {
-        var ref = model.get('refId');
+        var ref = model.get('jobId');
         if (ref) {
             Ext.Ajax.request({
                 url: this.urlPrefix + 'cancel/' + ref,

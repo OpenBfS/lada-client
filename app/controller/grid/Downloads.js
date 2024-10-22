@@ -121,8 +121,8 @@ Ext.define('Lada.controller.grid.Downloads', {
             success: function(response) {
                 var json = Ext.JSON.decode(response.responseText, true);
                 if (json) {
-                    if (json.refId) {
-                        queueItem.set('refId', json.refId);
+                    if (json.jobId) {
+                        queueItem.set('jobId', json.jobId);
                         queueItem.set('status', 'waiting');
                         this.refreshItemInfo(queueItem);
                     } else {

@@ -24,7 +24,7 @@ Ext.define('Lada.controller.grid.Queue', {
         window.setTimeout(function() {
             Ext.Ajax.request({
                 url: me.urlPrefix + 'status/'
-                    + item.get('refId') + me.statusUrlSuffix,
+                    + item.get('jobId') + me.statusUrlSuffix,
                 success: function(response) {
                     var json = Ext.decode(response.responseText);
                     item.set(json);
@@ -54,7 +54,7 @@ Ext.define('Lada.controller.grid.Queue', {
     onSaveItem: function(model) {
         model.set('downloadRequested', true);
         Ext.Ajax.request({
-            url: this.urlPrefix + this.downloadPath + model.get('refId'),
+            url: this.urlPrefix + this.downloadPath + model.get('jobId'),
             method: 'GET',
             headers: {
                 Accept: 'application/octet-stream'
