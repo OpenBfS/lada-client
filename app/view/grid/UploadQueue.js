@@ -48,7 +48,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             dataIndex: 'status',
             width: 80,
             renderer: function(value) {
-                return i18n.getMsg( 'print.status.' + value);
+                return i18n.getMsg( 'print.status.' + value.toLowerCase());
             }
         }, {
             header: i18n.getMsg('print.message'),
@@ -65,7 +65,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             menuText: i18n.getMsg('note'),
             width: 20,
             getTip: function(value, meta, rec) {
-                if (rec.get('status') === 'error') {
+                if (rec.get('status').toLowerCase() === 'error') {
                     return i18n.getMsg('importResponse.failure.true');
                 }
                 if (!rec.get('warnings')
@@ -121,7 +121,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             },
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
-                if (rec.get('errors') || rec.get('status') === 'error') {
+                if (rec.get('errors') || rec.get('status').toLowerCase() === 'error') {
                     return 'error';
                 }
                 if (rec.get('warnings')) {
@@ -136,7 +136,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             dataIndex: 'status',
             menuText: i18n.getMsg('save'),
             getTip: function(value, meta, rec) {
-                switch (rec.get('status')) {
+                switch (rec.get('status').toLowerCase()) {
                     case 'finished':
                         if (!rec.get('downloadRequested')) {
                             return i18n.getMsg('import.showresult');
@@ -153,7 +153,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             width: 20,
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
-                switch (rec.get('status')) {
+                switch (rec.get('status').toLowerCase()) {
                     case 'finished':
                         if (!rec.get('downloadRequested')) {
                             return 'saveas';
@@ -169,11 +169,11 @@ Ext.define('Lada.view.grid.UploadQueue', {
             },
             handler: function(grid, rowIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
-                var status = rec.get('status');
+                var status = rec.get('status').toLowerCase();
                 if (status === 'running' || status === 'waiting') {
                     controller.onCancelItem(rec);
                 } else if (
-                    rec.get('status') === 'finished'
+                    rec.get('status').toLowerCase() === 'finished'
                 ) {
                     controller.onSaveItem(rec);
                 }
