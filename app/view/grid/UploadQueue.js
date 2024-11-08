@@ -172,9 +172,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
                 var status = rec.get('status').toLowerCase();
                 if (status === 'running' || status === 'waiting') {
                     controller.onCancelItem(rec);
-                } else if (
-                    rec.get('status').toLowerCase() === 'finished'
-                ) {
+                } else if (status === 'finished') {
                     controller.onSaveItem(rec);
                 }
             }

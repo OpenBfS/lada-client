@@ -86,7 +86,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
                 if (status === 'running' || status === 'waiting') {
                     controller.onCancelItem(rec);
                 } else if (
-                    rec.get('status').toLowerCase() === 'finished' &&
+                    status === 'finished' &&
                     rec.get('downloadRequested') === false
                 ) {
                     controller.onSaveItem(rec);
