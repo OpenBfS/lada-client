@@ -38,6 +38,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
         var i18n = Lada.getApplication().bundle;
         this.add({
             xtype: 'button',
+            name: "statuskombiBtn",
             text: i18n.getMsg('button.changestatus'),
             tooltip: i18n.getMsg('button.changestatus.qtip'),
             action: 'newstatus',
