@@ -162,7 +162,7 @@ Ext.define('Lada.view.grid.Messwert', {
             items: [{
                 header: i18n.getMsg('measdId'),
                 dataIndex: 'measdId',
-                width: 118,
+                flex: 1.3,
                 renderer: function(value, metaData, record) {
                     this.validationResultRenderer(value, metaData, record);
                     if (!value || value === '') {
@@ -185,6 +185,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     queryMode: 'local',
                     minChars: 0,
                     typeAhead: false,
+                    matchFieldWidth: false,
                     triggers: {
                         clear: {
                             extraCls: 'x-form-clear-trigger'
@@ -204,7 +205,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }, {
                 header: i18n.getMsg('measVal'),
                 dataIndex: 'measVal',
-                width: 80,
+                flex: 1,
                 editor: {
                     xtype: 'expnumberfield',
                     allowBlank: false
@@ -227,7 +228,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }, {
                 header: i18n.getMsg('detect_lim'),
                 dataIndex: 'detectLim',
-                width: 140,
+                flex: 1,
                 editor: {
                     xtype: 'expnumberfield',
                     allowBlank: false
@@ -250,7 +251,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }, {
                 header: i18n.getMsg('measUnitId'),
                 dataIndex: 'measUnitId',
-                width: 120,
+                flex: 1,
                 renderer: function(value, metaData, record) {
                     this.validationResultRenderer(value, metaData, record);
                     if (!value || value === '') {
@@ -285,6 +286,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     queryMode: 'local',
                     minChars: 0,
                     typeAhead: false,
+                    matchFieldWidth: false,
                     triggers: {
                         clear: {
                             extraCls: 'x-form-clear-trigger'
@@ -297,7 +299,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 dataIndex: 'error',
                 xtype: 'numbercolumn',
                 format: '0000.0',
-                flex: 1,
+                flex: 0.6,
                 editor: {
                     xtype: 'formatnumberfield',
                     allowBlank: false,
