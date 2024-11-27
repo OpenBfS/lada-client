@@ -100,21 +100,21 @@ Ext.define('Lada.view.grid.Messung', {
         }, {
             header: i18n.getMsg('measm.ext_id'),
             dataIndex: 'extId',
-            flex: 0.7,
+            flex: 0.5,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('minSampleId'),
             dataIndex: 'minSampleId',
-            flex: 0.8,
+            flex: 0.5,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('mmt_id'),
             dataIndex: 'mmtId',
-            flex: 1,
+            flex: 0.5,
             editor: {
                 allowBlank: false
             }
@@ -123,7 +123,7 @@ Ext.define('Lada.view.grid.Messung', {
             dataIndex: 'measmStartDate',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
-            flex: 2,
+            flex: 1.2,
             editor: {
                 xtype: 'datefield',
                 allowBlank: false,
@@ -158,7 +158,7 @@ Ext.define('Lada.view.grid.Messung', {
         }, {
             header: i18n.getMsg('isCompleted'),
             dataIndex: 'isCompleted',
-            flex: 0.8,
+            flex: 0.6,
             renderer: function(value) {
                 if (value) {
                     return 'Ja';
