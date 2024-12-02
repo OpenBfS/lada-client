@@ -1060,13 +1060,15 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 && Ext.Array.contains(Lada.funktionen, 4)
             )
         ) {
+            var isProbeGrid = this.rowtarget.dataType === "probeId";
+            var userHasNoMsts = Lada.mst.length == 0;
             if (!this.tbuttonExists('genericadd')) {
                 this.toolbarbuttons.push({
                     text: this.i18n.getMsg('add'),
                     icon: 'resources/img/list-add.png',
                     action: 'genericadd',
                     needsSelection: false,
-                    disabled: false
+                    disabled: isProbeGrid && userHasNoMsts,
                 });
             }
         }
