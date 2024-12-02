@@ -92,8 +92,9 @@ Ext.define('Lada.controller.grid.Downloads', {
                     win.showError('export.differentcoldecimal');
                     return;
                 }
-                requestData.subDataColumnNames = win
-                    .getSubdataColumNames(requestData.subDataColumns);
+                requestData.subDataColumnNames = win.getSubdataColumNames(
+                  win.getSubdataColumns(win)
+                );
                 Object.assign(requestData, {
                     rowDelimiter: win.down('combobox[name=linesep]')
                         .getValue(),
