@@ -178,8 +178,7 @@ Ext.define('Lada.view.grid.Messung', {
             flex: 1,
             renderer: function(value, meta, record) {
                 if (
-                    (!value || value === '') &&
-                    this.messwerteLoading === false
+                    (!value || value === '')
                 ) {
                     var mId = record.get('id');
                     this.updateNuklide(mId, record);
