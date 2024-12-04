@@ -305,12 +305,11 @@ Ext.define('Lada.view.grid.Messung', {
      * Activate the Remove Button
      */
     activateRemoveButton: function(selection, record) {
-        var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly &&
-            record.get('statusMp') === 1 &&
-            record.get('owner')) {
-            grid.down('button[action=delete]').enable();
+        var editableGrid = !this.readOnly;
+        var isEditableRecord = record.get("statusEdit");
+        var hasOwner = record.get("owner");
+        if (editableGrid && isEditableRecord && hasOwner) {
+          this.down("button[action=delete]").enable();
         }
     },
     /**
