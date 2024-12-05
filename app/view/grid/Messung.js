@@ -147,10 +147,7 @@ Ext.define('Lada.view.grid.Messung', {
             flex: 2,
             dataIndex: 'statusMp',
             renderer: function(value, meta, record) {
-                var statusProt = record.getStatusProt();
-                var statusMpId = statusProt.get('statusMpId');
-                var kombis = Ext.data.StoreManager.get('statuskombi');
-                var kombi = kombis.getById(statusMpId);
+                var kombi = this.determineKombi(record);
                 var st = kombi.get('statusLev').lev + ' - '
                             + kombi.get('statusVal').val;
                 return Ext.htmlEncode(st);
@@ -305,10 +302,11 @@ Ext.define('Lada.view.grid.Messung', {
      */
     activateRemoveButton: function(selection, record) {
         var editableGrid = !this.readOnly;
-        var isEditableRecord = record.get("statusEdit");
-        var hasOwner = record.get("owner");
+        var kombi = this.determineKombi(record);
+        var isEditableRecord = kombi.get('id') === 1;
+        var hasOwner = record.get('owner');
         if (editableGrid && isEditableRecord && hasOwner) {
-          this.down("button[action=delete]").enable();
+          this.down('button[action=delete]').enable();
         }
     },
     /**
@@ -316,5 +314,12 @@ Ext.define('Lada.view.grid.Messung', {
      */
     deactivateRemoveButton: function() {
         this.down('button[action=delete]').disable();
+    },
+    determineKombi: function(record) {
+        var statusProt = record.getStatusProt();
+        var statusMpId = statusProt.get("statusMpId");
+        var kombis = Ext.data.StoreManager.get("statuskombi");
+        var kombi = kombis.getById(statusMpId);
+        return kombi;
     }
 });
