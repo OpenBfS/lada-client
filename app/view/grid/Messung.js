@@ -297,10 +297,10 @@ Ext.define('Lada.view.grid.Messung', {
      */
     activateRemoveButton: function(selection, record) {
         var editableGrid = !this.readOnly;
-        var isEditableRecord = record.getStatusProt().get("statusMpId") === 1;
+        var isEditableRecord = record.getStatusProt().get('statusMpId') === 1;
         var hasOwner = record.get('owner');
         if (editableGrid && isEditableRecord && hasOwner) {
-          this.down('button[action=delete]').enable();
+            this.down('button[action=delete]').enable();
         }
     },
     /**
@@ -311,8 +311,8 @@ Ext.define('Lada.view.grid.Messung', {
     },
     determineKombi: function(record) {
         var statusProt = record.getStatusProt();
-        var statusMpId = statusProt.get("statusMpId");
-        var kombis = Ext.data.StoreManager.get("statuskombi");
+        var statusMpId = statusProt.get('statusMpId');
+        var kombis = Ext.data.StoreManager.get('statuskombi');
         var kombi = kombis.getById(statusMpId);
         return kombi;
     }
