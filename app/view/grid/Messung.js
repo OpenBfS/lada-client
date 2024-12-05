@@ -35,8 +35,6 @@ Ext.define('Lada.view.grid.Messung', {
 
     lastClickTime: 0,
 
-    messwerteLoading: false,
-
     initComponent: function() {
         this.store = Ext.create('Lada.store.Messungen');
 
@@ -180,8 +178,6 @@ Ext.define('Lada.view.grid.Messung', {
                     var mId = record.get('id');
                     this.updateNuklide(mId, record);
                     return 'Lade...';
-                } else {
-                    this.messwerteLoading = false;
                 }
                 return Ext.htmlEncode(value);
             }
@@ -240,7 +236,6 @@ Ext.define('Lada.view.grid.Messung', {
     updateNuklide: function(id, record) {
         var messwerte = Ext.create('Lada.store.Messwerte');
         var me = this;
-        me.messwerteLoading = true;
         /*messwerte.onAfter('load',
             this.updateColumn,
             this,
