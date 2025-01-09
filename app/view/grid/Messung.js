@@ -35,8 +35,6 @@ Ext.define('Lada.view.grid.Messung', {
 
     lastClickTime: 0,
 
-    messwerteLoading: false,
-
     initComponent: function() {
         this.store = Ext.create('Lada.store.Messungen');
 
@@ -100,21 +98,21 @@ Ext.define('Lada.view.grid.Messung', {
         }, {
             header: i18n.getMsg('measm.ext_id'),
             dataIndex: 'extId',
-            flex: 0.7,
+            flex: 0.5,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('minSampleId'),
             dataIndex: 'minSampleId',
-            flex: 0.8,
+            flex: 0.5,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('mmt_id'),
             dataIndex: 'mmtId',
-            flex: 1,
+            flex: 0.5,
             editor: {
                 allowBlank: false
             }
@@ -123,7 +121,7 @@ Ext.define('Lada.view.grid.Messung', {
             dataIndex: 'measmStartDate',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
-            flex: 2,
+            flex: 1.2,
             editor: {
                 xtype: 'datefield',
                 allowBlank: false,
@@ -147,26 +145,15 @@ Ext.define('Lada.view.grid.Messung', {
             flex: 2,
             dataIndex: 'statusMp',
             renderer: function(value, meta, record) {
-                var statusId = record.get('status');
-                var mId = record.get('id');
-                //also fwd the record to the async loading of statuswerte
-                // in order to add the statuswert to the record,
-                // after the grid was rendered...
-                if (!value || value === '') {
-                    // the loading happens in linked 'status' column
-                    this.updateStatus(mId, statusId, record);
-                    return 'Lade...';
-                }
-                var kombis = Ext.data.StoreManager.get('statuskombi');
-                var kombi = kombis.getById(value);
+                var kombi = this.determineKombi(record);
                 var st = kombi.get('statusLev').lev + ' - '
                             + kombi.get('statusVal').val;
-                return st;
+                return Ext.htmlEncode(st);
             }
         }, {
             header: i18n.getMsg('isCompleted'),
             dataIndex: 'isCompleted',
-            flex: 0.8,
+            flex: 0.6,
             renderer: function(value) {
                 if (value) {
                     return 'Ja';
@@ -186,16 +173,13 @@ Ext.define('Lada.view.grid.Messung', {
             flex: 1,
             renderer: function(value, meta, record) {
                 if (
-                    (!value || value === '') &&
-                    this.messwerteLoading === false
+                    (!value || value === '')
                 ) {
                     var mId = record.get('id');
                     this.updateNuklide(mId, record);
                     return 'Lade...';
-                } else {
-                    this.messwerteLoading = false;
                 }
-                return value;
+                return Ext.htmlEncode(value);
             }
         }];
         this.listeners = {
@@ -249,30 +233,9 @@ Ext.define('Lada.view.grid.Messung', {
         this.store.reload();
     },
 
-    /**
-     * Load the statusstore,
-     * afterwards: retrieve the statusid
-     */
-    updateStatus: function(value, statusId, record) {
-        var statusStore = Ext.create('Lada.store.Status');
-        statusStore.onAfter({
-            load: {
-                fn: this.updateStatusColumn,
-                scope: this,
-                options: {statusId: statusId, record: record}
-            }
-        });
-        statusStore.load({
-            params: {
-                measmId: value
-            }
-        });
-    },
-
     updateNuklide: function(id, record) {
         var messwerte = Ext.create('Lada.store.Messwerte');
         var me = this;
-        me.messwerteLoading = true;
         /*messwerte.onAfter('load',
             this.updateColumn,
             this,
@@ -310,29 +273,6 @@ Ext.define('Lada.view.grid.Messung', {
         opts.record.endEdit();
     },
 
-    /**
-     * Retrieve Statuswert and update the column
-     */
-    updateStatusColumn: function(sstore, record, success, operation, options) {
-        var opts = options.options;
-        var value = 0;
-        if (sstore.getTotalCount() === 0 || !opts.statusId) {
-            value = 0;
-        } else {
-            var rec = sstore.getById(opts.statusId);
-            if (rec) {
-                value = rec.get('statusMpId');
-                //add the determined statuswert to the record.
-                // this is necessary to let the controller determine
-                // which actions are allowed.
-                opts.record.beginEdit();
-                opts.record.set('statusMp', value);
-                opts.record.endEdit();
-                opts.record.commit();
-            }
-        }
-    },
-
     setReadOnly: function(b) {
         this.readOnly = b;
         if (b === true) {
@@ -356,22 +296,24 @@ Ext.define('Lada.view.grid.Messung', {
      * Activate the Remove Button
      */
     activateRemoveButton: function(selection, record) {
-        var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly &&
-            record.get('statusMp') === 1 &&
-            record.get('owner')) {
-            grid.down('button[action=delete]').enable();
+        var editableGrid = !this.readOnly;
+        var isEditableRecord = record.getStatusProt().get('statusMpId') === 1;
+        var hasOwner = record.get('owner');
+        if (editableGrid && isEditableRecord && hasOwner) {
+            this.down('button[action=delete]').enable();
         }
     },
     /**
-     * Activate the Remove Button
+     * Dectivate the Remove Button
      */
     deactivateRemoveButton: function() {
-        var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
-            grid.down('button[action=delete]').disable();
-        }
+        this.down('button[action=delete]').disable();
+    },
+    determineKombi: function(record) {
+        var statusProt = record.getStatusProt();
+        var statusMpId = statusProt.get('statusMpId');
+        var kombis = Ext.data.StoreManager.get('statuskombi');
+        var kombi = kombis.getById(statusMpId);
+        return kombi;
     }
 });

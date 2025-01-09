@@ -21,11 +21,11 @@ Ext.define('Lada.view.widget.KtaGruppe', {
     searchValueField: 'extId',
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{extId} - {name}</div></tpl>'),
+            '{extId:htmlEncode} - {name:htmlEncode}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{extId}</tpl>'),
+        '<tpl for=".">{extId:htmlEncode}</tpl>'),
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{extId} - {name}</tpl>'),
+        '<tpl for=".">{extId:htmlEncode} - {name:htmlEncode}</tpl>'),
     //forceSelection: true,
     forceSelection: this.forceSelection || false,
     // Enable filtering of comboboxes

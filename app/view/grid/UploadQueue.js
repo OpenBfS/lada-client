@@ -7,23 +7,23 @@
  */
 
 /**
- * Grid for the UploadQueue - Stores, listing all uploads that have been
- * initiated and might have pending results
+ * Grid for the upload queue.
  */
-
-
 Ext.define('Lada.view.grid.UploadQueue', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.uploadqueuegrid',
+    requires: [
+        'Lada.controller.grid.Uploads'
+    ],
 
     controller: 'upload',
 
-    store: null, //TODO needs to be set
     viewConfig: {
         deferEmptyText: true,
         markDirty: false
     },
     emptyText: 'emptygrid.uploadqueue',
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var controller = this.controller;
@@ -33,7 +33,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             dataIndex: 'filename',
             renderer: function(value) {
                 return '<div style="white-space: normal !important;">' +
-                    value + '</div>';
+                    Ext.htmlEncode(value) + '</div>';
             },
             flex: 1.2
         }, {
@@ -48,14 +48,14 @@ Ext.define('Lada.view.grid.UploadQueue', {
             dataIndex: 'status',
             width: 80,
             renderer: function(value) {
-                return i18n.getMsg( 'print.status.' + value);
+                return i18n.getMsg( 'print.status.' + value.toLowerCase());
             }
         }, {
             header: i18n.getMsg('print.message'),
             dataIndex: 'message',
             renderer: function(value) {
                 return '<div style="white-space: normal !important;">' +
-                    value + '</div>';
+                    Ext.htmlEncode(value) + '</div>';
             },
             flex: 2
         }, {
@@ -65,37 +65,63 @@ Ext.define('Lada.view.grid.UploadQueue', {
             menuText: i18n.getMsg('note'),
             width: 20,
             getTip: function(value, meta, rec) {
-                if (rec.get('status') === 'error') {
+                if (rec.get('status').toLowerCase() === 'error') {
                     return i18n.getMsg('importResponse.failure.true');
                 }
-                if (!rec.get('warnings') && !rec.get('errors') && !rec.get('notifications')) {
+                if (!rec.get('warnings')
+                    && !rec.get('errors')
+                    && !rec.get('notifications')
+                ) {
                     return ' ';
                 }
                 if (!rec.get('warnings') && !rec.get('notifications')) {
                     return i18n.getMsg('importResponse.failure.true');
                 }
-                if (!rec.get('errors') && !rec.get('warnings') && rec.get('notifications')) {
+                if (!rec.get('errors')
+                    && !rec.get('warnings')
+                    && rec.get('notifications')
+                ) {
                     return i18n.getMsg('importResponse.notifications.true');
                 }
-                if (!rec.get('errors') && rec.get('warnings') && rec.get('notifications') ) {
-                    return i18n.getMsg('importResponse.warningsANDnotifications.true');
+                if (!rec.get('errors')
+                    && rec.get('warnings')
+                    && rec.get('notifications')
+                ) {
+                    return i18n.getMsg(
+                        'importResponse.warningsANDnotifications.true');
                 }
-                if (!rec.get('errors') && rec.get('warnings') && !rec.get('notifications')) {
+                if (!rec.get('errors')
+                    && rec.get('warnings')
+                    && !rec.get('notifications')
+                ) {
                     return i18n.getMsg('importResponse.warnings.warninglist');
                 }
-                if (rec.get('errors') && rec.get('warnings') && rec.get('notifications')) {
-                    return i18n.getMsg('importResponse.failureAndWarningsAndNotifications.true');
+                if (rec.get('errors')
+                    && rec.get('warnings')
+                    && rec.get('notifications')
+                ) {
+                    return i18n.getMsg(
+                        'importResponse.failureAndWarningsAndNotifications.true'
+                    );
                 }
-                if (rec.get('errors') && !rec.get('warnings') && rec.get('notifications')) {
-                    return i18n.getMsg('importResponse.failureAndNotifications.true');
+                if (rec.get('errors')
+                    && !rec.get('warnings')
+                    && rec.get('notifications')
+                ) {
+                    return i18n.getMsg(
+                        'importResponse.failureAndNotifications.true');
                 }
-                if (rec.get('errors') && rec.get('warnings') && !rec.get('notifications')) {
-                    return i18n.getMsg('importResponse.failureAndWarnings.true');
+                if (rec.get('errors')
+                    && rec.get('warnings')
+                    && !rec.get('notifications')
+                ) {
+                    return i18n.getMsg(
+                        'importResponse.failureAndWarnings.true');
                 }
             },
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
-                if (rec.get('errors') || rec.get('status') === 'error') {
+                if (rec.get('errors') || rec.get('status').toLowerCase() === 'error') {
                     return 'error';
                 }
                 if (rec.get('warnings')) {
@@ -110,7 +136,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             dataIndex: 'status',
             menuText: i18n.getMsg('save'),
             getTip: function(value, meta, rec) {
-                switch (rec.get('status')) {
+                switch (rec.get('status').toLowerCase()) {
                     case 'finished':
                         if (!rec.get('downloadRequested')) {
                             return i18n.getMsg('import.showresult');
@@ -127,7 +153,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             width: 20,
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
-                switch (rec.get('status')) {
+                switch (rec.get('status').toLowerCase()) {
                     case 'finished':
                         if (!rec.get('downloadRequested')) {
                             return 'saveas';
@@ -143,13 +169,11 @@ Ext.define('Lada.view.grid.UploadQueue', {
             },
             handler: function(grid, rowIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
-                var status = rec.get('status');
+                var status = rec.get('status').toLowerCase();
                 if (status === 'running' || status === 'waiting') {
                     controller.onCancelItem(rec);
-                } else if (
-                    rec.get('status') === 'finished'
-                ) {
-                    controller.getResult(rec);
+                } else if (status === 'finished') {
+                    controller.onSaveItem(rec);
                 }
             }
         }, {

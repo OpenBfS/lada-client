@@ -150,7 +150,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                             }
                         });
                     }
-                    return record.get('extId');
+                    return Ext.htmlEncode(record.get('extId'));
                 }
             }, {
                 header: i18n.getMsg('ctry'),
@@ -172,7 +172,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     if (!record.get('iso3166')) {
                         return record.get('id');
                     }
-                    return record.get('iso3166');
+                    return Ext.htmlEncode(record.get('iso3166'));
                 }
             }, {
                 header: i18n.getMsg('orte.gemId'),
@@ -185,7 +185,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     if (!record || record.get('adminUnitId') === '') {
                         return '';
                     }
-                    return record.get('adminUnitId');
+                    return Ext.htmlEncode(record.get('adminUnitId'));
                 }
             }, {
                 header: i18n.getMsg('orte.verwaltungseinheit'),
@@ -205,7 +205,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                         return '';
                     }
                     var record2 = gemeinden.getById(gemid);
-                    return record2.get('name');
+                    return Ext.htmlEncode(record2.get('name'));
                 }
             }, {
                 header: i18n.getMsg('orte.ozId'),
@@ -227,7 +227,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                         return '';
                     }
                     var record2 = ozs.getById(ozid);
-                    return value + '<br>' + record2.get('name');
+                    var result = Ext.htmlEncode(value) + '<br>';
+                    return result + Ext.htmlEncode(record2.get('name'));
                 }
             }, {
                 header: i18n.getMsg('orte.anlageId'),
@@ -251,7 +252,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
                     var ktaGruppe = ktaGruppen.getById(
                         record.get('nuclFacilGrId'));
-                    return ktaGruppe.get('name');
+                    return Ext.htmlEncode(ktaGruppe.get('name'));
                 }
             }, {
                 header: i18n.getMsg('orte.langtext'),
@@ -273,7 +274,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                         return '';
                     }
                     return '<div style="white-space: normal !important;">' +
-                                           langtext + '</div>';
+                                           Ext.htmlEncode(langtext) + '</div>';
                 }
             }],
             defaults: {

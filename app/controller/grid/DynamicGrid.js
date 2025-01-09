@@ -15,6 +15,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     requires: [
         'Lada.view.window.DeleteMultipleItems',
         'Lada.view.window.GenProbenFromMessprogramm',
+        'Lada.view.window.GridExport',
         'Lada.view.window.Probe',
         'Lada.view.window.SetTags',
         'Lada.view.window.TagManagement'
@@ -55,6 +56,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             },
             'dynamicgrid toolbar button[action=setstatus]': {
                 click: this.setStatus
+            },
+            'button[action=gridexport]': {
+                click: this.openExportWindow
             },
             'button[action=addMap]': {
                 click: this.activateDraw
@@ -616,6 +620,60 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             this.buttonToggle(true, grid);
         } else {
             this.buttonToggle(false, grid);
+        }
+    },
+
+    openExportWindow: function(button) {
+        if (button.isDisabled()) {
+            return;
+        }
+        var grid = button.up('grid');
+        var i18n = Lada.getApplication().bundle;
+        var failmessage = false;
+        if (!grid || !grid.store.getCount()) {
+            failmessage = i18n.getMsg('export.nodata');
+        } else if (!grid.rowtarget) {
+            failmessage = i18n.getMsg('undefined'); // should not happen
+        }
+        if (failmessage !== false) {
+            Ext.create('Ext.window.Window', {
+                title: i18n.getMsg('export.failed'),
+                modal: true,
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
+                items: [{
+                    xtype: 'container',
+                    html: failmessage,
+                    margin: '10, 5, 5, 5'
+                }, {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    defaults: {
+                        margin: '5,5,5,5'
+                    },
+                    items: [{
+                        xtype: 'button',
+                        text: i18n.getMsg('export.continue'),
+                        margin: '5, 0, 5, 5',
+                        handler: function(btn) {
+                            btn.up('window').close();
+                        }
+                    }]
+                }]
+            }).show();
+        } else {
+            var options = {grid: grid};
+            if (grid.rowtarget.dataType === 'messungId') {
+                options.hasMessung = grid.rowtarget.dataIndex;
+            } else if (grid.rowtarget.dataType === 'probeId') {
+                options.hasProbe = grid.rowtarget.dataIndex;
+            }
+            Ext.create('Lada.view.window.GridExport', options).show();
         }
     },
 

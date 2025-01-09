@@ -114,8 +114,9 @@ Ext.define('Lada.view.grid.Messmethoden', {
                         return '';
                     }
                     var store = me.mmtStore;
-                    return value + ' - ' + store.findRecord(
-                        'id', value, 0, false, false, true).get('name');
+                    var result = Ext.htmlEncode(value) + ' - ';
+                    return result + Ext.htmlEncode(store.findRecord(
+                        'id', value, 0, false, false, true).get('name'));
                 },
                 editor: {
                     xtype: 'combobox',
@@ -134,9 +135,10 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     tpl: Ext.create('Ext.XTemplate',
                         '<tpl for=".">' +
                     '<div class="x-combo-list-item  x-boundlist-item" >' +
-                    '{id} - {name}</div></tpl>'),
+                    '{id:htmlEncode} - {name:htmlEncode}</div></tpl>'),
                     displayTpl: Ext.create('Ext.XTemplate',
-                        '<tpl for=".">{id} - {name}</tpl>'),
+                        '<tpl for=".">{id:htmlEncode} - ' +
+                        '{name:htmlEncode}</tpl>'),
                     listeners: {
                         change: me.setNuklide
                     }
@@ -159,7 +161,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                         var record = store.getById(value[i]);
                         returnvalues = returnvalues + record.get('name');
                     }
-                    return returnvalues;
+                    return Ext.htmlEncode(returnvalues);
                 },
                 editor: {
                     xtype: 'tagfield',

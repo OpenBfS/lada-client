@@ -7,26 +7,23 @@
  */
 
 /**
- * Grid for the downloadqueue- Stores, listing all open and recently failed
- * print jobs for the current session
+ * Grid for the export and print queues.
+ *
+ * Subclasses use different controllers.
  */
-
-
 Ext.define('Lada.view.grid.DownloadQueue', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.downloadqueuegrid',
-    requires: ['Lada.controller.grid.Downloads'],
-    store: null, //TODO needs to be set
+
     viewConfig: {
         deferEmptyText: true,
         markDirty: false
     },
     maxHeight: 200,
     emptyText: 'emptygrid.downloadqueue',
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var controller = Lada.app.getController(
-            'Lada.controller.grid.Downloads');
+        var controller = this.controller;
         this.emptyText = i18n.getMsg('emptygrid.downloadqueue');
         this.columns = [{
             header: i18n.getMsg('export.filename'),
@@ -44,7 +41,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             dataIndex: 'status',
             flex: 1,
             renderer: function(value) {
-                return i18n.getMsg( 'print.status.' + value);
+                return i18n.getMsg( 'print.status.' + value.toLowerCase());
             }
         }, {
             header: i18n.getMsg('print.message'),
@@ -57,7 +54,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             dataIndex: 'status',
             getTip: function(value, meta, rec) {
                 // Show tooltip for finished and not yet downloaded items
-                if (rec.get('status') === 'finished'
+                if (rec.get('status').toLowerCase() === 'finished'
                     && !rec.get('downloadRequested')
                 ) {
                     return i18n.getMsg('print.download');
@@ -69,7 +66,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             width: 20,
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
-                switch (rec.get('status')) {
+                switch (rec.get('status').toLowerCase()) {
                     case 'finished':
                         if (!rec.get('downloadRequested')) {
                             return 'saveas';
@@ -85,11 +82,11 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             },
             handler: function(grid, rowIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
-                var status = rec.get('status');
+                var status = rec.get('status').toLowerCase();
                 if (status === 'running' || status === 'waiting') {
                     controller.onCancelItem(rec);
                 } else if (
-                    rec.get('status') === 'finished' &&
+                    status === 'finished' &&
                     rec.get('downloadRequested') === false
                 ) {
                     controller.onSaveItem(rec);

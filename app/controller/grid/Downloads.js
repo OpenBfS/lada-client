@@ -11,202 +11,204 @@
  * updates
  */
 Ext.define('Lada.controller.grid.Downloads', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.grid.Queue',
+    alias: 'controller.export',
 
-    ladaPrintUrlPrefix: 'lada-printer/print/',
-    exportUrls: {
-        status: 'lada-server/data/asyncexport/status/',
-        download: 'lada-server/data/asyncexport/download/'
-    },
+    store: 'downloadqueue-export',
+    urlPrefix: 'lada-server/data/asyncexport/',
+    downloadPath: 'download/',
 
     /**
      * Initialize the controller
      */
     init: function() {
         this.control({
-            'exportdata checkbox[name=allrows]': {
-                change: this.setExportButtonDisabled
-            },
-            'exportdata combobox[name=formatselection]': {
-                change: this.setExportButtonDisabled
+            ['exportdata checkbox[name=allrows], ' +
+                'exportdata combobox[name=formatselection], ' +
+                'exportdata checkbox[name=allcolumns], ' +
+                'exportdata checkbox[name=secondarycolumns], ' +
+                'exportdata tagfield[name=exportcolumns], ' +
+                'exportdata tagfield[name=exportexpcolumns]'
+            ]: {
+                change: this.updateUI
             }
         });
 
-        // Request polling to run every 2 seconds
-        window.setInterval(() => this.refreshQueue(), 2000);
-    },
-
-    setExportButtonDisabled: function(item) {
-        var win = item.up('window');
-        win.down('button[action=export]').setDisabled(
-            !win.grid.getSelectionModel().getSelection().length
-            && (win.down('combobox[name=formatselection]').getValue() === 'laf'
-                || !win.down('checkbox[name=allrows]').getValue()));
+        this.callParent(arguments);
     },
 
     /**
-     * Cancels the mapfish creation of a queued DownloadQueue item
-     * @param {*} model
+     * Evaluates the options set and starts the corresponding export
      */
-    onCancelItem: function(model) {
-        var type = model.get('type');
+    doExport: function(button) {
+        var win = button.up('window');
 
-        var ref = model.get('refId');
-        if (ref && type === 'lada-print') {
-            Ext.Ajax.request({
-                url: this.ladaPrintUrlPrefix + 'cancel/' + ref,
-                method: 'DELETE',
-                callback: this.refreshQueue
-            });
-        } else if (type === 'laf') {
-            // LAF export offers no server side cancelling API. This just stops
-            // caring about some future answer
-            model.set('done', true);
-            model.set('status', 'cancelled');
-        }
-    },
+        var exportFormat = win.down('combobox[name=formatselection]')
+            .getValue();
 
-    /**
-     * Deletes an old entry from queue
-     * @param {*} model
-     * @param store
-     */
-    onDeleteItem: function(model, store) {
-        if (model.get('done') === true) {
-            store.remove(model);
+        var filename = win.down('textfield[name=filename]').getValue();
+        const suffix = '.' + exportFormat;
+        if (!filename.endsWith(suffix)) {
+            filename += suffix;
         }
-    },
 
-    /**
-     * Retrieves a finished item to DownloadQueue Item and saves it to disk
-     * @param {*} model
-     */
-    onSaveItem: function(model) {
-        // potentially submits wrong prefix part if url is proxied:
-        // var url = model.get('downloadURL');
-        var type = model.get('type');
-        var url;
-        switch (type) {
-            case 'lada-print':
-                url = this.ladaPrintUrlPrefix + 'report/' + model.get('refId');
-                break;
-            case 'export':
-                url = this.exportUrls.download + model.get('refId');
-                break;
-        }
-        if (url) {
-            model.set('downloadRequested', true);
-            var me = this;
-            Ext.Ajax.request({
-                url: url,
-                method: 'GET',
-                headers: {
-                    Accept: 'application/octet-stream'
-                },
-                binary: true,
-                timeout: 60000,
-                success: function(response) {
-                    var content = response.responseBytes;
-                    var filetype = response.getResponseHeader('Content-Type');
-                    var blob = new Blob([content], {type: filetype});
-                    saveAs(blob, model.get('filename'));
-                    me.refreshQueue();
-                },
-                failure: function(error) {
-                    model.set('status', 'error');
-                    // sets more of a debug info. Needs end user readability why
-                    // download failed.
-                    model.set('message', error.error);
-                    me.refreshQueue();
-                }
-            });
-        }
-    },
-
-    /**
-     * Tries to refresh all queued item info.
-     */
-    refreshQueue: function() {
-        // this should be done only once, but after initialization
-        // (after app.js: GET appContext.json finished)
-        if (Lada.appContext && Lada.appContext.merge.urls['print-servlet']) {
-            this.ladaPrintUrlPrefix = Lada.appContext.merge.urls[
-                'print-servlet'];
-        }
-        var store0 = Ext.data.StoreManager.get('downloadqueue-print');
-        var store1 = Ext.data.StoreManager.get('downloadqueue-export');
-        var me = this;
-        if (store0) {
-            Ext.each(store0.getData().items, function(item) {
-                me.refreshItemInfo(item);
-            });
-        }
-        if (store1) {
-            Ext.each(store1.getData().items, function(item) {
-                me.refreshItemInfo(item);
-            });
-        }
-    },
-
-    /**
-     * Polls the status of a queue item
-     * @param {*} item Lada.model.DownloadQueue instance
-     */
-    refreshItemInfo: function(item) {
-        // potentially submits wrong prefix part if url is proxied
-        // var url = item.get('mapfish_statusURL');
-        var refId = item.get('refId');
-        if (refId && !item.get('done')) {
-            var url;
-            switch (item.get('type')) {
-                case 'lada-print':
-                    url = this.ladaPrintUrlPrefix + '/status/' + refId + '.json';
-                    break;
-                case 'export':
-                    url = this.exportUrls.status + refId;
-                    break;
-            }
-            var me = this;
-            return new Ext.Promise(function() {
-                Ext.Ajax.request({
-                    url: url,
-                    success: function(response) {
-                        var json = Ext.decode(response.responseText);
-                        // save to disk if autodownload is true.
-                        if ( item.status !== 'finished' &&
-                            json.status === 'finished' &&
-                            item.get('autodownload') === true &&
-                            item.get('downloadRequested') === false) {
-                            me.onSaveItem(item);
-                        }
-                        item.set('done', json.done);
-                        item.set('status', json.status);
-                        item.set('downloadURL', json.downloadURL || null);
-                        if (json.message) {
-                            item.set('message', json.message);
-                        } else {
-                            if (json.error) {
-                                item.set('message', json.error);
-                            } else {
-                                item.set('message', '');
+        var requestData = {
+            filename: filename,
+            encoding: win.down('combobox[name=encoding]').getValue()
+        };
+        switch (exportFormat) {
+            case 'geojson':
+                var data = JSON.stringify(win.getGeoJson());
+                var blob = new Blob(
+                    [data], {type: 'application/json;charset=utf-8'});
+                saveAs(blob, filename, true);
+                return; // GeoJSON is not handled by server-side export
+            case 'laf':
+                var dataset = win.getDataSets();
+                if (win.hasMessung) {
+                    requestData.messungen = [];
+                    for (var i = 0; i < dataset.length; i++) {
+                        var mid = dataset[i].get(win.hasMessung);
+                        if (Array.isArray(mid)) {
+                            for (var j = 0; j < mid.length; j++) {
+                                requestData.messungen.push(mid[j]);
                             }
+                        } else {
+                            requestData.messungen.push(mid);
                         }
-                    },
-                    failure: function(response) {
-                        item.set('done', true);
-                        item.set('status', 'error');
-
-                        var msg = response.responseText;
-                        if (!msg) {
-                            var i18n = Lada.getApplication().bundle;
-                            msg = response.timedout
-                                ? i18n.getMsg('err.msg.timeout')
-                                : response.statusText;
-                        }
-                        item.set('message', msg);
                     }
+                } else if (win.hasProbe) {
+                    requestData.proben = [];
+                    for (var k = 0; k < dataset.length; k++) {
+                        var pid = dataset[k].get(win.hasProbe);
+                        requestData.proben.push(pid);
+                    }
+                }
+                break;
+            case 'csv':
+                var colsep = win.down('combobox[name=colsep]').getValue();
+                var decsep = win.down('combobox[name=decsep]').getValue();
+                if (colsep === decsep) {
+                    win.showError('export.differentcoldecimal');
+                    return;
+                }
+                requestData.subDataColumnNames = win.getSubdataColumNames(
+                  win.getSubdataColumns(win)
+                );
+                Object.assign(requestData, {
+                    rowDelimiter: win.down('combobox[name=linesep]')
+                        .getValue(),
+                    fieldSeparator: colsep,
+                    decimalSeparator: decsep,
+                    quote: win.down('combobox[name=textlim]').getValue()
                 });
-            });
+            case 'json':
+                // Parameters for both CSV and JSON
+                Object.assign(requestData, {
+                    columns: win.getColumnDefinitions(win),
+                    idField: win.grid.rowtarget.dataIndex,
+                    idFilter: win.getExportIds(win),
+                    subDataColumns: win.getSubdataColumns(win),
+                    timezone: Lada.util.Date.getCurrentTimeZone()
+                });
         }
+
+        var queueItem = win.controller.addQueueItem(filename);
+
+        Ext.Ajax.request({
+            url: win.requestUrl + exportFormat,
+            jsonData: requestData,
+            scope: this,
+            success: function(response) {
+                var json = Ext.JSON.decode(response.responseText, true);
+                if (json) {
+                    if (json.jobId) {
+                        queueItem.set('jobId', json.jobId);
+                        queueItem.set('status', 'waiting');
+                        this.refreshItemInfo(queueItem);
+                    } else {
+                        queueItem.set('status', 'error');
+                    }
+
+                    if (json.error) {
+                        queueItem.set('message', json.error );
+                    } else {
+                        queueItem.set('message', '' );
+                    }
+                } else {
+                    // TODO: Handle SSO HTML form like in
+                    // RestProxy.processResponse
+                    queueItem.set('done', true);
+                    queueItem.set('status', 'error');
+                }
+            },
+            failure: function(response, opts) {
+                queueItem.set('done', true);
+                queueItem.set('status', 'error');
+                queueItem.set('message', win.controller.handleRequestFailure(
+                    response, opts, null, true));
+            }
+        });
+    },
+
+    doCopy: function(button) {
+        var i18n = Lada.getApplication().bundle;
+        button.setDisabled(true);
+        button.setText(i18n.getMsg('export.button.loading'));
+        var data = JSON.stringify(button.up('window').getGeoJson());
+        window.localStorage.setItem('gis-transfer-data', data);
+        window.localStorage.setItem(
+            'gis-transfer-data-transfer-date', new Date().valueOf());
+        button.setText(i18n.getMsg('export.button.copy.success'));
+    },
+
+    /**
+     * Add an entry to the downloadqueue.
+     * @param filename: The name used to save results
+     * @returns reference to the model item
+     */
+    addQueueItem: function(filename) {
+        var storeItem = Ext.create('Lada.model.DownloadQueue', {
+            filename: filename,
+            startDate: new Date().valueOf(),
+            status: 'preparation',
+            done: false
+        });
+        Ext.data.StoreManager.get(this.store).add(storeItem);
+        return storeItem;
+    },
+
+    /**
+     * updateUI sets the current state of the UI depending on selected values
+     * @param win window context
+     */
+    updateUI: function(item) {
+        var win = item.up('window');
+
+        var formatSelection = win.down('combobox[name=formatselection]')
+            .getValue();
+        var isLAF = formatSelection === 'laf';
+        var isCSV = formatSelection === 'csv';
+        var isJSON = formatSelection === 'json';
+        var isGeoJSON = formatSelection === 'geojson';
+
+        var isAllColumnsSet = win.down('checkbox[name=allcolumns]').getValue();
+
+        win.down('fieldset[name=csvoptions]').setVisible(isCSV);
+        win.down('combobox[name=encoding]').setVisible( isLAF || isCSV);
+        win.down('checkbox[name=allrows]').setVisible(!isLAF);
+        win.down('checkbox[name=allcolumns]').setVisible(!isLAF);
+        win.down('checkbox[name=secondarycolumns]').setVisible(isCSV || isJSON);
+        win.down('button[action=copyGeoJson]').setVisible(isGeoJSON);
+        win.down('button[action=copyGeoJson]').setDisabled(!isGeoJSON);
+        win.down('tagfield[name=exportcolumns]')
+            .setVisible(!isLAF && !isAllColumnsSet);
+        win.down('tagfield[name=exportexpcolumns]')
+            .setVisible(!isAllColumnsSet && !isLAF && !isGeoJSON
+                && win.down('checkbox[name=secondarycolumns]').getValue());
+        win.down('button[action=export]').setDisabled(
+            !win.down('form').isValid()
+            || !win.grid.getSelectionModel().getSelection().length
+            && (isLAF || !win.down('checkbox[name=allrows]').getValue()));
     }
 });

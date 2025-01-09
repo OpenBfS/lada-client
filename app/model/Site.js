@@ -99,6 +99,9 @@ Ext.define('Lada.model.Site', {
         name: 'latitude',
         type: 'float'
     }, {
+        name: 'route',
+        type: 'nonblankstring'
+    }, {
         name: 'lastMod',
         type: 'date'
     }, {

@@ -16,11 +16,13 @@ Ext.define('Lada.view.widget.StatuskombiSelect', {
     displayField: 'statusLev',
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-        '{statusLev.lev} - {statusVal.val}</div></tpl>'),
+        '{statusLev.lev:htmlEncode} - {statusVal.val:htmlEncode}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{statusLev.lev} - {statusVal.val}</tpl>'),
+        '<tpl for=".">{statusLev.lev:htmlEncode} -' +
+        '{statusVal.val:htmlEncode}</tpl>'),
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{statusLev.lev} - {statusVal.val}</tpl>'),
+        '<tpl for=".">{statusLev.lev:htmlEncode} -' +
+        ' {statusVal.val:htmlEncode}</tpl>'),
     valueField: 'id',
     autoSelect: false,
     queryMode: 'local',

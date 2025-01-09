@@ -17,7 +17,7 @@ Ext.define('Lada.view.window.PrintGrid', {
     requires: [
         'Koala.view.form.IrixFieldSet',
         'Lada.controller.Print',
-        'Lada.view.grid.DownloadQueue'
+        'Lada.view.grid.PrintQueue'
     ],
 
     controller: 'print',
@@ -171,7 +171,7 @@ Ext.define('Lada.view.window.PrintGrid', {
                 name: 'results',
                 hidden: true
             }, {
-                xtype: 'downloadqueuegrid',
+                xtype: 'printqueue',
                 store: 'downloadqueue-print',
                 width: '100%'
             }]

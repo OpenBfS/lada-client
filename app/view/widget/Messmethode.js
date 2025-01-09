@@ -26,11 +26,11 @@ Ext.define('Lada.view.widget.Messmethode', {
     layout: 'hbox',
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{display}</div></tpl>'),
+            '{display:htmlEncode}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{display}</tpl>'),
+        '<tpl for=".">{display:htmlEncode}</tpl>'),
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{display}</tpl>'),
+        '<tpl for=".">{display:htmlEncode}</tpl>'),
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messmethode');

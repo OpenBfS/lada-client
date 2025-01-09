@@ -86,7 +86,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 dataIndex: 'sampleSpecifId',
                 flex: 1,
                 renderer: function(value) {
-                    return value;
+                    return Ext.htmlEncode(value);
                 }
             }, {
                 header: i18n.getMsg('pzw'),
@@ -99,7 +99,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                     }
                     var store = Ext.data.StoreManager.get('probenzusaetze');
                     var record = store.getById(value);
-                    return record.get('name');
+                    return Ext.htmlEncode(record.get('name'));
                 },
                 editor: {
                     xtype: 'combobox',

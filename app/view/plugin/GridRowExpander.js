@@ -83,9 +83,9 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
             if (node.hasCls(me.rowCollapsedCls) === true && !this.expandedAll) {
                 me.toggleRow(i);
             } else
-            if (node.hasCls(me.rowCollapsedCls) === false && this.expandedAll) {
-                me.toggleRow(i);
-            }
+                if (node.hasCls(me.rowCollapsedCls) === false && this.expandedAll) {
+                    me.toggleRow(i);
+                }
         }
         this.expandedAll = !this.expandedAll ;
         return this.expandedAll;

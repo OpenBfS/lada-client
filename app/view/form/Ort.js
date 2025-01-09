@@ -104,12 +104,6 @@ Ext.define('Lada.view.form.Ort', {
             name: 'isReiActive',
             fieldLabel: i18n.getMsg('orte.aktiv')
         }, {
-            xtype: 'tarea',
-            labelWidth: 125,
-            maxLength: 1024,
-            name: 'route',
-            fieldLabel: i18n.getMsg('orte.route')
-        }, {
             xtype: 'datetimefield',
             labelWidth: 125,
             readOnly: true,
@@ -232,6 +226,12 @@ Ext.define('Lada.view.form.Ort', {
             name: 'heightAsl',
             maxLength: 10,
             allowDecimals: true
+        }, {
+           xtype: 'tarea',
+           labelWidth: 125,
+           maxLength: 1024,
+           name: 'route',
+           fieldLabel: i18n.getMsg('orte.route')
         }, {
             xtype: 'label',
             name: 'referenceCounter',

@@ -11,103 +11,12 @@
  * updates
  */
 Ext.define('Lada.controller.grid.Uploads', {
-    extend: 'Lada.controller.BaseController',
+    extend: 'Lada.controller.grid.Queue',
     alias: 'controller.upload',
 
-    record: null,
-
-    resultUrl: 'lada-server/data/import/async/result/',
-    statusUrl: 'lada-server/data/import/async/status/',
-
-    /**
-     * Initialize the controller, request polling to run every 2 seconds
-     */
-    init: function() {
-        window.setInterval(() => this.refreshQueue(), 2000);
-    },
-
-    /**
-     * Cancels the mapfish creation of a queued DownloadQueue item
-     * @param {*} model
-     */
-    onCancelItem: function(model) {
-        model.set('done', true);
-        model.set('status', 'cancelled');
-    },
-
-    /**
-     * Deletes an old entry from queue
-     * @param {*} model
-     * @param store
-     */
-    onDeleteItem: function(model, store) {
-        if (model.get('done') === true) {
-            store.remove(model);
-        }
-    },
-
-    /**
-     * Tries to refresh all queued item info.
-     */
-    refreshQueue: function() {
-        var store = Ext.getStore('uploadqueue');
-        var me = this;
-        Ext.each(store.getData().items, function(item) {
-            if (item.get('done') !== true) {
-                me.refreshItemInfo(item);
-            }
-        });
-    },
-
-    /**
-     * Polls the status of an queue item
-     * @param {*} item Lada.model.UploadQueue instance
-     */
-    refreshItemInfo: function(item) {
-        var url;
-        var refId = item.get('refId');
-        url = this.statusUrl + refId;
-        if (url && refId) {
-            return new Ext.Promise(function() {
-                Ext.Ajax.request({
-                    url: url,
-                    success: function(response) {
-                        var json = Ext.decode(response.responseText);
-                        item.set('done', json.done);
-                        item.set('errors', json.errors);
-                        item.set('warnings', json.warnings);
-                        item.set('notifications', json.notifications);
-                        item.set('status', json.status);
-                        if (!json.error) {
-                            if (json.message) {
-                                item.set('message', json.message);
-                            }
-                        } else {
-                            item.set('message', json.error);
-                            item.set('status', 'error');
-                        }
-                        var store = Ext.data.StoreManager.get('tags');
-                        if (store) {
-                            store.reload();
-                        }
-                    },
-                    failure: function(response) {
-                        item.set('done', true);
-                        item.set('status', 'error');
-                        if (response.status === 404) {
-                            item.set('message', 'URL not found');
-                        } else {
-                            item.set('message', 'bad server answer');
-                        }
-                        var store = Ext.data.StoreManager.get('tags');
-                        if (store) {
-                            store.reload();
-                        }
-                    }
-                });
-            });
-        }
-    },
+    store: 'uploadqueue',
+    urlPrefix: 'lada-server/data/import/async/',
+    downloadPath: 'result/',
 
     /**
      * Add an entry to the upload queue.
@@ -125,7 +34,7 @@ Ext.define('Lada.controller.grid.Uploads', {
             errors: false,
             notifications: false
         });
-        var store = Ext.data.StoreManager.get('uploadqueue');
+        var store = Ext.data.StoreManager.get(this.store);
         store.add(storeItem);
         return storeItem;
     },
@@ -134,10 +43,10 @@ Ext.define('Lada.controller.grid.Uploads', {
      * Get the result of an import and show a result window
      * @param {Lada.model.UploadQueue} record UploadQueue record
      */
-    getResult: function(record) {
+    onSaveItem: function(record) {
         if (record.get('resultFetched') === false) {
             var me = this;
-            var url = this.resultUrl + record.get('refId');
+            var url = this.urlPrefix + this.downloadPath + record.get('jobId');
             Ext.Ajax.request({
                 url: url,
                 success: function(response) {
@@ -147,6 +56,12 @@ Ext.define('Lada.controller.grid.Uploads', {
                         mst: record.get('measFacilId'),
                         encoding: record.get('encoding')
                     });
+
+                    // Refresh tag store in order to add import tag
+                    var store = Ext.data.StoreManager.get('tags');
+                    if (store) {
+                        store.reload();
+                    }
                 }
             });
         } else {
@@ -166,5 +81,98 @@ Ext.define('Lada.controller.grid.Uploads', {
             encoding: options.encoding
         });
         win.show();
+    },
+
+    /**
+     * @private
+     * A handler for the Upload-Button, reading the file specified in the
+     * form field
+     */
+    readFiles: function(button) {
+        var me = this;
+        var win = button.up('panel');
+        var fileInput = win.down('filefield');
+        var files = fileInput.fileInputEl.dom.files;
+        var readers = new Array(files.length);
+        if (readers.length === 0) {
+            return;
+        }
+        win.files = files;
+        win.fileNames = [];
+        var binFiles = {};
+        var filesRead = 0;
+        win.fileCount = files.length;
+        for (var i = 0; i < files.length; i++) {
+            win.fileNames[i] = files[i].name;
+            var file = files[i];
+            readers[i] = new FileReader();
+            readers[i].fileName = files[i].name;
+            // eslint-disable-next-line no-loop-func
+            readers[i].onload = function(evt) {
+                var binData = evt.target.result;
+                //Remove mime type and save to array
+                binFiles[evt.target.fileName] = binData.split(',')[1];
+                filesRead++;
+                if (filesRead === files.length) {
+                    me.uploadFiles(button, binFiles);
+                }
+            };
+            readers[i].readAsDataURL(file);
+        }
+    },
+
+    /**
+     * Upload a list of files to the import service
+     * @param {Ext.button.Button} button Button that triggered the upload event
+     * @param {Object} binFiles Object containing file name as keys and file
+     * content as value
+     */
+    uploadFiles: function(button, binFiles) {
+        var me = this;
+        var win = button.up('panel');
+        var cb = win.down('combobox[name=encoding]');
+
+        var queueItem = this.addQueueItem(win.fileNames);
+        queueItem.set(
+            'encoding', win.down('combobox[name=encoding]').getValue());
+        queueItem.set('measFacilId', win.down('combobox[name=mst]').getValue());
+        Ext.Ajax.request({
+            url: 'lada-server/data/import/async/laf',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            scope: win,
+            jsonData: {
+                files: binFiles,
+                encoding: cb.getValue(),
+                measFacilId: queueItem.get('measFacilId')
+            },
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                queueItem.set('jobId', json.jobId);
+                queueItem.set('status', 'waiting');
+                queueItem.set('message', '' );
+                if (json.error) {
+                    queueItem.set('message', json.error );
+                    queueItem.set('status', 'error');
+                }
+                if (json.jobId) {
+                    me.refreshItemInfo(queueItem);
+                }
+            },
+            failure: function(response, opts) {
+                queueItem.set('status', 'error');
+                var msg = win.controller.handleRequestFailure(
+                    response, opts, null, true);
+                if (response.status === 502 || response.status === 413) {
+                    // correct status for an expected "file too big" would be
+                    // 413, needs server adaption, 502 could be something else
+                    msg = 'importResponse.failure.server.bigfile';
+                }
+                queueItem.set('message', Lada.util.I18n.getMsgIfDefined(msg));
+                queueItem.set('done', true);
+            }
+        });
     }
 });

@@ -28,13 +28,17 @@
  *
  */
 Ext.define('Lada.controller.Print', {
-    extend: 'Lada.controller.BaseController',
-
+    extend: 'Lada.controller.grid.Queue',
     alias: 'controller.print',
 
+    store: 'downloadqueue-print',
+
     // may be overwritten by any appContext settings
-    printUrlPrefix: 'lada-printer/print/',
+    urlPrefix: 'lada-printer/print/',
     irixServletURL: 'irix-servlet',
+
+    statusUrlSuffix: '.json',
+    downloadPath: 'report/',
 
     //Templates requiring additional server data
     specialTemplates: [
@@ -59,6 +63,12 @@ Ext.define('Lada.controller.Print', {
                 gridupdate: this.handleGridUpdate
             }
         });
+
+        this.callParent(arguments);
+        if (Lada.appContext && Lada.appContext.merge.urls['print-servlet']) {
+            this.urlPrefix = Lada.appContext.merge.urls[
+                'print-servlet'];
+        }
     },
 
     /**
@@ -70,7 +80,7 @@ Ext.define('Lada.controller.Print', {
     getTemplateParams: function(template, callbackFn) {
         var me = this;
         Ext.Ajax.request({
-            url: me.printUrlPrefix + template + '/capabilities.json',
+            url: me.urlPrefix + template + '/capabilities.json',
             success: function(response) {
                 if (response.responseText) {
                     var json = Ext.decode(response.responseText);
@@ -509,7 +519,7 @@ Ext.define('Lada.controller.Print', {
                 probenAttribute = attribute;
             }
         }
-        var qitem = this.addQueueItem(filename, 'lada-print');
+        var qitem = this.addQueueItem(filename);
         if (probenAttribute) {
             //TODO: preset fields are ignored here as they are no longer needed
             // see printSelection, prepareData, createSheetData
@@ -541,7 +551,6 @@ Ext.define('Lada.controller.Print', {
         }
     },
 
-
     /**
      * Send a prepared request to the print server, saves the answer as
      * @param jsonData the prepared data matching the capabilities description
@@ -568,7 +577,7 @@ Ext.define('Lada.controller.Print', {
             success: function(response) {
                 if (!isIrix) {
                     var json = Ext.decode(response.responseText);
-                    queueItem.set('refId', json.ref);
+                    queueItem.set('jobId', json.ref);
                     queueItem.set('mapfish_statusURL', json.statusURL);
                     queueItem.set('mapfish_downloadURL', json.downloadURL);
                     queueItem.set('status', 'waiting');
@@ -576,6 +585,9 @@ Ext.define('Lada.controller.Print', {
                         queueItem.set('message', json.error );
                     } else {
                         queueItem.set('message', '' );
+                    }
+                    if (json.ref) {
+                        me.refreshItemInfo(queueItem);
                     }
                 } else {
                     if (response.responseText) {
@@ -609,7 +621,7 @@ Ext.define('Lada.controller.Print', {
             };
             requestData.url = this.irixServletURL;
         } else {
-            requestData.url = me.printUrlPrefix + templateName + '/report.pdf';
+            requestData.url = me.urlPrefix + templateName + '/report.pdf';
             requestData.timeout = 60000;
             requestData.jsonData = JSON.stringify(jsonData);
         }
@@ -825,7 +837,7 @@ Ext.define('Lada.controller.Print', {
     getAvailableTemplates: function(window) {
         var me = this;
         Ext.Ajax.request({
-            url: me.printUrlPrefix + 'apps.json',
+            url: me.urlPrefix + 'apps.json',
             success: function(response) {
                 var data = [];
                 if (response.responseText) {
@@ -849,7 +861,7 @@ Ext.define('Lada.controller.Print', {
                                         grid.rowtarget.probeIdentifier] !==
                                             undefined ||
                                      selection.data[
-                                        grid.rowtarget.messungIdentifier] !==
+                                         grid.rowtarget.messungIdentifier] !==
                                             undefined
                                 ) {
                                     data.push({name: json[i]});
@@ -1061,26 +1073,31 @@ Ext.define('Lada.controller.Print', {
     /**
      * Add an entry to the downloadqueue.
      * @param filename: The name used to save results
-     * @param type: queue type (defining the interface for communication)
-     *          available: 'lada-print', 'export'
      * @returns reference to the model item
      */
-    addQueueItem: function(filename, type) {
+    addQueueItem: function(filename) {
         var storeItem = Ext.create('Lada.model.DownloadQueue', {
-            type: type,
             filename: filename,
             startDate: new Date().valueOf(),
             status: 'preparation',
-            done: false,
-            autodownload: false
+            done: false
         });
-        var store;
-        if (type === 'lada-print') {
-            store = Ext.data.StoreManager.get('downloadqueue-print');
-        } else {
-            store = Ext.data.StoreManager.get('downloadqueue-export');
-        }
-        store.add(storeItem);
+        Ext.data.StoreManager.get(this.store).add(storeItem);
         return storeItem;
+    },
+
+    /**
+     * Cancels the mapfish creation of a queued DownloadQueue item
+     * @param {*} model
+     */
+    onCancelItem: function(model) {
+        var ref = model.get('jobId');
+        if (ref) {
+            Ext.Ajax.request({
+                url: this.urlPrefix + 'cancel/' + ref,
+                method: 'DELETE',
+                failure: this.handleRequestFailure
+            });
+        }
     }
 });

@@ -102,6 +102,7 @@ Ext.define('Lada.controller.form.Messung', {
                         params: {mmtId: newRecord.get('mmtId')}
                     });
                     formPanel.setLoading(false);
+                    win.disableStatusEdit(!newRecord.get('statusEdit'));
                 }
             },
             failure: this.handleSaveFailure

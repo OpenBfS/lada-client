@@ -185,10 +185,12 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     'Ext.XTemplate',
                     '<tpl for=".">' +
                     '<div class="x-combo-list-item  x-boundlist-item" >' +
-                    '{messStellesIds} - {mst_name}</div></tpl>'),
+                    '{messStellesIds:htmlEncode} - ' +
+                    '{mst_name:htmlEncode}</div></tpl>'),
                 displayTpl: Ext.create(
                     'Ext.XTemplate',
-                    '<tpl for=".">{messStellesIds} - {mst_name}</tpl>')
+                    '<tpl for=".">{messStellesIds:htmlEncode}' +
+                    ' - {mst_name:htmlEncode}</tpl>')
             }, {
                 xtype: 'columnchoser'
             }, {
@@ -212,10 +214,10 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     'Ext.XTemplate',
                     '<tpl for=".">' +
                     '<div class="x-combo-list-item  x-boundlist-item" >' +
-                    '{gridCol}</div></tpl>'),
+                    '{gridCol:htmlEncode}</div></tpl>'),
                 displayTpl: Ext.create(
                     'Ext.XTemplate',
-                    '<tpl for=".">{gridCol}</tpl>'),
+                    '<tpl for=".">{gridCol:htmlEncode}</tpl>'),
                 persist: false
 
             }, {

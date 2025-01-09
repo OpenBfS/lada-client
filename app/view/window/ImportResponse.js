@@ -115,8 +115,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                         var btnDom = cmp.getEl().dom;
                         btnDom.setAttribute('data-clipboard-text', me.importtag);
                         new ClipboardJS(btnDom);
-                    }
-                    else {
+                    } else {
                         cmp.setHidden(true);
                     }
 

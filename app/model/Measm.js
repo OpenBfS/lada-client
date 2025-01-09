@@ -11,6 +11,7 @@ Ext.define('Lada.model.Measm', {
         'Lada.model.field.NonBlankString'
     ],
     extend: 'Lada.model.ValidatedModel',
+    hasOne: 'Lada.model.StatusProt',
     fields: [{
         name: 'id'
     }, {
@@ -40,10 +41,6 @@ Ext.define('Lada.model.Measm', {
     }, {
         name: 'measmStartDate',
         type: 'date'
-    }, {
-        name: 'status',
-        type: 'int',
-        allowNull: true
     }, {
         name: 'isCompleted',
         type: 'boolean'

@@ -108,7 +108,7 @@ Ext.define('Lada.view.grid.PKommentar', {
                     if (record) {
                         r = record.get('name');
                     }
-                    return r;
+                    return Ext.htmlEncode(r);
                 },
                 editor: {
                     xtype: 'combobox',
@@ -125,7 +125,7 @@ Ext.define('Lada.view.grid.PKommentar', {
                 renderer: function(value, metaData, gridRec) {
                     this.validationResultRenderer(value, metaData, gridRec);
                     return '<div style="white-space: normal !important;">' +
-                    value + '</div>';
+                    Ext.htmlEncode(value) + '</div>';
                 },
                 editor: {
                     xtype: 'textfield',
@@ -161,7 +161,7 @@ Ext.define('Lada.view.grid.PKommentar', {
         }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('pkommentargrid');
-            for (i = 0; i < grid.length; i++) {
+            for (var i = 0; i < grid.length; i++) {
                 grid[i].reload(function() {
                     Ext.ComponentQuery.query(
                         'timezonebutton[action=toggletimezone]')[0]

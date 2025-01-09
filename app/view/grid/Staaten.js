@@ -35,7 +35,7 @@ Ext.define('Lada.view.grid.Staaten', {
                 if (!value || value === '') {
                     return '--';
                 }
-                return value;
+                return Ext.htmlEncode(value);
             },
             dataIndex: 'iso3166'
         }, {

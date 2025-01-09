@@ -17,10 +17,7 @@ Ext.define('Lada.model.DownloadQueue', {
     fields: [{
         name: 'id'
     }, {
-        name: 'type'
-        // 'lada-print', 'laf'
-    }, {
-        name: 'refId'
+        name: 'jobId'
         // a unique identifier
     }, {
         name: 'filename'
@@ -43,9 +40,6 @@ Ext.define('Lada.model.DownloadQueue', {
         name: 'message'
     }, {
         name: 'done',
-        type: 'boolean'
-    }, {
-        name: 'autodownload',
         type: 'boolean'
     }, {
         name: 'downloadRequested',

@@ -71,7 +71,7 @@ Ext.define('Lada.view.grid.Status', {
                 if (item) {
                     r = item.get('name');
                 }
-                return r;
+                return Ext.htmlEncode(r);
             },
             sortable: false
         }, {
@@ -84,7 +84,7 @@ Ext.define('Lada.view.grid.Status', {
                 if (item) {
                     r = item.data.statusLev.lev;
                 }
-                return r;
+                return Ext.htmlEncode(r);
             },
             sortable: false
         }, {
@@ -97,7 +97,7 @@ Ext.define('Lada.view.grid.Status', {
                 if (item) {
                     r = item.data.statusVal.val;
                 }
-                return r;
+                return Ext.htmlEncode(r);
             },
             sortable: false
         }, {
@@ -110,7 +110,7 @@ Ext.define('Lada.view.grid.Status', {
                     return '';
                 }
                 return '<div style="white-space: normal !important;">' +
-                value + '</div>';
+                Ext.htmlEncode(value) + '</div>';
             }
         }];
         this.callParent(arguments);
@@ -138,7 +138,7 @@ Ext.define('Lada.view.grid.Status', {
         }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('statusgrid');
-            for (i = 0; i < grid.length; i++) {
+            for (var i = 0; i < grid.length; i++) {
                 grid[i].reload(function() {
                     Ext.ComponentQuery.query(
                         'timezonebutton[action=toggletimezone]')[0]
