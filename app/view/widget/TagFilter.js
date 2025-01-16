@@ -54,24 +54,42 @@ Ext.define('Lada.view.widget.TagFilter', {
                         i18n.getMsg('err.msg.generic.body'));
                 }
 
-                var assignable = ids.filter(function(id) {
+                var tagsByCatgegory = ids.reduce(function(byCategory, id) {
                     var tag = store.getById(id);
                     if (tag) {
-                        return tag.isAssignable();
+                        if (tag.isAssignable()) {
+                            byCategory.assignable.push(id);
+                        } else {
+                            byCategory.unassignable.push(id);
+                        }
+                    } else {
+                        byCategory.unavailable.push(id);
                     }
-                    return false;
+                    return byCategory;
+                }, {
+                    assignable: [],
+                    unassignable: [],
+                    unavailable: []
                 });
-
+                tagsByCatgegory.unavailable.map(function(id) {
+                    store.add(Ext.create('Lada.model.Tag', {
+                        id: id,
+                        name: 'Tag gelöscht'
+                    }));
+                });
                 var tagWidget = me.down('tagwidget[name=' + me.name + ']');
                 tagWidget.suspendEvent('change');
-                tagWidget.setValue(assignable);
+                tagWidget.setValue(
+                    tagsByCatgegory.assignable.concat(
+                        tagsByCatgegory.unavailable
+                    )
+                );
                 tagWidget.resumeEvent('change');
 
-                var unassignable = Ext.Array.difference(ids, assignable);
-                if (unassignable.length) {
+                if (tagsByCatgegory.unassignable.length) {
                     var readonlyWidget = me.down('tagwidget[name=readonly]');
                     readonlyWidget.suspendEvent('change');
-                    readonlyWidget.setValue(unassignable);
+                    readonlyWidget.setValue(tagsByCatgegory.unassignable);
                     readonlyWidget.resumeEvent('change');
                     readonlyWidget.setHidden(false);
                 }
