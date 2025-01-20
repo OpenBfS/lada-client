@@ -46,9 +46,9 @@ Ext.define('Lada.view.widget.TagFilter', {
             // Set initial values in tag widgets
             var ids = this.value.split(',');
             var me = this;
+            var i18n = Lada.getApplication().bundle;
             store.load(function(recs, op, success) {
                 if (!success) {
-                    var i18n = Lada.getApplication().bundle;
                     Ext.Msg.alert(
                         i18n.getMsg('err.msg.generic.title'),
                         i18n.getMsg('err.msg.generic.body'));
@@ -72,10 +72,12 @@ Ext.define('Lada.view.widget.TagFilter', {
                     unavailable: []
                 });
                 tagsByCatgegory.unavailable.map(function(id) {
-                    store.add(Ext.create('Lada.model.Tag', {
-                        id: id,
-                        name: 'Tag gelöscht'
-                    }));
+                    store.add(
+                        Ext.create('Lada.model.Tag', {
+                            id: id,
+                            name: i18n.getMsg('tag.deleted')
+                        })
+                    );
                 });
                 var tagWidget = me.down('tagwidget[name=' + me.name + ']');
                 tagWidget.suspendEvent('change');
