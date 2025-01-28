@@ -14,10 +14,10 @@
 #
 
 FROM httpd:bullseye
-MAINTAINER mlechner@bfs.de
+LABEL maintainer=mlechner@bfs.de
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV OPENSSL_CONF /etc/ssl/
+ENV DEBIAN_FRONTEND=noninteractive
+ENV OPENSSL_CONF=/etc/ssl/
 
 #
 # Install required packages
