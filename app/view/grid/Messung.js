@@ -20,6 +20,7 @@ Ext.define('Lada.view.grid.Messung', {
 
     maxHeight: 350,
     minHeight: 44,
+    mixins: ['Lada.view.mixins.StatusKombi'],
     viewConfig: {
         deferEmptyText: false
     },
@@ -308,12 +309,5 @@ Ext.define('Lada.view.grid.Messung', {
      */
     deactivateRemoveButton: function() {
         this.down('button[action=delete]').disable();
-    },
-    determineKombi: function(record) {
-        var statusProt = record.getStatusProt();
-        var statusMpId = statusProt.get('statusMpId');
-        var kombis = Ext.data.StoreManager.get('statuskombi');
-        var kombi = kombis.getById(statusMpId);
-        return kombi;
     }
 });

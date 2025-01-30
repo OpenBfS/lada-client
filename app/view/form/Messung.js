@@ -27,6 +27,7 @@ Ext.define('Lada.view.form.Messung', {
     ],
 
     model: 'Lada.model.Measm',
+    mixins: ['Lada.view.mixins.StatusKombi'],
     controller: 'messungform',
     minWidth: 650,
     margin: 5,
@@ -167,9 +168,10 @@ Ext.define('Lada.view.form.Messung', {
         var me = this;
         var form = me.getForm();
         form.loadRecord(record);
+        var kombi = this.determineKombi(record);
         if (record.getId()) {
             me.down('statuskombi').setValue(
-                record.get('status'), false, record.get('statusEdit'));
+                kombi, false, record.get('statusEdit'));
         }
 
         this.down('button[action=audit]').setDisabled(record.phantom);

@@ -51,40 +51,34 @@ Ext.define('Lada.view.widget.Statuskombi', {
     /**
      * Sets the widget value, adds buttons if needed and checks if reset button
      * is activated
-     * @param value The new value
+     * @param kombi A Kombi-Object
      * @param reset True if widget was reset, defaults to false
      * @param statusEdit True if it is allowed to set the status,
      * defaults to false
      */
-    setValue: function(value, reset, statusEdit) {
+    setValue: function(kombi, reset, statusEdit) {
         this.reset = reset !== undefined ? reset : false;
         this.statusEdit = statusEdit !== undefined ? statusEdit : false;
         var me = this;
-        Ext.ClassManager.get('Lada.model.StatusProt').load(value, {
-            success: function(record) {
-                var statuskombistore = Ext.data.StoreManager.get('statuskombi');
-                var kombi = statuskombistore.getById(record.data.statusMpId);
-                var text = kombi.get('statusLev').lev + ' - ' +
-                        kombi.get('statusVal').val;
+        var text = kombi.get('statusLev').lev + ' - ' +
+                kombi.get('statusVal').val;
 
-                me.currentValue = {
-                    statusStufe: kombi.get('statusLev'),
-                    statusWert: kombi.get('statusVal')
-                };
-                //Try updating the view
-                try {
-                    var textfield = me.down('textfield');
-                    if (textfield) {
-                        textfield.setEmptyText(text);
-                    }
-                } catch (e) {
-                    Ext.log({
-                        msg: 'Updating status kombi field failed: ' + e,
-                        level: 'warn'});
-                }
-
+        me.currentValue = {
+            statusStufe: kombi.get('statusLev'),
+            statusWert: kombi.get('statusVal')
+        };
+        //Try updating the view
+        try {
+            var textfield = me.down('textfield');
+            if (textfield) {
+                textfield.setEmptyText(text);
             }
-        });
+        } catch (e) {
+            Ext.log({
+                msg: 'Updating status kombi field failed: ' + e,
+                level: 'warn'});
+        }
+
     },
 
 
