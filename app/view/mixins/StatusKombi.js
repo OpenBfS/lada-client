@@ -7,7 +7,7 @@
  */
 
 /**
- * Mixin providing special functions for handling Deskriptor fieldset.
+ * Mixin providing helper to determine statuskombi from a record
  */
 Ext.define('Lada.view.mixins.StatusKombi', {
     determineKombi: function(record) {

@@ -59,17 +59,16 @@ Ext.define('Lada.view.widget.Statuskombi', {
     setValue: function(kombi, reset, statusEdit) {
         this.reset = reset !== undefined ? reset : false;
         this.statusEdit = statusEdit !== undefined ? statusEdit : false;
-        var me = this;
         var text = kombi.get('statusLev').lev + ' - ' +
                 kombi.get('statusVal').val;
 
-        me.currentValue = {
+        this.currentValue = {
             statusStufe: kombi.get('statusLev'),
             statusWert: kombi.get('statusVal')
         };
         //Try updating the view
         try {
-            var textfield = me.down('textfield');
+            var textfield = this.down('textfield');
             if (textfield) {
                 textfield.setEmptyText(text);
             }
