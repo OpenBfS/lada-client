@@ -12,6 +12,7 @@ Ext.define('Lada.model.Geolocat', {
     ],
     extend: 'Lada.model.ValidatedModel',
 
+    hasOne: 'Lada.model.Site',
     fields: [{
         name: 'id'
     }, {
@@ -21,10 +22,6 @@ Ext.define('Lada.model.Geolocat', {
         name: 'readonly',
         type: 'boolean',
         persist: false
-    }, {
-        name: 'siteId',
-        type: 'int',
-        allowNull: true
     }, {
         name: 'sampleId',
         type: 'int'

@@ -238,14 +238,10 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         // leave the ortstore empty at begin.
         // TODO check when changing filter method to remote/local
         this.ortstore.removeAll();
-        var ortId = this.record.get('siteId');
-        if (ortId) {
-            Lada.model.Site.load(ortId, {
-                success: function(rec) {
-                    me.down('ortszuordnungform').setFirstOrt(rec);
-                    map.addPreviousOrt(rec);
-                }
-            });
+        var ortRecord = this.record.getSite();
+        if (ortRecord) {
+            me.down('ortszuordnungform').setFirstOrt(ortRecord);
+            map.addPreviousOrt(ortRecord);
         }
         map.addListener('featureselected', osg.selectOrt, osg);
         osg.addListener('select', map.selectFeature, map);
@@ -273,7 +269,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         if (this.messprogramm) {
             ortId = this.record.get('site');
         } else {
-            ortId = this.record.get('siteId');
+            ortId = this.record.getSite().get('id');
         }
         var ortrecord = this.ortstore.findRecord('id', ortId);
         if (ortrecord) {

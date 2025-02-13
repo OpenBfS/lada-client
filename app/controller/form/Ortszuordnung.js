@@ -77,24 +77,14 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     revert: function(button) {
         var form = button.up('form');
         form.reset();
-
-        var currentOrt = form.getRecord().get('siteId');
+        var currentOrt = form.getRecord().getSite();
         var osg = button.up('window').down('ortstammdatengrid');
         var selmod = osg.getView().getSelectionModel();
         if (!currentOrt) {
             selmod.deselectAll();
         } else {
-            var record = osg.store.getById(currentOrt);
-            if (!record) {
-                Lada.model.Site.load(currentOrt, {
-                    success: function(rec) {
-                        form.setFirstOrt(rec);
-                    }
-                });
-            } else {
-                form.setFirstOrt(record);
-                selmod.select(record);
-            }
+            form.setFirstOrt(currentOrt);
+            selmod.select(currentOrt);
             var map = button.up('window').down('map');
             if (map.previousOrtLayer) {
                 var prevOrt = map.previousOrtLayer.getSource().getFeatures()[0];
