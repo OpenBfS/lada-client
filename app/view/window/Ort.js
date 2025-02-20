@@ -24,7 +24,7 @@ Ext.define('Lada.view.window.Ort', {
     height: 700,
 
     margin: 10,
-
+    constrain: true,
     maximizable: true,
     collapsible: true,
 
