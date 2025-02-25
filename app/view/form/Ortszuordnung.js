@@ -174,6 +174,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             var newOrtId = selRecord.get('id');
             if (!this.getRecord().get('readonly') && newOrtId) {
                 this.getForm().findField('siteId').setValue(newOrtId);
+                this.getController().setSelectedSite(selRecord);
                 this.setOrtInfo(selRecord);
             }
         }
@@ -187,6 +188,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         if (record) {
             this.getForm().setValues({siteId: record.get('id')});
             this.setOrtInfo(record);
+            this.getController().setSelectedSite(record);
         }
     },
 

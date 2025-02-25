@@ -12,7 +12,7 @@
 Ext.define('Lada.controller.form.Ortszuordnung', {
     extend: 'Lada.controller.form.BaseFormController',
     alias: 'controller.ortszuordnungform',
-
+    selectedSite: {},
     /**
      * Initialize the Controller with 4 listeners
      */
@@ -39,11 +39,20 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
       */
     save: function(button) {
         var formPanel = button.up('ortszuordnungform');
-        var record = formPanel.getForm().getRecord();
-        record.set(formPanel.getForm().getFieldValues(true));
+        var form = formPanel.getForm();
+        var record = form.getRecord();
+        var values = form.getFieldValues(true);
+        values = Object.keys(values).reduce(function(o, n) {
+            if (n !== 'siteId') {
+                o[n] = values[n];
+            }
+            return o;
+        }, {});
+        record.set(values);
         if (record.phantom) {
             record.set('id', null);
         }
+        record.setSite(this.selectedSite);
         record.save({
             scope: this,
             success: function(newRecord) {
@@ -66,6 +75,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                     formPanel.up('window').parentWindow
                         .down('ortszuordnunggrid').store.reload();
                 }
+                this.revert(button);
             },
             failure: this.handleSaveFailure
         });
@@ -78,6 +88,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var form = button.up('form');
         form.reset();
         var currentOrt = form.getRecord().getSite();
+        this.setSelectedSite(currentOrt);
         var osg = button.up('window').down('ortstammdatengrid');
         var selmod = osg.getView().getSelectionModel();
         if (!currentOrt) {
@@ -123,5 +134,12 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 parentWindow: win
             }).show();
         }
+    },
+
+    /**
+     * Keeps track of the current selected site in the form
+     */
+    setSelectedSite: function(site) {
+        this.selectedSite = site;
     }
 });
