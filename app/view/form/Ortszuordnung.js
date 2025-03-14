@@ -169,7 +169,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      * setOrt can be called from a CallbackFunction, ie select from a grid.
      * it will set the ortId of this record
      */
-    setOrt: function(row, selRecord) {
+    setOrt: function(selRecord) {
         if (selRecord) {
             var newOrtId = selRecord.get('id');
             if (!this.getRecord().get('readonly') && newOrtId) {

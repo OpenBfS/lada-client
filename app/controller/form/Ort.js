@@ -124,8 +124,7 @@ Ext.define('Lada.controller.form.Ort', {
                             //Add to map and select using the grid
                             if (win.setOzOnComplete === true ) {
                                 ozw.down('map').addLocations(ortgrid.store);
-                                ozw.down('ortszuordnungform')
-                                    .setOrt(null, newrecord);
+                                ozw.down('ortszuordnungform').setOrt(newrecord);
                                 ortgrid.getView().getSelectionModel()
                                     .select(newrecord);
                             }

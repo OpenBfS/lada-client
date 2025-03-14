@@ -410,7 +410,7 @@ Ext.define('Lada.view.grid.Orte', {
                 this.getView().focusRow(rowIndex);
                 var win = this.up('ortszuordnungwindow');
                 if (win) {
-                    win.down('ortszuordnungform').setOrt(null, record);
+                    win.down('ortszuordnungform').setOrt(record);
                     this.up('window').down('map').zoomToSelectedFeatures();
                 }
             }
