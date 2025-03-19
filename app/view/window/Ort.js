@@ -18,15 +18,14 @@ Ext.define('Lada.view.window.Ort', {
         'Lada.view.window.HelpprintWindow',
         'Lada.view.form.Ort'
     ],
-    width: 1200,
-    minWidth: 640,
+    minWidth: 540,
+    maxWidth: 1200,
 
     height: 700,
 
     margin: 10,
     constrain: true,
-    maximizable: true,
-    collapsible: true,
+    resizable: false,
 
     shadow: false,
 
@@ -34,7 +33,10 @@ Ext.define('Lada.view.window.Ort', {
 
     bodyStyle: {background: '#fff'},
 
-    layout: 'border',
+    layout: {
+           type: 'hbox',
+           align: 'stretch'
+        },
 
     mode: null,
 
@@ -118,14 +120,11 @@ Ext.define('Lada.view.window.Ort', {
                     borderStyle: 'solid'
                 }
             },
-            flex: 1.2,
-            region: 'west'
+            width: 400
         }, {
             xtype: 'siteimages',
             site: this.record,
-            region: 'center',
-            split: true,
-            flex: 2
+            split: true
         }]);
 
         this.setTitleAndReadOnly();
