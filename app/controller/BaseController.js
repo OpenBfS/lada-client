@@ -78,6 +78,7 @@ Ext.define('Lada.controller.BaseController', {
                     responseJson = { errors: errors };
                 } else {
                     msg = this.getHttpError(response);
+                    responseJson = { errors: { errors: [msg] }};
                 }
             }
         } else {
