@@ -171,6 +171,12 @@ Ext.define('Lada.view.window.GridExport', {
                 value: 'laf'
             });
         }
+        if (this.hasProbe) {
+            formatdata.push({
+                name: i18n.getMsg('export.laf9'),
+                value: 'laf9'
+            });
+        }
         this.formatStore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: formatdata

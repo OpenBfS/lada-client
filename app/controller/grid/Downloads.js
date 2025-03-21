@@ -47,7 +47,7 @@ Ext.define('Lada.controller.grid.Downloads', {
             .getValue();
 
         var filename = win.down('textfield[name=filename]').getValue();
-        const suffix = '.' + exportFormat;
+        const suffix = '.' + (exportFormat !== 'laf9' ? exportFormat : 'json');
         if (!filename.endsWith(suffix)) {
             filename += suffix;
         }
@@ -63,6 +63,7 @@ Ext.define('Lada.controller.grid.Downloads', {
                     [data], {type: 'application/json;charset=utf-8'});
                 saveAs(blob, filename, true);
                 return; // GeoJSON is not handled by server-side export
+            case 'laf9':
             case 'laf':
                 var dataset = win.getDataSets();
                 if (win.hasMessung) {
@@ -187,7 +188,8 @@ Ext.define('Lada.controller.grid.Downloads', {
 
         var formatSelection = win.down('combobox[name=formatselection]')
             .getValue();
-        var isLAF = formatSelection === 'laf';
+        var isLAF = formatSelection.startsWith('laf');
+        var isLAF9 = formatSelection === 'laf9';
         var isCSV = formatSelection === 'csv';
         var isJSON = formatSelection === 'json';
         var isGeoJSON = formatSelection === 'geojson';
@@ -195,7 +197,7 @@ Ext.define('Lada.controller.grid.Downloads', {
         var isAllColumnsSet = win.down('checkbox[name=allcolumns]').getValue();
 
         win.down('fieldset[name=csvoptions]').setVisible(isCSV);
-        win.down('combobox[name=encoding]').setVisible( isLAF || isCSV);
+        win.down('combobox[name=encoding]').setVisible(isLAF && !isLAF9 || isCSV);
         win.down('checkbox[name=allrows]').setVisible(!isLAF);
         win.down('checkbox[name=allcolumns]').setVisible(!isLAF);
         win.down('checkbox[name=secondarycolumns]').setVisible(isCSV || isJSON);
