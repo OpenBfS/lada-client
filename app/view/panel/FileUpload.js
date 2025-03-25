@@ -26,14 +26,6 @@ Ext.define('Lada.view.panel.FileUpload', {
         align: 'stretch'
     },
     margin: '10',
-
-    files: null,
-    fileNames: null,
-
-    filesUploaded: 0,
-
-    resultWin: null,
-
     width: 350,
 
     /**
