@@ -100,6 +100,7 @@ Ext.define('Lada.controller.grid.Uploads', {
 
         var fileNames = [];
         var binFiles = {};
+        var jsonFiles = {};
         var filesRead = 0;
         for (var i = 0; i < files.length; i++) {
             fileNames[i] = files[i].name;
@@ -108,12 +109,23 @@ Ext.define('Lada.controller.grid.Uploads', {
             readers[i].fileName = files[i].name;
             // eslint-disable-next-line no-loop-func
             readers[i].onload = function(evt) {
-                var binData = evt.target.result;
+                var rawData = evt.target.result;
                 //Remove mime type and save to array
-                binFiles[evt.target.fileName] = binData.split(',')[1];
+                var binData = rawData.split(',')[1];
+                var jsonData = Ext.decode(atob(binData), true);
+                if (jsonData === null) {
+                    binFiles[evt.target.fileName] = binData;
+                } else {
+                    jsonFiles[evt.target.fileName] = jsonData;
+                }
                 filesRead++;
                 if (filesRead === files.length) {
-                    me.uploadFiles(button, fileNames, binFiles);
+                    if (Object.entries(binFiles).length) {
+                        me.uploadFiles(button, fileNames, binFiles, 'laf');
+                    }
+                    if (Object.entries(jsonFiles).length) {
+                        me.uploadFiles(button, fileNames, jsonFiles, 'laf9');
+                    }
                 }
             };
             readers[i].readAsDataURL(file);
@@ -126,7 +138,7 @@ Ext.define('Lada.controller.grid.Uploads', {
      * @param {Object} binFiles Object containing file name as keys and file
      * content as value
      */
-    uploadFiles: function(button, fileNames, binFiles) {
+    uploadFiles: function(button, fileNames, binFiles, format) {
         var me = this;
         var win = button.up('panel');
         var cb = win.down('combobox[name=encoding]');
@@ -135,8 +147,9 @@ Ext.define('Lada.controller.grid.Uploads', {
         queueItem.set(
             'encoding', win.down('combobox[name=encoding]').getValue());
         queueItem.set('measFacilId', win.down('combobox[name=mst]').getValue());
+
         Ext.Ajax.request({
-            url: 'lada-server/data/import/async/laf',
+            url: 'lada-server/data/import/async/' + format,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

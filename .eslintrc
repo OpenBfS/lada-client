@@ -3,6 +3,7 @@
         "es6": true
     },
     "globals": {
+        "atob": true,
         "Ext": true,
         "ol": true,
         "window": true,
