@@ -18,7 +18,9 @@ Ext.define('Lada.view.window.SetStatus', {
         'Lada.view.widget.StatuskombiSelect',
         'Lada.store.StatusKombi'
     ],
-
+    layout: {
+        type: 'vbox',
+    },
     controller: 'setstatus',
 
     grid: null,
@@ -29,7 +31,6 @@ Ext.define('Lada.view.window.SetStatus', {
     sendIds: null,
     modal: true,
     constrain: true,
-    closable: false,
     resultMessage: '',
 
     /**
@@ -92,7 +93,8 @@ Ext.define('Lada.view.window.SetStatus', {
                     }
                 }, {
                     xtype: 'textarea',
-                    height: 100,
+                    height: 150,
+                    width: 450,
                     fieldLabel: i18n.getMsg('text'),
                     emptyText: i18n.getMsg('emptytext.kommentar.widget')
                 }]
@@ -112,6 +114,7 @@ Ext.define('Lada.view.window.SetStatus', {
         }, {
             xtype: 'panel',
             hidden: true,
+            minWidth: 450,
             margin: '5, 5, 5, 5',
             scrollable: true,
             name: 'result'

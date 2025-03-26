@@ -97,13 +97,12 @@ Ext.define('Lada.controller.grid.Uploads', {
         if (readers.length === 0) {
             return;
         }
-        win.files = files;
-        win.fileNames = [];
+
+        var fileNames = [];
         var binFiles = {};
         var filesRead = 0;
-        win.fileCount = files.length;
         for (var i = 0; i < files.length; i++) {
-            win.fileNames[i] = files[i].name;
+            fileNames[i] = files[i].name;
             var file = files[i];
             readers[i] = new FileReader();
             readers[i].fileName = files[i].name;
@@ -114,7 +113,7 @@ Ext.define('Lada.controller.grid.Uploads', {
                 binFiles[evt.target.fileName] = binData.split(',')[1];
                 filesRead++;
                 if (filesRead === files.length) {
-                    me.uploadFiles(button, binFiles);
+                    me.uploadFiles(button, fileNames, binFiles);
                 }
             };
             readers[i].readAsDataURL(file);
@@ -127,12 +126,12 @@ Ext.define('Lada.controller.grid.Uploads', {
      * @param {Object} binFiles Object containing file name as keys and file
      * content as value
      */
-    uploadFiles: function(button, binFiles) {
+    uploadFiles: function(button, fileNames, binFiles) {
         var me = this;
         var win = button.up('panel');
         var cb = win.down('combobox[name=encoding]');
 
-        var queueItem = this.addQueueItem(win.fileNames);
+        var queueItem = this.addQueueItem(fileNames);
         queueItem.set(
             'encoding', win.down('combobox[name=encoding]').getValue());
         queueItem.set('measFacilId', win.down('combobox[name=mst]').getValue());
@@ -163,8 +162,7 @@ Ext.define('Lada.controller.grid.Uploads', {
             },
             failure: function(response, opts) {
                 queueItem.set('status', 'error');
-                var msg = win.controller.handleRequestFailure(
-                    response, opts, null, true);
+                var msg = me.handleRequestFailure(response, opts, null, true);
                 if (response.status === 502 || response.status === 413) {
                     // correct status for an expected "file too big" would be
                     // 413, needs server adaption, 502 could be something else
