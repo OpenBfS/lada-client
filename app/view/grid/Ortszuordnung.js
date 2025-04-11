@@ -191,8 +191,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 dataIndex: 'poiId',
                 width: 80,
                 renderer: function(_, metaData, gridRec) {
-                    var ortRecord = gridRec.getSite();
-                    var value = ortRecord.get('id');
+                    var value = gridRec.get('poiId');
                     this.validationResultRenderer(value, metaData, gridRec);
                     var ozs = me.ozsstore;
                     var record = ozs.getById(value);
