@@ -314,10 +314,11 @@ Ext.define('Lada.view.grid.Messwert', {
                 },
                 renderer: function(value, metaData, record) {
                     this.validationResultRenderer(value, metaData, record);
-                    if (!value || value === '') {
+                    var number = parseFloat(value);
+                    if (isNaN(number)) {
                         return '';
                     }
-                    return parseFloat(value).toString().replace('.', ',');
+                    return number.toString().replace('.', ',');
                 }
             }],
             defaults: {
