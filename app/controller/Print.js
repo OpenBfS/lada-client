@@ -42,7 +42,7 @@ Ext.define('Lada.controller.Print', {
 
     //Templates requiring additional server data
     specialTemplates: [
-        'lada_erfassungsbogen_01', 'lada_erfassungsbogen_02',
+        'Erfassungsschein_(Barcode_extPID)', 'Erfassungsschein_(Barcode_HPNr)',
         'lada_probenbegleitschein', 'lada_probenetikett'],
 
     init: function() {
