@@ -138,9 +138,9 @@ Ext.define('Lada.view.widget.base.FieldSet', {
             return;
         }
         if (notification) {
-            this.getEl().dom.style['border-color'] = '#FFE25D';
+            this.getEl().dom.style['border-color'] = '#70706e';
             // eslint-disable-next-line max-len
-            this.setTitle('<img src="resources/img/dialog-warning.png" width="13" height="13"  id="' + imgId + '"/>  ' +
+            this.setTitle('<img src="resources/img/dialog-notification.png" width="13" height="13"  id="' + imgId + '"/>  ' +
                     this.plainTitle);
             if (notificationText) {
                 if (!this.tooltip) {
