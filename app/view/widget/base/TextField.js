@@ -70,5 +70,9 @@ Ext.define('Lada.view.widget.base.TextField', {
 
     setReadOnly: function(value) {
         this.down('textfield').setReadOnly(value);
+    },
+
+    setEditable: function(value) {
+        this.down('textfield').setEditable(value);
     }
 });
