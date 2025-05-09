@@ -29,8 +29,7 @@ Ext.define('Lada.controller.BaseController', {
         if (response.getResponseHeader('validation-exception')
             && violationReport
         ) {
-            var errors = this.getBeanValidationErrors(
-                violationReport.parameterViolations);
+            var errors = this.getBeanValidationErrors(violationReport);
             for (const [key, value] of Object.entries(errors)) {
                 var violations = '';
                 // eslint-disable-next-line no-loop-func
@@ -73,7 +72,7 @@ Ext.define('Lada.controller.BaseController', {
                     && violationReport
                 ) {
                     var errors = this.getBeanValidationErrors(
-                        violationReport.parameterViolations, record);
+                        violationReport, record);
                     msg = i18n.getMsg('604');
                     responseJson = { errors: errors };
                 } else {
@@ -112,7 +111,9 @@ Ext.define('Lada.controller.BaseController', {
     },
 
     // Translate RESTEasy validation violation report
-    getBeanValidationErrors: function(violations, record) {
+    getBeanValidationErrors: function(report, record) {
+        var violations = report.parameterViolations.concat(
+            report.propertyViolations);
         var errors = {};
         for (var violation of violations) {
             var path = violation.path.split('\.');
