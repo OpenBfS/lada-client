@@ -45,7 +45,8 @@ Ext.define('Lada.controller.form.Probe', {
                 change: this.umweltChanged
             },
             'probeform datenbasis combobox': {
-                change: this.datenbasisChanged
+                change: this.datenbasisChanged,
+                dirtychange: this.datenbasisChanged
             },
             'probeform netzbetreiber combobox': {
                 change: this.checkCommitEnabled
