@@ -15,13 +15,16 @@ Ext.define('Lada.view.panel.SiteImages', {
     border: true,
     margin: 5,
     site: null,
-    width: '100%',
+    width: 760,
     height: 600,
-    scrollable: true,
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
+    collapsible: true,
+    collapseDirection: 'left',
+    collapsed: true,
+    titleCollapse: true,
 
     initComponent: function() {
         this.initUI();
@@ -38,12 +41,13 @@ Ext.define('Lada.view.panel.SiteImages', {
 
     initUI: function() {
         var i18n = Lada.getApplication().bundle;
+        this.setTitle(i18n.getMsg('form.site.label.map_photo'));
         this.items =
             [{
                 xtype: 'panel',
                 margin: 5,
-                minWidth: 550,
-                minHeight: 300,
+                maxWidth: 750,
+                height: '50%',
                 scrollable: true,
                 tbar: [{
                     xtype: 'label',
@@ -97,8 +101,8 @@ Ext.define('Lada.view.panel.SiteImages', {
             }, {
                 xtype: 'panel',
                 margin: 5,
-                minWidth: 550,
-                minHeight: 300,
+                maxWidth: 750,
+                height: '50%',
                 scrollable: true,
                 tbar: [{
                     xtype: 'label',
