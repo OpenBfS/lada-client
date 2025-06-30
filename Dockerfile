@@ -71,20 +71,11 @@ LABEL maintainer="aschumacher@bfs.de"
 
 RUN set -x && apt-get -y update && apt-get -y install curl && rm -rf /var/lib/apt/lists/*
 
-ARG LADA_CLIENT_VERSION
-
 WORKDIR /usr/local/apache2/htdocs/
 
 COPY --from=build /usr/local/lada/build/production/Lada/. /usr/local/apache2/htdocs/
 # chown to www-data and its login group(:)
 RUN chown -R www-data: .
-
-# ADD ${IMIS3_PACKAGE_REPO}/lada/lada-client-${LADA_CLIENT_VERSION}.tgz ./webcontent.tgz
-# RUN tar xzf webcontent.tgz
-# RUN rm webcontent.tgz
-# RUN chown -R www-data: .
-# RUN mv lada-client-${LADA_CLIENT_VERSION}/* .
-# RUN rm -Rf lada-client-${LADA_CLIENT_VERSION}
 
 CMD ["httpd-foreground"]
 HEALTHCHECK --start-period=30s CMD curl http://localhost/
