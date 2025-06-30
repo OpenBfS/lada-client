@@ -1,0 +1,7 @@
+services:
+  lada-client:
+    image: ${REGISTRY_HOST}imis3/lada-client:${LADA_CLIENT_VERSION}
+    build:
+      context: .
+      args:
+        BUILD_TYPE: ${BUILD_TYPE}
