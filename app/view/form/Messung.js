@@ -168,8 +168,8 @@ Ext.define('Lada.view.form.Messung', {
         var me = this;
         var form = me.getForm();
         form.loadRecord(record);
-        var kombi = this.determineKombi(record);
         if (record.getId()) {
+            var kombi = this.determineKombi(record);
             me.down('statuskombi').setValue(
                 kombi, false, record.get('statusEdit'));
         }

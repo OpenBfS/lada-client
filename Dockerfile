@@ -13,8 +13,10 @@
 # The LADA-application will be available under http://yourdockerhost:8182
 #
 
-FROM httpd:bullseye
-LABEL maintainer=mlechner@bfs.de
+ARG BUILD_TYPE=production
+
+FROM httpd:bullseye as build
+LABEL maintainer="aschumacher@bfs.de"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV OPENSSL_CONF=/etc/ssl/
@@ -27,20 +29,10 @@ RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
     curl unzip default-jre-headless git libapache2-mod-shib && \
     apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 80 81 82 83 84
-
-CMD ["httpd-foreground"]
-#
-# httpd setup
-#
-RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#LoadModule deflate_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
 
 RUN mkdir /usr/local/lada
 RUN ln -s /usr/local/lada/ /usr/local/apache2/htdocs/lada
 WORKDIR /usr/local/lada
-
-ADD custom-vhosts.conf ./
-RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
 
 ADD *.sh /usr/local/lada/
 
@@ -62,10 +54,28 @@ ADD Koala /usr/local/lada/Koala
 ADD .git /usr/local/lada/.git
 ADD .sencha /usr/local/lada/.sencha
 ADD build.xml /usr/local/lada/
+
+
 # set version info
-RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.js
+RUN if [ "${BUILD_TYPE}" = "development" ] ; then sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.js; fi
+
 #
 # build application
 #
 
-RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
+RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh ${BUILD_TYPE}
+
+
+FROM httpd:2.4 as deploy
+LABEL maintainer="aschumacher@bfs.de"
+
+RUN set -x && apt-get -y update && apt-get -y install curl && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/local/apache2/htdocs/
+
+COPY --from=build /usr/local/lada/build/production/Lada/. /usr/local/apache2/htdocs/
+# chown to www-data and its login group(:)
+RUN chown -R www-data: .
+
+CMD ["httpd-foreground"]
+HEALTHCHECK --start-period=30s CMD curl http://localhost/
