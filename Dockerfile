@@ -64,7 +64,7 @@ RUN ln -sf $PWD/custom-httpd.conf $HTTPD_PREFIX/conf/httpd.conf;\
 
 WORKDIR /usr/local/lada
 RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.js;
-RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
+RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh development
 RUN mkdir -p /usr/local/apache2/htdocs/build/production/
 RUN ln -s /usr/local/lada/build/production/Lada /usr/local/apache2/htdocs/build/production
 
