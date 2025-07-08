@@ -13,9 +13,7 @@
 # The LADA-application will be available under http://yourdockerhost:8182
 #
 
-ARG BUILD_TYPE=production
-
-FROM httpd:bullseye as build
+FROM httpd:bullseye AS base
 LABEL maintainer="aschumacher@bfs.de"
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -31,7 +29,6 @@ RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
 
 
 RUN mkdir /usr/local/lada
-RUN ln -s /usr/local/lada/ /usr/local/apache2/htdocs/lada
 WORKDIR /usr/local/lada
 
 ADD *.sh /usr/local/lada/
@@ -55,18 +52,32 @@ ADD .git /usr/local/lada/.git
 ADD .sencha /usr/local/lada/.sencha
 ADD build.xml /usr/local/lada/
 
+FROM base AS development
+LABEL maintainer="aschumacher@bfs.de"
+EXPOSE 80 81 82 83 84
+COPY --from=base /usr/local/lada/. /usr/local/lada
+RUN ln -s /usr/local/lada/ /usr/local/apache2/htdocs/lada
+ADD custom-vhosts.conf ./
+ADD custom-httpd.conf ./
+RUN ln -sf $PWD/custom-httpd.conf $HTTPD_PREFIX/conf/httpd.conf;\
+    ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf;
 
-# set version info
-RUN if [ "${BUILD_TYPE}" = "development" ] ; then sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.js; fi
+WORKDIR /usr/local/lada
+RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.js;
+RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
+RUN mkdir -p /usr/local/apache2/htdocs/build/production/
+RUN ln -s /usr/local/lada/build/production/Lada /usr/local/apache2/htdocs/build/production
 
+FROM base AS build
+COPY --from=base /usr/local/lada/. /usr/local/lada
+WORKDIR /usr/local/lada
 #
 # build application
 #
 
-RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh ${BUILD_TYPE}
+RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh production
 
-
-FROM httpd:2.4 as deploy
+FROM httpd:2.4 AS deploy
 LABEL maintainer="aschumacher@bfs.de"
 
 RUN set -x && apt-get -y update && apt-get -y install curl && rm -rf /var/lib/apt/lists/*
