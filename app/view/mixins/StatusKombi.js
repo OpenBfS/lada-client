@@ -12,7 +12,20 @@
 Ext.define('Lada.view.mixins.StatusKombi', {
     determineKombi: function(record) {
         var statusProt = record.getStatusProt();
-        var statusMpId = statusProt.get('statusMpId');
+        var statusMpId = null;
+        if (statusProt) {
+            statusMpId = statusProt.get('statusMpId');
+        } else {
+            // Fallback for the rare case that after a POST the
+            // Statusprot wasn't correctly deserialized and ended
+            // up as an Object on the record
+            statusProt = record.get('statusProt');
+            if (!statusProt) {
+                // in case everything went south tell someone
+                throw new Error('No StatusProt found!');
+            }
+            statusMpId = statusProt['statusMpId'];
+        }
         var kombis = Ext.data.StoreManager.get('statuskombi');
         var kombi = kombis.getById(statusMpId);
         return kombi;
