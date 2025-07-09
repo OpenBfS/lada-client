@@ -62,7 +62,7 @@ Ext.define('Lada.controller.form.Messung', {
 
         record.save({
             scope: this,
-            success: function(newRecord) {
+            success: function(r) {
                 var win = button.up('window');
                 var parentWin = win.parentWindow;
                 if (parentWin) {
@@ -82,27 +82,34 @@ Ext.define('Lada.controller.form.Messung', {
                 if (win.closeRequested) {
                     win.doClose();
                 } else {
-                    win.setRecord(newRecord);
-                    win.setTitle(win.createTitle());
-                    formPanel.setRecord(newRecord);
-                    win.down('button[action=tagedit]').setDisabled(false);
-                    win.down('button[name=reload]').setDisabled(false);
-                    win.disableChildren(
-                        newRecord.get('readonly') || !newRecord.get('owner'));
-                    win.setMessages(
-                        newRecord.get('errors'),
-                        newRecord.get('warnings'),
-                        newRecord.get('notifications'));
-                    var messwertStore = win.down('messwertgrid').getStore();
-                    if (messwertStore.isLoaded()) {
-                        messwertStore.reload();
-                    }
-                    //Reload measd store in case mmt changed
-                    win.mStore.load({
-                        params: {mmtId: newRecord.get('mmtId')}
+                    r.load({
+                        success: function(newRecord) {
+                            win.setRecord(newRecord);
+                            win.setTitle(win.createTitle());
+                            formPanel.setRecord(newRecord);
+                            var tagEdit = win.down('button[action=tagedit]');
+                            tagEdit.setDisabled(false);
+                            win.down('button[name=reload]').setDisabled(false);
+                            win.disableChildren(
+                                newRecord.get('readonly')
+                                || !newRecord.get('owner'));
+                            win.setMessages(
+                                newRecord.get('errors'),
+                                newRecord.get('warnings'),
+                                newRecord.get('notifications'));
+                            var messwertgrid = win.down('messwertgrid');
+                            var messwertStore = messwertgrid.getStore();
+                            if (messwertStore.isLoaded()) {
+                                messwertStore.reload();
+                            }
+                            //Reload measd store in case mmt changed
+                            win.mStore.load({
+                                params: {mmtId: newRecord.get('mmtId')}
+                            });
+                            formPanel.setLoading(false);
+                            win.disableStatusEdit(!newRecord.get('statusEdit'));
+                        }
                     });
-                    formPanel.setLoading(false);
-                    win.disableStatusEdit(!newRecord.get('statusEdit'));
                 }
             },
             failure: this.handleSaveFailure
