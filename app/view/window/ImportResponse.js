@@ -137,11 +137,10 @@ Ext.define('Lada.view.window.ImportResponse', {
         var html = '';
         if (response.status === 200 && responsedata) {
             Ext.Object.each(responsedata, function(fileName, fileResult) {
-                html = '<br/><hr><b>' +
-                    fileName +
-                    ':</b>' +
-                    '<p/>';
-                html += me.parseResponse(fileResult, true);
+                html = '<br/><hr><b>' + fileName + ':</b><p/>';
+                html += fileResult.samples
+                    ? me.showReport(fileResult.samples)
+                    : me.parseResponse(fileResult, true);
                 me.download += html;
             });
             me.down('button[name=download]').enable();
@@ -220,7 +219,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push('</ol>');
                 out.push('<br/>');
             } else {
-                out.push('<br>Beim Import traten keine Fehler auf.</br>');
+                out.push(
+                    '<br>' + i18n.getMsg('importResponse.noerrors') + '</br>');
             }
             if (numWarnings > 0) {
                 out.push('<br/>');
@@ -242,7 +242,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                     warnings, out, 'importResponse.warnings.validations');
                 out.push('</ol>');
             } else {
-                out.push('<br>Beim Import traten keine Warnungen auf.</br>');
+                out.push(
+                    '<br>' + i18n.getMsg('importResponse.nowarnings') + '</br>');
             }
 
             if (numNotifications > 0) {
@@ -269,7 +270,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push('</ol>');
             } else {
                 out.push(
-                    '<br>Beim Import traten keine Hinweismeldungen auf.</br>');
+                    '<br>' + i18n.getMsg('importResponse.nonotifications') + '</br>');
             }
 
             if (!divHtml) {
@@ -279,6 +280,99 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
         }
         return out.join('');
+    },
+
+    showReport: function(samples) {
+        const msgClassList = document.createElement('ul');
+        msgClassList.append(
+            this.showMessages(
+                samples,
+                'errors',
+                'importResponse.failure.errorlist',
+                'importResponse.noerrors'),
+            this.showMessages(
+                samples,
+                'warnings',
+                'importResponse.warnings.warninglist',
+                'importResponse.nowarnings'),
+            this.showMessages(
+                samples,
+                'notifications',
+                'importResponse.notifications.notificationlist',
+                'importResponse.nonotifications'));
+        return msgClassList.getHTML();
+    },
+
+    showMessages: function(samples, msgClass, header, emptyText) {
+        const i18n = Lada.getApplication().bundle;
+        const html = document.createElement('p');
+        const msgList = this.processMessages(
+            samples, msgClass, 'mainSampleId', 'extId');
+        if (msgList) {
+            html.append(i18n.getMsg(header), msgList);
+        } else {
+            html.append(i18n.getMsg(emptyText));
+        }
+        return html;
+    },
+
+    processMessages: function(objects, msgClass, primId, secId) {
+        var hasMsgs = false;
+        const msgList = document.createElement('ol');
+        for (const object of objects) {
+            var objectHasMsgs = false;
+            const ol = document.createElement('ol');
+
+            // Messages at object
+            const msgs = object[msgClass];
+            for (const msg in msgs) {
+                objectHasMsgs = true;
+                const li = document.createElement('li');
+                const translate = Lada.util.I18n.getMsgIfDefined;
+                li.textContent = `${translate(msg)}: `
+                    + `${msgs[msg].map(translate).join(', ')}`;
+                ol.appendChild(li);
+            }
+
+            // Messages at child objects
+            const childAttrs = {
+                /* Name of attribute with child(s) and two alternative
+                   child attributes to display as header for the object */
+                'measms': ['minSampleId', 'extId'],
+                'commSamples': ['text', 'measFacilId'],
+                'sampleSpecifMeasVals': ['sampleSpecifId', 'sampleSpecifId'],
+                'geolocats': ['typeRegulation', 'typeRegulation'],
+                'tags': ['name', 'measFacilId'],
+                'statusProts': ['text', 'measFacilId'],
+                'commMeasms': ['text', 'measFacilId'],
+                'measVals': ['measdId', 'measUnitId'],
+                'site': ['extId', 'networkId']
+            };
+            for (const attr in childAttrs) {
+                const childs = object[attr];
+                if (childs) {
+                    const subMsgList = this.processMessages(
+                        childs instanceof Array ? childs : [childs],
+                        msgClass,
+                        childAttrs[attr][0],
+                        childAttrs[attr][1]);
+                    if (subMsgList) {
+                        objectHasMsgs = true;
+                        ol.append(
+                            Lada.util.I18n.getMsgIfDefined(attr), subMsgList);
+                    }
+                }
+            }
+
+            if (objectHasMsgs) {
+                hasMsgs = true;
+                msgList.append(
+                    object[primId] ? object[primId] : object[secId],
+                    ol,
+                    document.createElement('br'));
+            }
+        }
+        return hasMsgs ? msgList : null;
     },
 
     printMessages: function(msgs, out, msg) {

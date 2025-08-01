@@ -352,7 +352,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         return Ext.htmlEncode(result);
                     }
                 }, {
-                    header: i18n.getMsg('messungen'),
+                    header: i18n.getMsg('measms'),
                     dataIndex: 'mmt',
                     renderer: function(value) {
                         if (value && value.length) {

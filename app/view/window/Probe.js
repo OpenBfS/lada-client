@@ -174,7 +174,7 @@ Ext.define('Lada.view.window.Probe', {
             }, {
                 xtype: 'fset',
                 name: 'measms',
-                title: i18n.getMsg('title.messungen'),
+                title: i18n.getMsg('measms'),
                 padding: '5, 5',
                 margin: 5,
                 collapsible: false,
@@ -197,7 +197,7 @@ Ext.define('Lada.view.window.Probe', {
             }, {
                 xtype: 'fset',
                 name: 'commSamples',
-                title: i18n.getMsg('title.kommentare'),
+                title: i18n.getMsg('commSamples'),
                 padding: '5, 5',
                 margin: 5,
                 collapsible: true,

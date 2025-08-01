@@ -178,7 +178,7 @@ Ext.define('Lada.view.window.Messung', {
             }, {
                 xtype: 'fset',
                 name: 'statusProts',
-                title: i18n.getMsg('title.status'),
+                title: i18n.getMsg('statusProts'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{
@@ -187,7 +187,7 @@ Ext.define('Lada.view.window.Messung', {
             }, {
                 xtype: 'fset',
                 name: 'commMeasms',
-                title: i18n.getMsg('title.kommentare'),
+                title: i18n.getMsg('commMeasms'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{
