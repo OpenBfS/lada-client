@@ -45,7 +45,8 @@ Ext.define('Lada.controller.form.Probe', {
                 change: this.umweltChanged
             },
             'probeform datenbasis combobox': {
-                change: this.datenbasisChanged
+                change: this.datenbasisChanged,
+                dirtychange: this.datenbasisChanged
             },
             'probeform netzbetreiber combobox': {
                 change: this.checkCommitEnabled
@@ -493,10 +494,18 @@ Ext.define('Lada.controller.form.Probe', {
 
     /**
      * Called if Datenbasis value changed. Changes visibility of REI specific
-     * containers if Datenbasis is REI
+     * containers if Datenbasis is REI and editability of extId.
      */
     datenbasisChanged: function(combo) {
         var datenbasis = combo.getRawValue();
+
+        // Editability of extId
+        var form = combo.up('probeform');
+        var record = form.getRecord();
+        form.down('tfield[name=extId]').setEditable(
+            record.phantom && datenbasis === 'LFGB');
+
+        // REI settings
         var reiComboContainer = combo.up().up().up()
             .down('container[name=reiComboContainer]');
         if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
