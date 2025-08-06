@@ -185,7 +185,7 @@ Ext.define('Lada.view.window.Probe', {
             }, {
                 xtype: 'fset',
                 name: 'sampleSpecifMeasVals',
-                title: i18n.getMsg('title.zusatzwerte'),
+                title: i18n.getMsg('sampleSpecifMeasVals'),
                 padding: '5, 5',
                 margin: 5,
                 collapsible: true,
