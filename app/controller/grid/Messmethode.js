@@ -43,6 +43,13 @@ Ext.define('Lada.controller.grid.Messmethode', {
         if (context.record.phantom) {
             context.record.set('id', null);
         }
+
+        // Convert IDs set in tagfield grid editor to associated objects
+        const measdStore = Ext.data.StoreManager.get('messgroessen');
+        context.record.measds().removeAll();
+        context.record.measds().add(
+            context.record.get('measdIds').map(i => measdStore.getById(i)));
+
         context.record.save({
             scope: this,
             success: function() {

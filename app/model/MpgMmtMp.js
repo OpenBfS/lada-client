@@ -9,6 +9,8 @@
 Ext.define('Lada.model.MpgMmtMp', {
     extend: 'Lada.model.ValidatedModel',
 
+    hasMany: 'Measd',
+
     fields: [{
         name: 'id'
     }, {
@@ -17,8 +19,9 @@ Ext.define('Lada.model.MpgMmtMp', {
     }, {
         name: 'mmtId'
     }, {
-        name: 'measds',
-        defaultValue: []
+        name: 'measdIds',
+        defaultValue: [],
+        persist: false
     }, {
         name: 'lastMod',
         type: 'date'
