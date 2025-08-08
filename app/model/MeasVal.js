@@ -25,8 +25,7 @@ Ext.define('Lada.model.MeasVal', {
         name: 'measmId',
         type: 'int'
     }, {
-        name: 'measdId',
-        type: 'int'
+        name: 'measdId'
     }, {
         name: 'measVal',
         type: 'float',
