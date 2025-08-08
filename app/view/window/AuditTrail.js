@@ -36,6 +36,7 @@ Ext.define('Lada.view.window.AuditTrail', {
         'sched_start_date',
         'sched_end_date',
         'measm_start_date',
+        'mid_coll_pd',
         'date'
     ],
 
