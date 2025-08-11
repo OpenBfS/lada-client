@@ -12,16 +12,13 @@ Ext.define('Lada.model.GeolocatMpg', {
     ],
     extend: 'Lada.model.ValidatedModel',
 
+    hasOne: 'Lada.model.Site',
     fields: [{
         name: 'id'
     }, {
         name: 'readonly',
         type: 'boolean',
         persist: false
-    }, {
-        name: 'siteId',
-        type: 'int',
-        allowNull: true
     }, {
         name: 'mpgId',
         type: 'int'
