@@ -12,7 +12,11 @@
 Ext.define('Lada.view.widget.Probenehmer', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.probenehmer',
-    store: 'Probenehmer',
+
+    requires: [
+        'Lada.store.Probenehmer'
+    ],
+
     displayField: 'extId',
     valueField: 'id',
     searchValueField: 'shortText',

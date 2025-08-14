@@ -49,7 +49,6 @@ Ext.application({
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
         'Lada.store.StatusKombi',
-        'Lada.store.Probenehmer',
         'Lada.store.DatensatzErzeuger',
         'Lada.store.DownloadQueue',
         'Lada.store.UploadQueue',
@@ -324,25 +323,6 @@ Ext.application({
                     r.add(recr);
                 }
             }
-        });
-        // TODO: usage of this store unclear: reloaded in probenehmer
-        // controller, but never used (probenehemr widget uses different
-        // instance)
-        Ext.create('Lada.store.Probenehmer', {
-            storeId: 'probenehmer',
-            proxy: {
-                type: 'rest',
-                url: 'lada-server/rest/sampler',
-                reader: {
-                    type: 'json',
-                    totalProperty: 'totalCount',
-                    rootProperty: 'data'
-                },
-                limitParam: undefined,
-                startParam: undefined,
-                pageParam: undefined
-            },
-            autoLoad: true
         });
         // TODO: usage of this store unclear: reloaded in Datensatzerzeuger
         // controller, but never used. Details here should go into model or
