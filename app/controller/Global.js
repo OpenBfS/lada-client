@@ -6,11 +6,10 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Controller for functionality that can't be logically put elsewhere.
- */
 Ext.define('Lada.controller.Global', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.BaseController',
+    alias: 'controller.global',
+
     routes: {
         'importer': 'onLafImport'
     },
@@ -25,6 +24,14 @@ Ext.define('Lada.controller.Global', {
             },
             'button[action=toggletimezone]': {
                 toggle: this.toggleTimezone
+            }
+        });
+
+        this.listen({
+            store: {
+                '*': {
+                    load: this.loadingErrorHandler
+                }
             }
         });
     },
@@ -82,6 +89,12 @@ Ext.define('Lada.controller.Global', {
         var viewport = Ext.ComponentQuery.query('viewport')[0];
         if (viewport) {
             viewport.down('tabpanel').setActiveTab(1);
+        }
+    },
+
+    loadingErrorHandler: function(store, records, success, operation) {
+        if (!success) {
+            this.handleServiceFailure(null, operation);
         }
     }
 });

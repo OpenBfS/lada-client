@@ -482,7 +482,6 @@ Ext.application({
     controllers: [
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Ortszuordnung',
-        'Lada.controller.Global',
         'Lada.controller.ElanScenario'
     ]
 });
