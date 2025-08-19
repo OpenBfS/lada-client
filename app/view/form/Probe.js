@@ -115,7 +115,7 @@ Ext.define('Lada.view.form.Probe', {
                             fieldLabel: i18n.getMsg('extProbeId'),
                             margin: '0, 5, 5, 5',
                             labelWidth: 45,
-                            maxLength: 16,
+                            maxLength: 19,
                             width: '32%',
                             editable: false
                         }, {
