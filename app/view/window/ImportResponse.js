@@ -281,10 +281,10 @@ Ext.define('Lada.view.window.ImportResponse', {
         return out.join('');
     },
 
-    printMessages: function(msgs, out, msg) {
+    printMessages: function(sampleMsgs, out, msg) {
         var i18n = Lada.getApplication().bundle;
-        for (var key in msgs) {
-            msgs = msgs[key];
+        for (var key in sampleMsgs) {
+            var msgs = sampleMsgs[key];
             if (key !== 'parser') {
                 out.push(i18n.getMsg('importResponse.list.probe', key));
             }
