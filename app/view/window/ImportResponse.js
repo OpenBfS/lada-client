@@ -293,20 +293,20 @@ Ext.define('Lada.view.window.ImportResponse', {
             validation.push(i18n.getMsg(msg));
             for (var i = msgs.length - 1; i >= 0; i--) {
                 var keySplit = msgs[i].key.split('#');
+                const valAndId = msgs[i].value.split('#');
+                const idHint = valAndId[1] ? ' ' + valAndId[1] : '';
                 if (keySplit[0] === 'validation') {
                     validation.push('<ol>');
-                    var parts = msgs[i].value.split('#');
-                    var str = i18n.getMsg(parts[0]) +
-                        (parts[1] === undefined ? '' : ' ' + parts[1]);
+                    const str = i18n.getMsg(valAndId[0]) + idHint;
                     validation.push(str + ' ('
                                     + Lada.util.I18n.getMsgIfDefined(
                                         msgs[i].code.toString()) + ')');
                     validation.push('</ol>');
                 } else {
-                    out.push('<li>' + msgs[i].key + ' ('
+                    out.push('<li>' + msgs[i].key + idHint + ' ('
                              + Lada.util.I18n.getMsgIfDefined(
                                  msgs[i].code.toString())
-                             + '): ' + msgs[i].value + '</li>');
+                             + '): ' + valAndId[0] + '</li>');
                 }
             }
             if (validation.length > 1) {
