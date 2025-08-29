@@ -73,9 +73,6 @@ Ext.define('Lada.model.Sample', {
         type: 'int',
         allowNull: true
     }, {
-        name: 'lastMod',
-        type: 'date'
-    }, {
         name: 'datasetCreatorId',
         type: 'int',
         allowNull: true

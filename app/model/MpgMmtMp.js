@@ -23,9 +23,6 @@ Ext.define('Lada.model.MpgMmtMp', {
         defaultValue: [],
         persist: false
     }, {
-        name: 'lastMod',
-        type: 'date'
-    }, {
         name: 'copyOf',
         persist: false
     }]

@@ -24,9 +24,6 @@ Ext.define('Lada.model.MpgCateg', {
         name: 'name',
         type: 'nonblankstring'
     }, {
-        name: 'lastMod',
-        type: 'date'
-    }, {
         name: 'readonly',
         type: 'boolean',
         persist: false

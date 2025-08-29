@@ -51,9 +51,6 @@ Ext.define('Lada.model.MeasVal', {
         name: 'measUnitId',
         type: 'int'
     }, {
-        name: 'lastMod',
-        type: 'date'
-    }, {
         name: 'treeMod',
         type: 'date'
     }, {

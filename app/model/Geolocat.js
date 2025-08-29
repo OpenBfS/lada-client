@@ -39,9 +39,6 @@ Ext.define('Lada.model.Geolocat', {
         name: 'poiId',
         allowNull: true
     }, {
-        name: 'lastMod',
-        type: 'date'
-    }, {
         name: 'treeMod',
         type: 'date'
     }, {
