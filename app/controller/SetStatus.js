@@ -202,6 +202,9 @@ Ext.define('Lada.controller.SetStatus', {
                         Lada.util.I18n.getMsgIfDefined(match));
                 }
 
+                // Convert newlines to HTML
+                msg = msg.replace(/\n/g, '<br>');
+
                 validation.push(
                     '<li><b>' + i18n.getMsg(key) + ':</b> ' +
                         Lada.util.I18n.getMsgIfDefined(msg.toString()) +
