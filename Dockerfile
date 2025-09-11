@@ -52,6 +52,13 @@ ADD .git /usr/local/lada/.git
 ADD .sencha /usr/local/lada/.sencha
 ADD build.xml /usr/local/lada/
 
+FROM base AS build
+COPY --from=base /usr/local/lada/. /usr/local/lada
+WORKDIR /usr/local/lada
+
+# build application
+RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh production
+
 FROM base AS development
 LABEL maintainer="aschumacher@bfs.de"
 EXPOSE 80 81 82 83 84
@@ -65,17 +72,9 @@ RUN ln -sf $PWD/custom-httpd.conf $HTTPD_PREFIX/conf/httpd.conf;\
 WORKDIR /usr/local/lada
 RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.js;
 RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh development
+
 RUN mkdir -p /usr/local/apache2/htdocs/build/production/
-RUN ln -s /usr/local/lada/build/production/Lada /usr/local/apache2/htdocs/build/production
-
-FROM base AS build
-COPY --from=base /usr/local/lada/. /usr/local/lada
-WORKDIR /usr/local/lada
-#
-# build application
-#
-
-RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh production
+COPY --from=build /usr/local/lada/build/production/. /usr/local/apache2/htdocs/build/production
 
 FROM httpd:2.4 AS deploy
 LABEL maintainer="aschumacher@bfs.de"

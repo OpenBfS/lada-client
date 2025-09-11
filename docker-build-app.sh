@@ -15,6 +15,4 @@ $SENCHA_CMD config --prop sencha.sdk.path=$SDK_PATH --save
 $SENCHA_CMD workspace init
 $SENCHA_CMD app install
 $SENCHA_CMD app clean
-#Build development and production variant
 $SENCHA_CMD app build ${BUILD_TYPE}
-
