@@ -83,6 +83,13 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     var params = newVal ? {mmtId: newVal} : {};
                     nuklidfield.getStore().proxy.extraParams = params;
                     nuklidfield.getStore().load();
+
+                    /* Convert associated objects to IDs for tagfield
+                       used in grid editor */
+                    o.record.set(
+                        'measdIds',
+                        o.record.measds().getRange().map(m => m.get('id')));
+
                     return true;
                 }
             }
@@ -145,28 +152,18 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 }
             }, {
                 header: i18n.getMsg('nuklide'),
-                dataIndex: 'measds',
+                dataIndex: 'measdIds',
                 flex: 2,
                 renderer: function(value, metaData, gridRec) {
                     this.validationResultRenderer(value, metaData, gridRec);
-                    if (!value || value === '') {
-                        return '';
-                    }
-                    var store = me.mmtUnfilteredStore;
-                    var returnvalues = '';
-                    for (var i = 0; i < value.length; i++) {
-                        if (i) {
-                            returnvalues = returnvalues + ', ';
-                        }
-                        var record = store.getById(value[i]);
-                        returnvalues = returnvalues + record.get('name');
-                    }
-                    return Ext.htmlEncode(returnvalues);
+                    return Ext.htmlEncode(
+                        gridRec.measds().getRange()
+                            .map(m => m.get('id')).join(', '));
                 },
                 editor: {
                     xtype: 'tagfield',
                     store: 'messgroessen',
-                    displayField: 'name',
+                    displayField: 'id',
                     valueField: 'id',
                     autoSelect: false,
                     queryMode: 'local'

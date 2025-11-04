@@ -123,6 +123,7 @@ Ext.define('Lada.view.window.SetStatus', {
             margin: '5, 5, 5, 5',
             height: 25,
             hidden: true,
+            width: '100%',
             text: i18n.getMsg('statusprogress')
         }];
         this.buttons = [{

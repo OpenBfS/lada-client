@@ -309,7 +309,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     xtype: 'datecolumn',
-                    header: i18n.getMsg('sollVon'),
+                    header: i18n.getMsg('schedStartDate'),
                     dataIndex: 'schedStartDate',
                     renderer: function(value) {
                         var dt = '';
@@ -319,7 +319,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     xtype: 'datecolumn',
-                    header: i18n.getMsg('sollBis'),
+                    header: i18n.getMsg('schedEndDate'),
                     dataIndex: 'schedEndDate',
                     renderer: function(value) {
                         var dt = '';

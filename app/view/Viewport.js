@@ -16,12 +16,17 @@
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
+        'Lada.controller.Global',
         'Lada.view.panel.QueryPanel',
         'Lada.view.panel.FileUpload',
         'Lada.view.window.HelpprintWindow',
         'Lada.view.widget.ElanScenarioButton'
     ],
+
+    controller: 'global',
+
     layout: 'fit',
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{

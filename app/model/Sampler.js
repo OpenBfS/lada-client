@@ -70,9 +70,6 @@ Ext.define('Lada.model.Sampler', {
         allowNull: true,
         type: 'nonblankstring'
     }, {
-        name: 'lastMod',
-        type: 'date'
-    }, {
         name: 'readonly',
         type: 'boolean',
         persist: false

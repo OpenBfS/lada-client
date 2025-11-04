@@ -54,7 +54,7 @@ Ext.define('Lada.controller.grid.Messung', {
                 record: messungRecord
             });
             win.show();
-            win.initData(messungRecord);
+            win.initData();
             probeWindow.addChild(win);
             if (win.isVisible()) {
                 win.setPosition(window.innerWidth - 30 - win.width);

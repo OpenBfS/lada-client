@@ -48,7 +48,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
-                Ext.data.StoreManager.get('probenehmer').reload();
 
                 var win = button.up('window');
                 if (win.closeRequested) {

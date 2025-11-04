@@ -45,9 +45,6 @@ Ext.define('Lada.model.Measm', {
         name: 'isCompleted',
         type: 'boolean'
     }, {
-        name: 'lastMod',
-        type: 'date'
-    }, {
         name: 'isScheduled',
         type: 'boolean'
     }, {

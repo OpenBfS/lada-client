@@ -468,7 +468,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }, {
                     xtype: 'fset',
                     name: 'zusatzwertFieldset',
-                    title: i18n.getMsg('title.zusatzwerte'),
+                    title: i18n.getMsg('sampleSpecifMeasVals'),
                     layout: {
                         type: 'hbox',
                         align: 'stretch'

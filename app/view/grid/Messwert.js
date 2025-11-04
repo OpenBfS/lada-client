@@ -162,7 +162,7 @@ Ext.define('Lada.view.grid.Messwert', {
             items: [{
                 header: i18n.getMsg('measdId'),
                 dataIndex: 'measdId',
-                flex: 1.3,
+                width: 150,
                 renderer: function(value, metaData, record) {
                     this.validationResultRenderer(value, metaData, record);
                     if (!value || value === '') {
@@ -171,12 +171,12 @@ Ext.define('Lada.view.grid.Messwert', {
                     var store = Ext.data.StoreManager.get('messgroessen');
                     return Ext.htmlEncode(store.findRecord(
                         'id', value, 0, false, false, true)
-                        .get('name'));
+                        .get('id'));
                 },
                 editor: {
                     xtype: 'combobox',
                     store: me.messgroesseStore,
-                    displayField: 'name',
+                    displayField: 'id',
                     valueField: 'id',
                     allowBlank: false,
                     editable: true,
@@ -205,7 +205,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }, {
                 header: i18n.getMsg('measVal'),
                 dataIndex: 'measVal',
-                flex: 1,
+                width: 80,
                 editor: {
                     xtype: 'expnumberfield',
                     allowBlank: false
@@ -228,7 +228,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }, {
                 header: i18n.getMsg('detect_lim'),
                 dataIndex: 'detectLim',
-                flex: 1,
+                width: 140,
                 editor: {
                     xtype: 'expnumberfield',
                     allowBlank: false
@@ -251,7 +251,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }, {
                 header: i18n.getMsg('measUnitId'),
                 dataIndex: 'measUnitId',
-                flex: 1,
+                width: 120,
                 renderer: function(value, metaData, record) {
                     this.validationResultRenderer(value, metaData, record);
                     if (!value || value === '') {
@@ -299,7 +299,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 dataIndex: 'error',
                 xtype: 'numbercolumn',
                 format: '0000.0',
-                flex: 0.6,
+                flex: 1.0,
                 editor: {
                     xtype: 'formatnumberfield',
                     allowBlank: false,

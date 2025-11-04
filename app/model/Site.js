@@ -103,16 +103,20 @@ Ext.define('Lada.model.Site', {
         type: 'nonblankstring'
     }, {
         name: 'lastMod',
-        type: 'date'
+        type: 'date',
+        persist: false
     }, {
         name: 'referenceCount',
-        type: 'int'
+        type: 'int',
+        persist: false
     }, {
         name: 'plausibleReferenceCount',
-        type: 'int'
+        type: 'int',
+        persist: false
     }, {
         name: 'referenceCountMp',
-        type: 'int'
+        type: 'int',
+        persist: false
     }, {
         name: 'readonly',
         type: 'boolean'

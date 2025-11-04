@@ -168,7 +168,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
     getNetworkId: function() {
         var mstId = this.down('textfield[name=measFacilId]').getValue();
         var mst = Ext.data.StoreManager.get('messstellen').getById(mstId);
-        return mst.get('networkId');
+        return mst ? mst.get('networkId') : null;
     },
 
     setNetzbetreiber: function(mstId) {

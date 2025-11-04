@@ -45,9 +45,6 @@ Ext.define('Lada.model.SampleSpecifMeasVal', {
         type: 'float',
         allowNull: true
     }, {
-        name: 'lastMod',
-        type: 'date'
-    }, {
         name: 'treeMod',
         type: 'date'
     }, {
