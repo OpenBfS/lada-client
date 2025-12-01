@@ -20,6 +20,7 @@ Ext.define('Lada.view.window.ChangeKDA', {
     collapsible: false,
     maximizable: false,
     width: 400,
+    constrain: true,
     layout: {
         type: 'vbox',
         align: 'stretch'

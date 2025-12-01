@@ -4,6 +4,7 @@
 Ext.define('Lada.view.window.ImportResponse', {
     extend: 'Ext.window.Window',
     alias: 'widget.importresponse',
+    constrain: true,
 
     responseData: '',
     fileName: '',

@@ -21,6 +21,7 @@ Ext.define('Lada.view.window.SetTags', {
 
     layout: 'vbox',
     width: 400,
+    constrain: true,
 
     recordType: null, //probe | messung
 

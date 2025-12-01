@@ -12,6 +12,7 @@
 Ext.define('Lada.view.window.ElanScenarioWindow', {
     extend: 'Ext.window.Window',
     alias: 'window.elanscenariowindow',
+    constrain: true,
 
     /**
      * Component id. Should not be changed, as there should only be one event

@@ -39,7 +39,7 @@ Ext.define('Lada.view.window.HelpprintWindow', {
     layout: 'border',
     minWidth: 500,
     minHeight: 300,
-
+    constrain: true,
     resizable: true,
     maximizable: true,
 

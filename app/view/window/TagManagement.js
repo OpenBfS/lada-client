@@ -20,6 +20,7 @@ Ext.define('Lada.view.window.TagManagement', {
     alias: 'widget.tagmanagementwindow',
     requires: ['Lada.view.form.Tag'],
     collapsible: true,
+    constrain: true,
 
     /**
      * This function initialises the Window
