@@ -12,35 +12,35 @@ RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
     curl unzip default-jre-headless git && \
     apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
+ENV LADA_HOME=/usr/local/lada
+RUN mkdir $LADA_HOME
+WORKDIR $LADA_HOME
 
-RUN mkdir /usr/local/lada
-WORKDIR /usr/local/lada
-
-ADD *.sh /usr/local/lada/
+ADD *.sh $LADA_HOME/
 
 # Install dependencies
 RUN ./install-sencha2opt.sh
 RUN ./install-dependencies.sh
 
-ADD overrides /usr/local/lada/overrides
-ADD resources /usr/local/lada/resources
-ADD sass /usr/local/lada/sass
+ADD overrides $LADA_HOME/overrides
+ADD resources $LADA_HOME/resources
+ADD sass $LADA_HOME/sass
 
-ADD index.html /usr/local/lada/
+ADD index.html $LADA_HOME/
 
-ADD *.js *.json /usr/local/lada/
-ADD app /usr/local/lada/app
-ADD Koala /usr/local/lada/Koala
-ADD .git /usr/local/lada/.git
-ADD .sencha /usr/local/lada/.sencha
-ADD build.xml /usr/local/lada/
+ADD *.js *.json $LADA_HOME/
+ADD app $LADA_HOME/app
+ADD Koala $LADA_HOME/Koala
+ADD .git $LADA_HOME/.git
+ADD .sencha $LADA_HOME/.sencha
+ADD build.xml $LADA_HOME/
 
 ###############
 # Build stage #
 ###############
 FROM base AS build
-COPY --from=base /usr/local/lada/. /usr/local/lada
-WORKDIR /usr/local/lada
+COPY --from=base $LADA_HOME/. $LADA_HOME
+WORKDIR $LADA_HOME
 
 # build application
 RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh production
@@ -49,8 +49,8 @@ RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -
 # Dev build stage #
 ###################
 FROM base AS development-build
-COPY --from=base /usr/local/lada/. /usr/local/lada
-WORKDIR /usr/local/lada
+COPY --from=base $LADA_HOME/. $LADA_HOME
+WORKDIR $LADA_HOME
 RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.js;
 RUN ./docker-build-app.sh development
 
@@ -63,14 +63,15 @@ EXPOSE 80 81 82 83 84
 RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
     libapache2-mod-shib && apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
-COPY --from=development-build /usr/local/lada/. /usr/local/lada
-RUN ln -s /usr/local/lada/ $HTTPD_PREFIX/htdocs/lada
+ENV LADA_HOME=/usr/local/lada
+COPY --from=development-build $LADA_HOME/. $LADA_HOME
+RUN ln -s $LADA_HOME/ $HTTPD_PREFIX/htdocs/lada
 
 RUN mkdir -p $HTTPD_PREFIX/htdocs/build/production/
-COPY --from=build /usr/local/lada/build/production/. $HTTPD_PREFIX/htdocs/build/production
+COPY --from=build $LADA_HOME/build/production/. $HTTPD_PREFIX/htdocs/build/production
 
 RUN sed -i -e '/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#LoadModule deflate_module/s/#//' $HTTPD_PREFIX/conf/httpd.conf
-WORKDIR /usr/local/lada
+WORKDIR $LADA_HOME
 ADD custom-vhosts.conf ./
 RUN sed -i "$ a \Include $PWD/custom-vhosts.conf" $HTTPD_PREFIX/conf/httpd.conf
 
