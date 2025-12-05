@@ -226,6 +226,7 @@ Ext.define('Lada.controller.form.Probe', {
                 for (var i = 0; i < messungArr.length; i++) {
                     var messung = messungArr[i];
                     var messungRec = Ext.create('Lada.model.Measm', messung);
+                    messung.extId = null;
                     messung.minSampleId = null;
                     messung.isCompleted = false;
                     messung.isScheduled = false;
