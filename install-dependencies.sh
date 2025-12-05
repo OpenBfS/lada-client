@@ -1,13 +1,11 @@
 #!/bin/bash -e
 
 CUR_DIR=`pwd`
-SCRIPT_DIR=`dirname $0`
+
 OL_VERSION='4.6.5'
 ELMASSE_VERSION='1.2.0'
 FILESAVER_VERSION='1.3.3'
 BLOB_VERSION='master'
-
-cd $SCRIPT_DIR
 
 mkdir -p packages/local
 cd packages/local
