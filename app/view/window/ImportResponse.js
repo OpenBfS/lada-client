@@ -387,8 +387,8 @@ Ext.define('Lada.view.window.ImportResponse', {
             var validation = [];
             validation.push(i18n.getMsg(msg));
             for (var i = msgs.length - 1; i >= 0; i--) {
-                var keySplit = msgs[i].key.split('#');
-                const valAndId = msgs[i].value.split('#');
+                var keySplit = String(msgs[i].key).split('#');
+                const valAndId = String(msgs[i].value).split('#');
                 const idHint = valAndId[1] ? ' ' + valAndId[1] : '';
                 if (keySplit[0] === 'validation') {
                     validation.push('<ol>');
