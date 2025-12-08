@@ -135,8 +135,7 @@ Ext.define('Lada.view.window.AuditTrail', {
             case 'messprogramm':
                 container.update(this.createHtmlMessprogramm(json));
         }
-        Ext.ComponentQuery.query('panel#' + this.down('panel')
-            .getId())[0].loadingMask.hide();
+        this.hideLoadingMask();
     },
 
     loadFailure: function() {
@@ -145,6 +144,7 @@ Ext.define('Lada.view.window.AuditTrail', {
         var html = '<p><strong>' + i18n.getMsg('err.msg.generic.title')
             + '</strong></p>' + i18n.getMsg('err.msg.generic.body');
         container.update(html);
+        this.hideLoadingMask();
     },
 
     createHtmlProbe: function(json) {
@@ -323,6 +323,13 @@ Ext.define('Lada.view.window.AuditTrail', {
             });
         }
         at.loadingMask.show();
+    },
+
+    hideLoadingMask: function() {
+        var at = this.down('panel');
+        if (at.loadingMask) {
+            at.loadingMask.hide();
+        }
     },
 
     /**
