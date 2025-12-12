@@ -166,22 +166,9 @@ Ext.define('Lada.view.grid.Messung', {
                 allowBlank: false
             }
         }, {
-            header: i18n.getMsg('number_of_nuclids'),
-            // Gibt die Anzahl der Messwerte wieder,
-            // NICHT die Anzahl der verschiedenen Nukleide
-            // Eventuell ist die Bezeichnug daher irreführend
-            dataIndex: 'messwerteCount',
-            flex: 1,
-            renderer: function(value, meta, record) {
-                if (
-                    (!value || value === '')
-                ) {
-                    var mId = record.get('id');
-                    this.updateNuklide(mId, record);
-                    return 'Lade...';
-                }
-                return Ext.htmlEncode(value);
-            }
+            header: i18n.getMsg('measValsCount'),
+            dataIndex: 'measValsCount',
+            flex: 1
         }];
         this.listeners = {
             select: {
@@ -232,46 +219,6 @@ Ext.define('Lada.view.grid.Messung', {
     reload: function() {
         this.hideReloadMask();
         this.store.reload();
-    },
-
-    updateNuklide: function(id, record) {
-        var messwerte = Ext.create('Lada.store.Messwerte');
-        var me = this;
-        /*messwerte.onAfter('load',
-            this.updateColumn,
-            this,
-            {record: record, type: 'messwerteCount'});*/
-        messwerte.load({
-            params: {
-                measmId: id
-            },
-            callback: function(records, operation, success) {
-                me.updateColumn(
-                    messwerte,
-                    record,
-                    success,
-                    operation,
-                    {record: record, type: 'messwerteCount'}
-                );
-            }
-        });
-    },
-
-    updateColumn: function(store, record, success, operation, opts) {
-        var value;
-        if (success) {
-            var amount = store.count();
-            if ( amount === 0 ) {
-                value = '0';
-            } else {
-                value = amount;
-            }
-        } else {
-            value = '-';
-        }
-        opts.record.beginEdit();
-        opts.record.set(opts.type, value);
-        opts.record.endEdit();
     },
 
     setReadOnly: function(b) {

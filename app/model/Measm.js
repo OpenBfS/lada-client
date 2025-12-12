@@ -67,7 +67,8 @@ Ext.define('Lada.model.Measm', {
         name: 'statuskombi',
         persist: false
     }, {
-        name: 'messwerteCount',
+        name: 'measValsCount',
+        type: 'int',
         persist: false
     }, {
         name: 'kommentarCount',
