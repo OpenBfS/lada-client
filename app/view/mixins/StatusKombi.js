@@ -7,24 +7,27 @@
  */
 
 /**
- * Mixin providing helper to determine statuskombi from a record
+ * Mixin providing helper to determine statusMpId of last StatusProt
+ * from a record.
  */
 Ext.define('Lada.view.mixins.StatusKombi', {
     determineKombi: function(record) {
-        var statusProt = record.getStatusProt();
+        var statusProts = record.statusProts();
+        const statusMpIdKey = 'statusMpId';
         var statusMpId = null;
-        if (statusProt) {
-            statusMpId = statusProt.get('statusMpId');
+        if (statusProts.count() > 0) {
+            statusMpId = statusProts.last().get(statusMpIdKey);
         } else {
             // Fallback for the rare case that after a POST the
-            // Statusprot wasn't correctly deserialized and ended
-            // up as an Object on the record
-            statusProt = record.get('statusProt');
-            if (!statusProt) {
+            // association wasn't correctly deserialized and ended
+            // up as an array on the record
+            var statusProtArray = record.get('statusProts');
+            if (!statusProtArray || statusProtArray.length === 0) {
                 // in case everything went south tell someone
-                throw new Error('No StatusProt found!');
+                throw new Error('No statusProts found!');
             }
-            statusMpId = statusProt['statusMpId'];
+            statusMpId = statusProtArray[statusProtArray.length - 1][
+                statusMpIdKey];
         }
         var kombis = Ext.data.StoreManager.get('statuskombi');
         var kombi = kombis.getById(statusMpId);

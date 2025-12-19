@@ -11,7 +11,7 @@ Ext.define('Lada.model.Measm', {
         'Lada.model.field.NonBlankString'
     ],
     extend: 'Lada.model.ValidatedModel',
-    hasOne: 'Lada.model.StatusProt',
+    hasMany: 'Lada.model.StatusProt',
     fields: [{
         name: 'id'
     }, {

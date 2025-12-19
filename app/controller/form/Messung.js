@@ -188,7 +188,9 @@ Ext.define('Lada.controller.form.Messung', {
         var view = button.up('messungform');
         var messwertGrid = button.up('messungedit').down('messwertgrid');
         win.on('statussetend', function() {
-            view.record.load({
+            /* Create new record instance because record.load() does not
+               update associations from response data */
+            Lada.model.Measm.load(view.record.get('id'), {
                 success: function(record) {
                     // Update Messung form
                     view.setRecord(record);
