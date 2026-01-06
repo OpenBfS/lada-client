@@ -73,7 +73,14 @@ Ext.define('Lada.view.grid.BaseGrid', {
                 return false;
             }
             if (!success) {
-                me.loadingFailed(loadedStore, operation);
+                if (
+                    operation.getError() && operation.getError().status === 403
+                ) {
+                    var i18n = Lada.getApplication().bundle;
+                    me.setEmptyText(i18n.getMsg('699'));
+                    return;
+                }
+                me.showReloadMask();
             }
         });
     },
@@ -120,24 +127,6 @@ Ext.define('Lada.view.grid.BaseGrid', {
         this.unmask();
         if (this.reloadMask && this.reloadMask.isVisible()) {
             this.reloadMask.hide();
-        }
-    },
-
-    /**
-     * @protected
-     * Handle a failed store loading operation.
-     * Shows the reload mask
-     * @param {Ext.data.store} store The store that failed loading
-     * @param {Ext.data.operation.operation} operation The operation that failed
-     */
-    loadingFailed: function(store, operation) {
-        if (operation.getError() && operation.getError().status === 403) {
-            // Don't show an error: store loaded correctly, but user has no
-            // permission to see any data
-            // TODO some message ?
-            return;
-        } else {
-            this.showReloadMask();
         }
     },
 
