@@ -240,17 +240,20 @@ Ext.define('Lada.view.grid.Messung', {
             this.down('button[action=add]').enable();
         }
     },
+
     /**
      * Activate the Remove Button
      */
     activateRemoveButton: function(selection, record) {
         var editableGrid = !this.readOnly;
-        var isEditableRecord = record.getStatusProt().get('statusMpId') === 1;
+        var isEditableRecord =
+            record.statusProts().last().get('statusMpId') === 1;
         var hasOwner = record.get('owner');
         if (editableGrid && isEditableRecord && hasOwner) {
             this.down('button[action=delete]').enable();
         }
     },
+
     /**
      * Dectivate the Remove Button
      */
