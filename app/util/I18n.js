@@ -32,6 +32,22 @@ Ext.define('Lada.util.I18n', {
         getMsgIfDefined: function(key) {
             var i18n = Lada.getApplication().bundle;
             return i18n.getMsg(key).replace(this.msgNotFound, '');
+        },
+
+        /**
+         * Translate keys in list-like messages where list items
+         * start with something like '- measmId:'
+         */
+        translateListKeys: function(msg) {
+            for (const matchResult of msg.matchAll(/- (\w+):/g)) {
+                const match = matchResult[1];
+                msg = msg.replace(
+                    match,
+                    Lada.util.I18n.getMsgIfDefined(match));
+            }
+
+            // Convert newlines to HTML
+            return Ext.String.htmlEncode(msg).replace(/\n/g, '<br>');
         }
     }
 });

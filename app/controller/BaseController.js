@@ -142,8 +142,7 @@ Ext.define('Lada.controller.BaseController', {
                 message = message.replace(match, translatedFields.join(', '));
             }
 
-            // Prepare newlines for HTML
-            message = message.replace(/\n/g, '<br>');
+            message = Lada.util.I18n.translateListKeys(message);
 
             if (errors[key]) {
                 errors[key].push(message);

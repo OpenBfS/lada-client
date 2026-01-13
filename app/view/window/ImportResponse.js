@@ -329,9 +329,11 @@ Ext.define('Lada.view.window.ImportResponse', {
             for (const msg in msgs) {
                 objectHasMsgs = true;
                 const li = document.createElement('li');
-                const translate = Lada.util.I18n.getMsgIfDefined;
-                li.textContent = `${translate(msg)}: `
-                    + `${msgs[msg].map(translate).join(', ')}`;
+                const translate = m => Lada.util.I18n.translateListKeys(
+                    Lada.util.I18n.getMsgIfDefined(m));
+                li.insertAdjacentHTML(
+                    'afterbegin',
+                    `${translate(msg)}: ${msgs[msg].map(translate).join(', ')}`);
                 ol.appendChild(li);
             }
 

@@ -193,18 +193,6 @@ Ext.define('Lada.controller.SetStatus', {
             var msgs = messages[key];
             var validation = [];
             for (var msg of msgs.reverse()) {
-                // Translate keys in list-like messages where list items
-                // start with something like '- measmId:'
-                for (const matchResult of msg.matchAll(/- (\w+):/g)) {
-                    const match = matchResult[1];
-                    msg = msg.replace(
-                        match,
-                        Lada.util.I18n.getMsgIfDefined(match));
-                }
-
-                // Convert newlines to HTML
-                msg = msg.replace(/\n/g, '<br>');
-
                 validation.push(
                     '<li><b>' + i18n.getMsg(key) + ':</b> ' +
                         Lada.util.I18n.getMsgIfDefined(msg.toString()) +
