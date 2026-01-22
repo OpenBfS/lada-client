@@ -158,12 +158,12 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     this.validationResultRenderer(value, metaData, gridRec);
                     return Ext.htmlEncode(
                         gridRec.measds().getRange()
-                            .map(m => m.get('id')).join(', '));
+                            .map(m => m.get('name')).join(', '));
                 },
                 editor: {
                     xtype: 'tagfield',
                     store: 'messgroessen',
-                    displayField: 'id',
+                    displayField: 'name',
                     valueField: 'id',
                     autoSelect: false,
                     queryMode: 'local'

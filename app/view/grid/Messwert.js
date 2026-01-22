@@ -171,12 +171,12 @@ Ext.define('Lada.view.grid.Messwert', {
                     var store = Ext.data.StoreManager.get('messgroessen');
                     return Ext.htmlEncode(store.findRecord(
                         'id', value, 0, false, false, true)
-                        .get('id'));
+                        .get('name'));
                 },
                 editor: {
                     xtype: 'combobox',
                     store: me.messgroesseStore,
-                    displayField: 'id',
+                    displayField: 'name',
                     valueField: 'id',
                     allowBlank: false,
                     editable: true,

@@ -13,11 +13,13 @@ Ext.define('Lada.model.Measd', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
-        name: 'id',
-        type: 'nonblankstring'
+        name: 'id'
     }, {
         name: 'descr',
         allowNull: true,
+        type: 'nonblankstring'
+    }, {
+        name: 'name',
         type: 'nonblankstring'
     }, {
         name: 'defColor',

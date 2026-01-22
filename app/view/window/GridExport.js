@@ -545,7 +545,7 @@ Ext.define('Lada.view.window.GridExport', {
                 store = Ext.data.StoreManager.get('messgroessen');
                 record = store.getById(value);
                 if (record) {
-                    r = record.get('id');
+                    r = record.get('name');
                     return r || '';
                 }
                 return '';

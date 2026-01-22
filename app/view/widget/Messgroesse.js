@@ -14,7 +14,7 @@ Ext.define('Lada.view.widget.Messgroesse', {
     requires: ['Lada.store.Messgroessen'],
     alias: 'widget.messgroesse',
     store: 'Messgroessen',
-    displayField: 'id',
+    displayField: 'name',
     valueField: 'id',
     // Enable filtering of comboboxes
     autoSelect: false,

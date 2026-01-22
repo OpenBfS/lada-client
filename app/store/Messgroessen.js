@@ -13,7 +13,7 @@ Ext.define('Lada.store.Messgroessen', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Measd',
     sorters: [{
-        property: 'id',
+        property: 'name',
         direction: 'ASC',
         transform: function(val) {
             if (val) {
