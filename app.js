@@ -398,7 +398,7 @@ Ext.application({
             model: Ext.create('Ext.data.Model', {
                 fields: [
                     {name: 'label', type: 'string'},
-                    {name: 'value', type: 'string'}
+                    {name: 'value', type: 'int'}
                 ]
             }),
             data: Lada.availablePagingSizes

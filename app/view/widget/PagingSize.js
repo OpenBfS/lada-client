@@ -18,26 +18,28 @@ Ext.define('Lada.view.widget.PagingSize', {
     items: [{
         xtype: 'combobox',
         allowBlank: false,
-        forceSelection: true,
         displayField: 'label',
         valueField: 'value',
         submitValue: false,
         queryMode: 'local',
         width: 70,
-        disableKeyFilter: true,
-        editable: false,
-        onChange: function(newVal, oldVal) {
-            if (newVal === oldVal) {
-                return;
-            }
-            Lada.getApplication().setPagingSize(parseInt(newVal, 10));
-            var tb = this.up('pagingtoolbar');
-            if (tb) {
-                var pageStore = tb.getStore();
-                if (pageStore) {
-                    pageStore.setPageSize(newVal);
+        maskRe: /\d/,
+        checkChangeBuffer: 500,
+        listeners: {
+            change: function(combo) {
+                if (!combo.isValid()) {
+                    return;
                 }
-                pageStore.loadPage(1);
+                var newVal = combo.getValue();
+                Lada.getApplication().setPagingSize(newVal);
+                var tb = this.up('pagingtoolbar');
+                if (tb) {
+                    var pageStore = tb.getStore();
+                    if (pageStore) {
+                        pageStore.setPageSize(newVal);
+                    }
+                    pageStore.loadPage(1);
+                }
             }
         }
     }, {
