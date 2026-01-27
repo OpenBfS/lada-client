@@ -24,6 +24,8 @@ Ext.define('Lada.view.widget.PagingSize', {
         queryMode: 'local',
         width: 70,
         maskRe: /\d/,
+        // Work-around: maskRe lets pass special characters like '-':
+        vtype: 'alphanum',
         checkChangeBuffer: 500,
         listeners: {
             change: function(combo) {
