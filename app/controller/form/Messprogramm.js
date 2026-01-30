@@ -329,18 +329,20 @@ Ext.define('Lada.controller.form.Messprogramm', {
       * buttons which are present in the toolbar of the form.
       */
     dirtyForm: function(form) {
-        var enableForm = !form.getRecord().get('readonly') && form.isDirty();
-        form.owner.down('button[action=save]').setDisabled(
-            !enableForm || !form.isValid());
-        form.owner.down('button[action=discard]').setDisabled(!enableForm);
+        var record = form.getRecord();
+        if (record) {
+            var enableForm = !record.get('readonly') && form.isDirty();
+            form.owner.down('button[action=save]').setDisabled(
+                !enableForm || !form.isValid());
+            form.owner.down('button[action=discard]').setDisabled(!enableForm);
 
-        var disableActions = form.getRecord().phantom
-        form.owner.up('messprogramm').down(
-            'button[action=generateproben]').setDisabled(disableActions);
+            form.owner.up('messprogramm').down(
+                'button[action=generateproben]').setDisabled(record.phantom);
 
-        var disableActions = form.getRecord().phantom
-            || form.isDirty() || form.getRecord().get('readonly');
-        form.owner.down('button[action=copy]').setDisabled(disableActions);
+            var disableActions = record.phantom
+                || form.isDirty() || record.get('readonly');
+            form.owner.down('button[action=copy]').setDisabled(disableActions);
+        }
     },
 
     deskriptorSelect: function(field, records) {

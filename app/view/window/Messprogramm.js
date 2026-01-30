@@ -179,6 +179,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                             me.record.get('referenceCount') +
                             ')</i>');
                 }
+                me.down('messprogrammform').isValid();
             };
             if (!loadedRecord) {
                 Ext.ClassManager.get('Lada.model.Mpg').load(
@@ -208,8 +209,8 @@ Ext.define('Lada.view.window.Messprogramm', {
 
             this.disableChildren();
             this.down('button[name=reload]').setDisabled(true);
+            this.down('messprogrammform').isValid();
         }
-        this.down('messprogrammform').isValid();
     },
 
     initializeUi: function() {
