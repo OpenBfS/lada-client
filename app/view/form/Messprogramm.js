@@ -179,6 +179,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }, {
                             xtype: 'betriebsart',
                             name: 'oprModeId',
+                            allowBlank: false,
                             margin: '0, 0, 5, 5',
                             fieldLabel: i18n.getMsg('oprModeId'),
                             width: '50%',
