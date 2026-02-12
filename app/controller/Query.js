@@ -194,6 +194,7 @@ Ext.define('Lada.controller.Query', {
                         isFilterActive: item.get('isFilterActive'),
                         isFilterNegate: item.get('isFilterNegate'),
                         isFilterRegex: item.get('isFilterRegex'),
+                        isFilterNull: item.get('isFilterNull'),
                         filterVal: item.get('filterVal'),
                         width: me.getVisibleColumnWidth(item)
                     });
