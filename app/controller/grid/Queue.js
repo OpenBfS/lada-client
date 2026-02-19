@@ -53,27 +53,10 @@ Ext.define('Lada.controller.grid.Queue', {
      */
     onSaveItem: function(model) {
         model.set('downloadRequested', true);
-        Ext.Ajax.request({
-            url: this.urlPrefix + this.downloadPath + model.get('jobId'),
-            method: 'GET',
-            headers: {
-                Accept: 'application/octet-stream'
-            },
-            binary: true,
-            timeout: 60000,
-            scope: this,
-            success: function(response) {
-                var content = response.responseBytes;
-                var filetype = response.getResponseHeader('Content-Type');
-                var blob = new Blob([content], {type: filetype});
-                saveAs(blob, model.get('filename'));
-            },
-            failure: function(response, opts) {
-                model.set('status', 'error');
-                model.set('message', this.handleRequestFailure(
-                    response, opts, null, true));
-            }
-        });
+        const link = document.createElement('a');
+        link.href = this.urlPrefix + this.downloadPath + model.get('jobId');
+        link.download = model.get('filename');
+        link.click();
     },
 
     onCancelItem: function(model) {
