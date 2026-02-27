@@ -101,11 +101,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         }
         var parentWin = grid.up('window');
         var parent = parentWin.record;
-        // parent is either probe or messprogramm.
-        var parentisMp = false;
-        if (parent.data.mainSampleId === undefined) {
-            parentisMp = true;
-        }
+        var parentisMp = parent instanceof Lada.model.Mpg;
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: parentWin,
             probe: parentisMp ? null : parent,
@@ -124,10 +120,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     add: function(button) {
         var parent = button.up('window').record;
-        var parentisMp = false;
-        if (parent.data.mainSampleId === undefined) {
-            parentisMp = true;
-        }
+        var parentisMp = parent instanceof Lada.model.Mpg;
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: button.up('window'),
             probe: parentisMp ? null : parent,
