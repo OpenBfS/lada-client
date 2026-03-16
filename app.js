@@ -217,6 +217,9 @@ Ext.application({
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'
         });
+        Ext.create('Lada.store.OprMode', {
+            storeId: 'oprModeStore'
+        });
         Ext.create('Lada.store.Messeinheiten', {
             storeId: 'messeinheiten'
         });

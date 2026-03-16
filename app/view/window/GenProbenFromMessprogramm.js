@@ -283,12 +283,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (!value || value === '') {
                             r = value;
                         }
-                        var store = Ext.data.StoreManager.get(
-                            'betriebsartStore');
-                        var i = store.findExact('betriebsartId', value);
+                        var store = Ext.data.StoreManager.get('oprModeStore');
+                        var i = store.findExact('id', value);
                         var record = store.getData().items[i];
                         if (record) {
-                            r = record.get('betriebsart');
+                            r = record.get('name');
                         }
                         return Ext.htmlEncode(r);
                     }
