@@ -120,7 +120,7 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
                                     i18n.getMsg(
                                         'gpfm.generated.error',
                                         key,
-                                        i18n.getMsg(result.message)));
+                                        result.message));
                         }
                     });
                 win.down('toolbar').down('button').setDisabled(false);
