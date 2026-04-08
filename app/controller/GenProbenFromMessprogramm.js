@@ -86,7 +86,7 @@ Ext.define('Lada.controller.GenProbenFromMessprogramm', {
                 // Process response data
                 var results = [];
                 Ext.Object.each(
-                    json.proben,
+                    json.data,
                     function(key, result) {
                         if (result.success) {
                             results.push(result);
