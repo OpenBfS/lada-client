@@ -507,15 +507,11 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 success: function(response) {
                     var json = Ext.JSON.decode(response.responseText);
                     var resultMessage = '';
-                    for (var j = 0; j < json.length; j++) {
-                        if (json[j].success !== 200) {
-                            resultMessage += '<strong>'
-                                + i18n.getMsg('messprogramm') + ': '
-                                + json[j].id
-                                + '</strong><br><dd>'
-                                + i18n.getMsg(json[j].success)
-                                + '</dd><br>';
-                        }
+                    for (const j in json) {
+                        resultMessage += '<strong>'
+                            + i18n.getMsg('messprogramm') + ': '
+                            + `${j}</strong><br>`
+                            + `<dd>${json[j]}</dd><br>`;
                     }
                     if (resultMessage) {
                         var errorWin = Ext.create('Ext.window.Window', {
