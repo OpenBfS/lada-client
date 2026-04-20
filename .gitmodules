@@ -1,0 +1,3 @@
+[submodule "resources/ladaHelp"]
+	path = resources/ladaHelp
+	url = https://sca-ber@redmine-koala.bfs.de/scm/git/lada-help
