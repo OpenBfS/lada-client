@@ -394,10 +394,18 @@ Ext.define('Lada.view.window.ImportResponse', {
                 const idHint = valAndId[1] ? ' ' + valAndId[1] : '';
                 if (keySplit[0] === 'validation') {
                     validation.push('<ol>');
-                    const str = i18n.getMsg(valAndId[0]) + idHint;
+                    let str = i18n.getMsg(valAndId[0]) + idHint;
                     const message = Lada.util.I18n.translateListKeys(
                         Lada.util.I18n.getMsgIfDefined(msgs[i].code.toString()));
-                    validation.push(str + ' (' + message + ')');
+                    const isSpecial = /^[^#]+#[^#]+$/.test(msgs[i].value); // values like extId#BS01
+                    if (isSpecial) {
+                        const prefix = valAndId[1] + ': ';
+                        str = i18n.getMsg(valAndId[0]);
+                        const suffix = ' (' + message + ')';
+                        validation.push( prefix + str + ' ' + suffix);
+                    } else {
+                        validation.push(str + ' (' + message + ')');
+                    }
                     validation.push('</ol>');
                 } else {
                     out.push('<li>' + msgs[i].key + idHint + ' ('
