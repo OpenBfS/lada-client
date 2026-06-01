@@ -173,6 +173,11 @@ Ext.define('Lada.view.window.RecordWindow', {
                     me.showReloadMask();
                 } else {
                     me.hideReloadMask();
+                    var formPanel = me.down('form');
+                    if (formPanel && record) {
+                        formPanel.getForm().loadRecord(record);
+                        me.record = record;
+                    }
                 }
                 if (me.loadCallback) {
                     me.loadCallback(record, operation, success);
