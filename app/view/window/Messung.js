@@ -277,9 +277,8 @@ Ext.define('Lada.view.window.Messung', {
         if (!loadedRecord && this.record) {
             Ext.ClassManager.get('Lada.model.Measm').load(
                 this.record.get('id'), {
-                    success: loadCallback,
-                    scope: this
-                });
+                    success: loadCallback
+            });
         } else if (!loadedRecord) {
             // Create new measm
             var record = Ext.create('Lada.model.Measm', {
