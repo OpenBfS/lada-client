@@ -53,13 +53,31 @@ Ext.define('Lada.controller.grid.Messung', {
                 probe: probeRecord,
                 record: messungRecord
             });
-            win.show();
-            win.initData();
-            probeWindow.addChild(win);
-            if (win.isVisible()) {
-                win.setPosition(window.innerWidth - 30 - win.width);
+            if (win.show()) {
+                win.loadRecord(
+                    messungRecord.get('id'),
+                    this,
+                    function(newRecord, operation, success) {
+                        win.setLoading(true);
+                        if (!newRecord || !operation) {
+                            Ext.log({
+                                msg: 'Loading messung record failed',
+                                level: 'warn'
+                            });
+                            return;
+                        }
+                        if (success) {
+                            win.setProbe(probeRecord);
+                            win.setRecord(newRecord);
+                            win.initData(newRecord);
+                            win.setLoading(false);
+                        }
+                    });
+                probeWindow.addChild(win);
+                if (win.isVisible()) {
+                    win.setPosition(window.innerWidth - 30 - win.width);
+                }
             }
-
             return;
         };
         if (grid.up('probenedit')) {
