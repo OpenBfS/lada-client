@@ -157,11 +157,6 @@ Ext.define('Lada.view.window.AuditTrail', {
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
         } else {
-            if (audit.length > 1) {
-                audit.sort(function(a, b) {
-                    return b.timestamp - a.timestamp;
-                });
-            }
             for (var i = 0; i < audit.length; i++) {
                 html += '<p style="margin-bottom:0"><b>' +
                     i18n.getMsg('date') +
@@ -198,11 +193,6 @@ Ext.define('Lada.view.window.AuditTrail', {
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
         } else {
-            if (audit.length > 1) {
-                audit.sort(function(a, b) {
-                    return b.timestamp - a.timestamp;
-                });
-            }
             for (var i = 0; i < audit.length; i++) {
                 html += '<p style="margin-bottom:0"><b>' +
                     i18n.getMsg('date') +
@@ -230,11 +220,6 @@ Ext.define('Lada.view.window.AuditTrail', {
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
         } else {
-            if (audit.length > 1) {
-                audit.sort(function(a, b) {
-                    return b.timestamp - a.timestamp;
-                });
-            }
             for (var i = 0; i < audit.length; i++) {
                 html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date')
                         + ': '
