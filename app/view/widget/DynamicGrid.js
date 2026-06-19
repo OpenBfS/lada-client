@@ -569,19 +569,32 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateMessprogrammColumns: function(col) {
-        col.xtype = 'widgetcolumn';
-        col.widget = {
-            xtype: 'button',
-            icon: Ext.getResourcePath(this.openIconPath, null, null),
-            width: '16px',
-            height: '16px',
-            userCls: 'widget-column-button',
-            tooltip: this.i18n.getMsg('typedgrid.tooltip.mprid'),
-            hidden: true,
-            listeners: {
-                click: function(button) {
-                    var id = button.getText();
-                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+        col.xtype = 'gridcolumn';
+        col.dataIndex = 'mprId';
+        col.renderer = function(value, meta, record) {
+            if (!value) {
+                return;
+            }
+            var iconpath = Ext.getResourcePath(this.openIconPath, null, null);
+            var dataPart = ' data-id="' + value + '" ';
+            var stylePart = ' style="cursor:pointer;" ';
+            var classPart = ' class="action-btn-messprogramm" ';
+            var img = '<img' +
+                        dataPart +
+                        stylePart +
+                        classPart +
+                        ' src="' + iconpath + '"/> ';
+            return '<span>' + img + value + '</span>';
+        };
+        col.listeners = {
+            click: function(column, cellElement, rowIndex, colIndex, e, rec) {
+                var target = e.getTarget('.action-btn-messprogramm');
+                if (target) {
+                    var id = target.getAttribute('data-id');
+                    if (!id) {
+                        return;
+                    }
+                    id = Number(id);
                     var win = Ext.create(
                         'Lada.view.window.Messprogramm', {
                             recordId: id});
@@ -595,14 +608,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     win.initData(record);
                                 }
                             });
-                    }
-
-                },
-                textchange: function(button, oldval, newval) {
-                    if (!newval || newval === '') {
-                        button.hide();
-                    } else {
-                        button.show();
                     }
                 }
             }
