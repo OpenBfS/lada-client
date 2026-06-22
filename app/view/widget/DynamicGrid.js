@@ -569,51 +569,69 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateMessprogrammColumns: function(col) {
-        col.xtype = 'gridcolumn';
-        col.dataIndex = 'mprId';
-        col.renderer = function(value, meta, record) {
-            if (!value) {
-                return;
+        var options = {
+            'col': col,
+            'dataIndex': 'mprId',
+            'iconPath': Ext.getResourcePath(this.openIconPath, null, null),
+            'buttonName': 'messprogramm',
+            'windowType': 'Lada.view.window.Messprogramm',
+            'onWindowOpen': function(win, record, operation, success) {
+                if (success) {
+                    win.setRecord(record);
+                    win.initData(record);
+                }
             }
-            var iconpath = Ext.getResourcePath(this.openIconPath, null, null);
-            var dataPart = ' data-id="' + value + '" ';
-            var stylePart = ' style="cursor:pointer;" ';
-            var classPart = ' class="action-btn-messprogramm" ';
-            var img = '<img' +
-                        dataPart +
-                        stylePart +
-                        classPart +
-                        ' src="' + iconpath + '"/> ';
-            return '<span>' + img + value + '</span>';
+        };
+        col = this.generateImageButtonColumn(options);
+    },
+
+    generateImageButtonColumn: function(options) {
+        var col = options.col;
+        var buttonName = 'action-btn-' + options.buttonName;
+        col.xtype = 'gridcolumn';
+        col.dataIndex = options.dataIndex;
+        var tpl = new Ext.XTemplate(
+            '<span>',
+            '<img src="{iconPath}" ',
+            'class="{btnName}" ',
+            'data-id="{[Number(values.value)]}" ',
+            'style="cursor:pointer;" /> ',
+            '{value:htmlEncode}',
+            '</span>'
+        );
+        tpl.compile(); // Macht das Template extrem performant
+
+        col.renderer = function(value, meta, record) {
+            if (Ext.isEmpty(value)) {
+                return '';
+            }
+            return tpl.apply({
+                value: value,
+                iconPath: options.iconPath,
+                btnName: buttonName
+            });
         };
         col.listeners = {
+            scope: this,
             click: function(column, cellElement, rowIndex, colIndex, e, rec) {
-                var target = e.getTarget('.action-btn-messprogramm');
+                var target = e.getTarget('.' + buttonName);
                 if (target) {
-                    var id = target.getAttribute('data-id');
+                    var id = Number(target.getAttribute('data-id'));
                     if (!id) {
                         return;
                     }
-                    id = Number(id);
-                    var win = Ext.create(
-                        'Lada.view.window.Messprogramm', {
-                            recordId: id});
+                    var win = Ext.create(options.windowType, { recordId: id });
                     if (win.show()) {
                         win.loadRecord(
-                            id,
-                            this,
-                            function(record, operation, success) {
-                                if (success) {
-                                    win.setRecord(record);
-                                    win.initData(record);
-                                }
+                            id, this, function(record, operation, success) {
+                                options.onWindowOpen(
+                                    win, record, operation, success);
                             });
                     }
                 }
             }
         };
     },
-
     generateOrtColumns: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
