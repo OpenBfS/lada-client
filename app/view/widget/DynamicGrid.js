@@ -553,7 +553,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         );
         tpl.compile(); // Macht das Template extrem performant
 
-        col.renderer = function(value, meta, record) {
+        col.renderer = function(value) {
             if (Ext.isEmpty(value)) {
                 return '';
             }
@@ -565,7 +565,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
         col.listeners = {
             scope: this,
-            click: function(column, cellElement, rowIndex, colIndex, e, rec) {
+            click: function(column, cellElement, rowIndex, colIndex, e) {
                 var target = e.getTarget('.' + buttonName);
                 if (target) {
                     var id = Number(target.getAttribute('data-id'));
