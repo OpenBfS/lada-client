@@ -460,44 +460,20 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateProbeColumn: function(col) {
-        col.xtype = 'widgetcolumn';
-        col.widget = {
-            xtype: 'button',
-            icon: Ext.getResourcePath(this.openIconPath, null, null),
-            width: '16px',
-            height: '16px',
-            userCls: 'widget-column-button',
-            tooltip: this.i18n.getMsg('typedgrid.tooltip.probeid'),
-            hidden: true,
-            listeners: {
-                click: function(button) {
-                    var id = Number(button.text);
-                    button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    var win = Ext.create('Lada.view.window.Probe', {
-                        style: 'z-index: -1;',
-                        recordId: id
-                    });
-                    //Window may not be shown if another instance is open
-                    if (win.show()) {
-                        win.setPosition(30);
-                        win.loadRecord(id, this,
-                            function(record, operation, success) {
-                                if (success) {
-                                    win.setRecord(record);
-                                    win.initData(record);
-                                }
-                            });
-                    }
-                },
-                textchange: function(button, oldval, newval) {
-                    if (!newval || newval === '') {
-                        button.hide();
-                    } else {
-                        button.show();
-                    }
+        var options = {
+            'col': col,
+            'dataIndex': 'probeId',
+            'iconPath': Ext.getResourcePath(this.openIconPath, null, null),
+            'buttonName': 'probe',
+            'windowType': 'Lada.view.window.Probe',
+            'onWindowOpen': function(win, record, operation, success) {
+                if (success) {
+                    win.setRecord(record);
+                    win.initData(record);
                 }
             }
         };
+        col = this.generateImageButtonColumn(options);
     },
     generateMessungColumns: function(col) {
         var options = {
