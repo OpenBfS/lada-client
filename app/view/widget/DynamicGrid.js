@@ -500,72 +500,48 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
     generateMessungColumns: function(col) {
-        col.xtype = 'widgetcolumn';
-        col.widget = {
-            xtype: 'button',
-            icon: Ext.getResourcePath(this.openIconPath, null, null),
-            width: '16px',
-            height: '16px',
-            userCls: 'widget-column-button',
-            tooltip: this.i18n.getMsg('typedgrid.tooltip.messungid'),
-            hidden: true,
-            listeners: {
-                click: function(button) {
-                    var id = Number(button.text);
-                    button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    var win = Ext.create(
-                        'Lada.view.window.Messung', {
+        var options = {
+            'col': col,
+            'dataIndex': 'id',
+            'iconPath': Ext.getResourcePath(this.openIconPath, null, null),
+            'buttonName': 'messung',
+            'windowType': 'Lada.view.window.Messung',
+            'onWindowOpen': function(win, record, operation, success) {
+                if (success) {
+                    var messungRecord = record;
+                    var probeWin = Ext.create(
+                        'Lada.view.window.Probe', {
                             style: 'z-index: -1;',
-                            recordId: id
+                            recordId: messungRecord.get(
+                                'sampleId')
                         });
-                    if (win.show()) {
-                        win.loadRecord(id,
-                            this,
-                            function(record, operation, success) {
-                                if (success) {
-                                    var messungRecord = record;
-                                    var probeWin = Ext.create(
-                                        'Lada.view.window.Probe', {
-                                            style: 'z-index: -1;',
-                                            recordId: messungRecord.get(
-                                                'sampleId')
-                                        });
-                                    if (!probeWin.show()) {
-                                        //If there is already a probe window,
-                                        //use this instead of a new one
-                                        probeWin.destroy();
-                                        probeWin = Ext.ComponentQuery.query(
-                                            'probenedit[recordId=' +
-                                            messungRecord.get('sampleId') +
-                                            ']')[0];
-                                    }
-                                    probeWin.addChild(win);
-                                    win.parentWindow = probeWin;
-                                    probeWin.setPosition(30);
-                                    win.setPosition(35 + probeWin.width);
-                                    probeWin.loadRecord(
-                                        messungRecord.get('sampleId'),
-                                        this,
-                                        function(precord) {
-                                            probeWin.setRecord(precord);
-                                            probeWin.initData(precord);
-                                            win.setProbe(precord);
-                                            win.setRecord(record);
-                                            win.initData(record);
-                                        });
-                                }
-                            });
+                    if (!probeWin.show()) {
+                        //If there is already a probe window,
+                        //use this instead of a new one
+                        probeWin.destroy();
+                        probeWin = Ext.ComponentQuery.query(
+                            'probenedit[recordId=' +
+                            messungRecord.get('sampleId') +
+                            ']')[0];
                     }
-                },
-                textchange: function(button, oldval, newval) {
-                    if (!newval || newval === '') {
-                        button.hide();
-                    } else {
-                        button.show();
-                    }
+                    probeWin.addChild(win);
+                    win.parentWindow = probeWin;
+                    probeWin.setPosition(30);
+                    win.setPosition(35 + probeWin.width);
+                    probeWin.loadRecord(
+                        messungRecord.get('sampleId'),
+                        this,
+                        function(precord) {
+                            probeWin.setRecord(precord);
+                            probeWin.initData(precord);
+                            win.setProbe(precord);
+                            win.setRecord(record);
+                            win.initData(record);
+                        });
                 }
             }
         };
+        col = this.generateImageButtonColumn(options);
     },
 
     generateMessprogrammColumns: function(col) {
