@@ -585,43 +585,19 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
     generateOrtColumns: function(col) {
-        col.xtype = 'widgetcolumn';
-        col.widget = {
-            xtype: 'button',
-            icon: Ext.getResourcePath(this.openIconPath, null, null),
-            width: '16px',
-            height: '16px',
-            userCls: 'widget-column-button',
-            tooltip: this.i18n.getMsg('typedgrid.tooltip.ortid'),
-            hidden: true,
-            listeners: {
-                click: function(button) {
-                    var id = button.getText();
-                    button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    var win = Ext.create('Lada.view.window.Ort', {
-                        recordId: id
-                    });
-                    if (win.show()) {
-                        win.loadRecord(
-                            id,
-                            this,
-                            function(record, operation, success) {
-                                if (success) {
-                                    win.initData(record);
-                                }
-                            });
-                    }
-
-                },
-                textchange: function(button, oldval, newval) {
-                    if (!newval || newval === '') {
-                        button.hide();
-                    } else {
-                        button.show();
-                    }
+        var options = {
+            'col': col,
+            'dataIndex': 'id',
+            'iconPath': Ext.getResourcePath(this.openIconPath, null, null),
+            'buttonName': 'ort',
+            'windowType': 'Lada.view.window.Ort',
+            'onWindowOpen': function(win, record, operation, success) {
+                if (success) {
+                    win.initData(record);
                 }
             }
         };
+        col = this.generateImageButtonColumn(options);
     },
 
     generateGeomColumns: function(col) {
